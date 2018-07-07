@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Rewardz</string>
+    <string name="title_home">For you</string>
+    <string name="title_market">Ads Market</string>
+    <string name="title_Profile">Profile</string>
+    <string name="title_notification">Notifications</string>
+    <string name="title_settings">Settings</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up_button">Register</string>
+    <string name="btn_link_to_login">Already registered. Login Me!</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_forgot_password">Forgot Password</string>
+    <string name="btn_link_to_register">New user! Register.</string>
+    <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
+    <string name="auth_failed">Authentication failed! please try Again.</string>
+    <string name="blank_password">Please enter password</string>
+    <string name="blank_email">Please enter email</string>
+    <string name="lbl_forgot_password">Forgot password?!</string>
+    <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+    <string name="btn_reset_password">Reset password</string>
+    <string name="btn_back">Back</string>
+    <string name="reset_password_mail_sent">We have sent you instructions to reset your password!</string>
+    <string name="reset_password_mail_sent_error">Failed to send reset email!</string>
+
+    <string name="display_name">Display name</string>
+    <string name="city">City</string>
+    <string name="ad_publisher">Ads Publisher</string>
+    <string name="btn_save_details">Save details</string>
+    <string name="btn_edit_details">Update Profile</string>
+    <string name="signout">Sign Out</string>
+    <string name="title_activity_settings">Settings</string>
+
+
+</resources>
