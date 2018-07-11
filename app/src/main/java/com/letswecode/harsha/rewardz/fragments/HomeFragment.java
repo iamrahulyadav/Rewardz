@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment {
     RecyclerView mainlist;
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
-    String currentLocation = "nellore";
+    String currentLocation;
     double Lat, Lon;
 
     @Nullable
@@ -125,10 +125,10 @@ public class HomeFragment extends Fragment {
             public void onSuccess(Location location) {
 
                 if (location != null) {
-                        Lat = location.getLatitude();
-                        Lon = location.getLongitude();
+                    Lat = location.getLatitude();
+                    Lon = location.getLongitude();
 
-                        Log.d("latlon",String.valueOf(Lat)+ " "+ String.valueOf(Lon));
+                    Log.d("latlon",String.valueOf(Lat)+ " "+ String.valueOf(Lon));
                     getCurrentCity(Lat, Lon);
                 }
 
@@ -146,22 +146,26 @@ public class HomeFragment extends Fragment {
 
 
         if(user != null){
-            db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+            String userCurrentLocation = currentLocation;
+            Toast.makeText(getActivity(), "one "+userCurrentLocation+" two "+currentLocation,
+                    Toast.LENGTH_SHORT).show();
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-
-                        if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-                            Ads ads = doc.getDocument().toObject(Ads.class);
-                            AdsList.add(ads);
-                            Log.d("doc", doc.getDocument().toString());
-                            adsListAdapter.notifyDataSetChanged();
-                        }
-
-                    }
-                }
-            });
+//            db.collection("Published Ads").whereEqualTo("city", userCurrentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                @Override
+//                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+//
+//                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+//
+//                        if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
+//                            Ads ads = doc.getDocument().toObject(Ads.class);
+//                            AdsList.add(ads);
+//                            Log.d("doc", doc.getDocument().toString());
+//                            adsListAdapter.notifyDataSetChanged();
+//                        }
+//
+//                    }
+//                }
+//            });
         }
 
 
@@ -179,6 +183,7 @@ public class HomeFragment extends Fragment {
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(adsListAdapter);
+
 
     }
 
@@ -231,8 +236,29 @@ public class HomeFragment extends Fragment {
             str.append("Country Code: " + address.getCountryCode() + "\n");
             String strAddress = str.toString();
             Log.d("address", strAddress);
-            currentLocation = address.getLocality().toLowerCase();
+            currentLocation = address.getLocality().trim().toLowerCase().toString();
+            Toast.makeText(getActivity(), "one "+currentLocation,
+                    Toast.LENGTH_LONG).show();
             Log.d("city", currentLocation);
+
+
+
+            db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
+                            Ads ads = doc.getDocument().toObject(Ads.class);
+                            AdsList.add(ads);
+                            Log.d("doc", doc.getDocument().toString());
+                            adsListAdapter.notifyDataSetChanged();
+                        }
+
+                    }
+                }
+            });
         }
     }
 

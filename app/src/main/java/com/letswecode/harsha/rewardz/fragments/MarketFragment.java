@@ -1,6 +1,7 @@
 package com.letswecode.harsha.rewardz.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -28,6 +30,8 @@ public class MarketFragment extends Fragment {
     FirebaseFirestore db;
     FirebaseUser user;
 
+    private ShimmerFrameLayout mShimmerViewContainer;
+
     RecyclerView mainlist;
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
@@ -38,6 +42,7 @@ public class MarketFragment extends Fragment {
         //with the fragment you want to inflate
         //like if the class is HomeFragment it should have R.layout.home_fragment
         //if it is DashboardFragment it should have R.layout.fragment_dashboard
+        Log.d("life","onCreateView");
         return inflater.inflate(R.layout.fragment_market, null);
     }
 
@@ -71,6 +76,15 @@ public class MarketFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // initialise your views
 
+        mShimmerViewContainer =  view.findViewById(R.id.shimmer_view_container);
+        mShimmerViewContainer.startShimmerAnimation();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.INVISIBLE);
+            }
+        }, 5000);
 
         mainlist = view.findViewById(R.id.recyclerView);
         mainlist.setHasFixedSize(true);
