@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:padding="@dimen/padding_10"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         shimmer:duration="800">
 
         <!-- Adding 3 rows of placeholders -->

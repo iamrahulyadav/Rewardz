@@ -104,9 +104,23 @@ public class ProfileFragment extends Fragment {
                     _city = doc.get("City").toString();
                     adPublisher.setChecked(Boolean.parseBoolean(doc.get("AdPublisher").toString()));
                     _adPublisher = doc.get("AdPublisher").toString();
-                    Picasso.get()
-                            .load(doc.get("PhotoUri").toString())
-                            .into(displayPic);
+                    try{
+                        Picasso.get()
+                                .load(doc.get("PhotoUri").toString())
+                                .into(displayPic);
+                    }
+                    catch (Exception e ){
+                        Log.d("profile pic exception",e.getMessage());
+                        Picasso.get().load(R.drawable.ic_account_circle_black_24dp).into(displayPic);
+                    }
+//                    if(doc.get("PhotoUri").toString() != null){
+//                        Picasso.get()
+//                                .load(doc.get("PhotoUri").toString())
+//                                .into(displayPic);
+//                    }else{
+//                        Picasso.get().load(R.drawable.ic_account_circle_black_24dp).into(displayPic);
+//                    }
+
                     _photoUri = doc.get("PhotoUri").toString();
                     progressBar.setVisibility(View.INVISIBLE);
                 }

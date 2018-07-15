@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -67,6 +69,8 @@ public class HomeFragment extends Fragment {
     String currentLocation;
     double Lat, Lon;
 
+    private ShimmerFrameLayout mShimmerViewContainer;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,13 +94,13 @@ public class HomeFragment extends Fragment {
             // for ActivityCompat#requestPermissions for more details.
 
             Dexter.withActivity(getActivity())
-                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE)
+                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE)
                     .withListener(new MultiplePermissionsListener() {
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
-                                Toast.makeText(getActivity(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(getContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
                             }
                             if (report.isAnyPermissionPermanentlyDenied()) {
                                 // show alert dialog navigating to Settings
@@ -111,7 +115,7 @@ public class HomeFragment extends Fragment {
                     }).withErrorListener(new PermissionRequestErrorListener() {
                 @Override
                 public void onError(DexterError error) {
-                    Toast.makeText(getActivity(), "Error occurred! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error occurred!! "+ error.toString(), Toast.LENGTH_SHORT).show();
                 }
             }).onSameThread()
                     .check();
@@ -139,7 +143,7 @@ public class HomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         AdsList = new ArrayList<>();
-        adsListAdapter = new AdsListAdapter(AdsList);
+        adsListAdapter = new AdsListAdapter(getContext() ,AdsList);
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -178,6 +182,15 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // initialise your views
 
+        mShimmerViewContainer =  view.findViewById(R.id.shimmer_view_container);
+        mShimmerViewContainer.startShimmerAnimation();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.INVISIBLE);
+            }
+        }, 5000);
 
         mainlist = view.findViewById(R.id.recyclerView);
         mainlist.setHasFixedSize(true);
@@ -227,38 +240,45 @@ public class HomeFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Address address = list.get(0);
-            StringBuilder str = new StringBuilder();
-            str.append("Name:" + address.getLocality() + "\n");
-            str.append("Sub-Admin Ares: " + address.getSubAdminArea() +"\n");
-            str.append("Admin Area: " + address.getAdminArea() + "\n");
-            str.append("Country: " + address.getCountryName() + "\n");
-            str.append("Country Code: " + address.getCountryCode() + "\n");
-            String strAddress = str.toString();
-            Log.d("address", strAddress);
-            currentLocation = address.getLocality().trim().toLowerCase().toString();
-            Toast.makeText(getActivity(), "one "+currentLocation,
-                    Toast.LENGTH_LONG).show();
-            Log.d("city", currentLocation);
+            try{
+                Address address = list.get(0);
+                StringBuilder str = new StringBuilder();
+                str.append("Name:" + address.getLocality() + "\n");
+                str.append("Sub-Admin Ares: " + address.getSubAdminArea() +"\n");
+                str.append("Admin Area: " + address.getAdminArea() + "\n");
+                str.append("Country: " + address.getCountryName() + "\n");
+                str.append("Country Code: " + address.getCountryCode() + "\n");
+                String strAddress = str.toString();
+                Log.d("address", strAddress);
+                currentLocation = address.getLocality().trim().toLowerCase().toString();
+                Toast.makeText(getActivity(), "one "+currentLocation,
+                        Toast.LENGTH_LONG).show();
+                Log.d("city", currentLocation);
+            }catch (Exception e){
+                Log.d("error in location", e.getMessage());
+            }
 
 
 
-            db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+           if(user!= null){
+               db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                   @Override
+                   public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-                            Ads ads = doc.getDocument().toObject(Ads.class);
-                            AdsList.add(ads);
-                            Log.d("doc", doc.getDocument().toString());
-                            adsListAdapter.notifyDataSetChanged();
-                        }
+                       for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                    }
-                }
-            });
+                           if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
+                               Ads ads = doc.getDocument().toObject(Ads.class);
+                               AdsList.add(ads);
+                               Log.d("doc", doc.getDocument().toString());
+                               adsListAdapter.notifyDataSetChanged();
+                           }
+
+                       }
+                   }
+               });
+           }
         }
     }
 

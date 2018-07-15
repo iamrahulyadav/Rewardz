@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/auth_bg_anim_list"
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/parentLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/list_item_bg"
         android:layout_marginLeft="@dimen/feed_item_margin"
         android:layout_marginRight="@dimen/feed_item_margin"
         android:layout_marginTop="@dimen/feed_item_margin"
-        android:background="@drawable/list_item_bg"
         android:orientation="vertical"
         android:paddingBottom="@dimen/feed_item_padding_top_bottom"
-        android:paddingTop="@dimen/feed_item_padding_top_bottom">
+        android:paddingTop="@dimen/feed_item_padding_top_bottom" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/feed_item_padding_left_right"
-            android:paddingRight="@dimen/feed_item_padding_left_right">
+            android:paddingRight="@dimen/feed_item_padding_left_right" >
 
             <ImageView
                 android:id="@+id/profilePic"
@@ -35,7 +35,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd">
+                android:paddingLeft="@dimen/feed_item_profile_info_padd" >
 
                 <TextView
                     android:id="@+id/name"
@@ -74,17 +74,28 @@
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:text="url dummy"
-            android:visibility="gone"
             android:textColorLink="@color/link" />
 
         <ImageView
             android:id="@+id/adBanner"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:background="@android:color/white"
             android:scaleType="fitXY"
-            android:visibility="gone"
+            android:visibility="visible"
             app:srcCompat="@drawable/ic_dashboard_black_24dp" />
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/adVideo"
+            android:visibility="gone"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/redeemButton"
+            android:background="@drawable/auth_bg_gradient_two"
+            android:textColor="@android:color/white"
+            android:text="Redeem"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.letswecode.harsha.rewardz.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.letswecode.harsha.rewardz.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.adapter.AdsListAdapter;
 import com.letswecode.harsha.rewardz.modal.Ads;
@@ -52,7 +54,7 @@ public class MarketFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         AdsList = new ArrayList<>();
-        adsListAdapter = new AdsListAdapter(AdsList);
+        adsListAdapter = new AdsListAdapter(getContext(),AdsList);
 
         db.collection("Published Ads").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

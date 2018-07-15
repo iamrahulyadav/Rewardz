@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="0dp"
-    android:background="@drawable/list_item_bg"
+    android:layout_marginTop="25dp"
+    android:layout_marginLeft="15dp"
+
 
     >
     <View
         android:id="@+id/thumbnail"
-        android:layout_width="@dimen/placeholderImage"
-        android:layout_height="@dimen/placeholderImage"
+        android:layout_width="@dimen/feed_item_profile_pic"
+        android:layout_height="@dimen/feed_item_profile_pic"
         android:layout_marginRight="@dimen/activityPadding"
         android:layout_marginTop="@dimen/padding_10"
         android:background="@color/background"
@@ -26,7 +26,8 @@
         <View
             android:layout_width="100dp"
             android:layout_height="@dimen/placeholderTextHeight"
-            android:background="@color/background" />
+            android:background="@color/background"
+            />
         <View
             android:layout_width="30dp"
             android:layout_height="@dimen/placeholderTextHeight"
@@ -50,7 +51,8 @@
             android:layout_width="30dp"
             android:layout_height="@dimen/placeholderTextHeight"
             android:layout_marginTop="5dp"
-            android:background="@color/background" />
+            android:background="@color/background"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <LinearLayout
@@ -65,7 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_margin="@dimen/padding_10"
-            android:background="@color/background" />
+            android:background="@color/background"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

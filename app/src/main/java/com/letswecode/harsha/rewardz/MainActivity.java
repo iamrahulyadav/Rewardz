@@ -167,33 +167,37 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (savedVersionCode == DOESNT_EXIST) {
 
-            // TODO This is a new install (or the user cleared the shared preferences)
-            Dexter.withActivity(this)
-                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .withListener(new MultiplePermissionsListener() {
-                        @Override
-                        public void onPermissionsChecked(MultiplePermissionsReport report) {
-                            // check if all permissions are granted
-                            if (report.areAllPermissionsGranted()) {
-                                Toast.makeText(getApplicationContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
-                            }
-                            if (report.isAnyPermissionPermanentlyDenied()) {
-                                // show alert dialog navigating to Settings
-                                showSettingsDialog();
-                            }
-                        }
+            Toast.makeText(MainActivity.this, "First RUN",Toast.LENGTH_SHORT).show();
 
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                            token.continuePermissionRequest();
-                        }
-                    }).withErrorListener(new PermissionRequestErrorListener() {
-                @Override
-                public void onError(DexterError error) {
-                    Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
-                }
-            }).onSameThread()
-                    .check();
+            // TODO This is a new install (or the user cleared the shared preferences)
+//            Dexter.withActivity(this)
+//                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
+//                    .withListener(new MultiplePermissionsListener() {
+//                        @Override
+//                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+//                            // check if all permissions are granted
+//                            if (report.areAllPermissionsGranted()) {
+//                                Toast.makeText(getApplicationContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
+//                            }
+//                            if (report.isAnyPermissionPermanentlyDenied()) {
+//                                // show alert dialog navigating to Settings
+//                                showSettingsDialog();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+//                            token.continuePermissionRequest();
+//                        }
+//                    }).withErrorListener(new PermissionRequestErrorListener() {
+//                @Override
+//                public void onError(DexterError error) {
+//                    Toast.makeText(getApplicationContext(), "Error occurred!!!! "+ error.toString(), Toast.LENGTH_LONG).show();
+//                    Log.d("permission error", error.toString());
+//                    System.out.println(error.toString());
+//                }
+//            }).onSameThread()
+//                    .check();
 
         } else if (currentVersionCode > savedVersionCode) {
 
