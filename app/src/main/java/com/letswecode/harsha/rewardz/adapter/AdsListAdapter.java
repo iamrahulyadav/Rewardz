@@ -106,21 +106,6 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
             ad_url = mView.findViewById(R.id.txtUrl);
             ad_banner = mView.findViewById(R.id.adBanner);
 
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(context, DetailAdActivity.class);
-//                    intent.putExtra("adPublisherPic", AdsList.get(getAdapterPosition()).getPublisher_image());
-//                    intent.putExtra("adPublisherName", AdsList.get(getAdapterPosition()).getPublisher_name());
-//                    intent.putExtra("adExpiresOn", AdsList.get(getAdapterPosition()).getExpires_on());
-//                    intent.putExtra("adBanner", AdsList.get(getAdapterPosition()).getAd_banner());
-//                    intent.putExtra("adDescription", AdsList.get(getAdapterPosition()).getAd_description());
-//                    intent.putExtra("adUrl", AdsList.get(getAdapterPosition()).getAd_url());
-//                    intent.putExtra("adType", AdsList.get(getAdapterPosition()).getAd_type());
-//                    intent.putExtra("adVideoUrl", AdsList.get(getAdapterPosition()).getVideo_url());
-//                    intent.putExtra("adPoints", AdsList.get(getAdapterPosition()).getPoints());
-//                }
-//            });
 
         }
     }

@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -66,7 +67,7 @@ public class HomeFragment extends Fragment {
     RecyclerView mainlist;
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
-    String currentLocation;
+    public String currentLocation;
     double Lat, Lon;
 
     private ShimmerFrameLayout mShimmerViewContainer;
@@ -123,6 +124,18 @@ public class HomeFragment extends Fragment {
 
             return;
         }
+//TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW
+        //code block to get the write_settings permission
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            boolean settingsCanWrite = Settings.System.canWrite(getContext());
+            if(!settingsCanWrite){
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }//end of obtaining permission to write settings. WE NEED THIS IN ORDER TO CHANGE RINGTONE.
+
 
         client.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
             @Override
@@ -154,28 +167,10 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getActivity(), "one "+userCurrentLocation+" two "+currentLocation,
                     Toast.LENGTH_SHORT).show();
 
-//            db.collection("Published Ads").whereEqualTo("city", userCurrentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                @Override
-//                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//
-//                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-//
-//                        if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-//                            Ads ads = doc.getDocument().toObject(Ads.class);
-//                            AdsList.add(ads);
-//                            Log.d("doc", doc.getDocument().toString());
-//                            adsListAdapter.notifyDataSetChanged();
-//                        }
-//
-//                    }
-//                }
-//            });
+            //Here I had the code of getting ads from db, but i moved it down
+
         }
 
-
-
-
-//
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {

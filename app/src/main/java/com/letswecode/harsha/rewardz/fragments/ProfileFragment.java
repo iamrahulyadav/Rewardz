@@ -22,7 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.ui.ProfileUpdateActivity;
 import com.squareup.picasso.Picasso;
@@ -30,7 +32,7 @@ import com.squareup.picasso.Picasso;
 public class ProfileFragment extends Fragment {
 
     Button updateProfile;
-    TextView displayName, mobileNumber, city;
+    TextView displayName, mobileNumber, city, rewardPoints;
     Switch adPublisher;
     ImageView displayPic;
     ProgressBar progressBar;
@@ -69,7 +71,7 @@ public class ProfileFragment extends Fragment {
         adPublisher = view.findViewById(R.id.adpublisher);
         displayPic = view.findViewById(R.id.displaypic);
         progressBar = view.findViewById(R.id.progressBar);
-
+        rewardPoints = view.findViewById(R.id.points);
         readUserProfile();
 
 
@@ -88,9 +90,64 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    //TODO: Add transaction history of user
+
+
     private void readUserProfile() {
-        progressBar.setVisibility(View.VISIBLE);
+//TODO: changed onSuccessListener to snapshotChangedListener run it and check for errors
+        //TODO: IF above works well remove below commented code.
         DocumentReference userdata = db.collection("usersProfile").document(user.getUid());
+        userdata.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("ERROR", e.getMessage());
+                    return;
+                }
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Log.d("doc",documentSnapshot.getData().toString());
+
+                    displayName.setText(documentSnapshot.get("DisplayName").toString());
+                    _displayName = documentSnapshot.get("DisplayName").toString();
+                    mobileNumber.setText(documentSnapshot.get("Phone").toString());
+                    _mobileNumber = documentSnapshot.get("Phone").toString();
+                    city.setText(documentSnapshot.get("City").toString());
+                    _city = documentSnapshot.get("City").toString();
+                    adPublisher.setChecked(Boolean.parseBoolean(documentSnapshot.get("AdPublisher").toString()));
+                    _adPublisher = documentSnapshot.get("AdPublisher").toString();
+                    _photoUri = documentSnapshot.get("PhotoUri").toString();
+                    try{
+                        Picasso.get()
+                                .load(documentSnapshot.get("PhotoUri").toString())
+                                .into(displayPic);
+                    }
+                    catch (Exception error ){
+                        Log.d("profile pic exception",error.getMessage());
+                        Picasso.get().load(R.drawable.ic_account_circle_black_24dp).into(displayPic);
+                    }
+
+                }
+            }
+        });
+
+        //to get reward points
+        DocumentReference userRewards = db.collection("userRewards").document(user.getUid());
+        userRewards.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("ERROR", e.getMessage());
+                    return;
+                }
+                if (documentSnapshot != null && documentSnapshot.exists()){
+                    rewardPoints.setText(documentSnapshot.get("Rewards").toString());
+                }
+
+            }
+        });
+
+        //progressBar.setVisibility(View.VISIBLE); //TODO: ADD SHIMMER EFFECT
+      /*  DocumentReference userdata = db.collection("usersProfile").document(user.getUid());
         userdata.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -125,13 +182,12 @@ public class ProfileFragment extends Fragment {
                     progressBar.setVisibility(View.INVISIBLE);
                 }
             }
-        })
-            .addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("error", e.getMessage());
                 }
-            });
+            }); */
 
     }
 }

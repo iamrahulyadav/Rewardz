@@ -15,9 +15,9 @@
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="@string/title_Profile" />
-    <item
+   <!-- <item
         android:id="@+id/navigation_notification"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notification" />
+        android:title="@string/title_notification" /> -->
 
 </menu>

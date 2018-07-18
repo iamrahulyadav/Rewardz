@@ -63,6 +63,9 @@ public class DetailAdActivity extends AppCompatActivity {
         Redeem_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: deduct the points from user wallet in DB. and add this to transaction table
+                //TODO: ->which contains AD-id, User-id, TimeSpan.
+                //TODO: ADD coupon code attribute to published adds document and show the code here after deducting the points
                 Toast.makeText(DetailAdActivity.this, "Redeemed "+adPoints+ " not connected to DB",Toast.LENGTH_LONG).show();
             }
         });

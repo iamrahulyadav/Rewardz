@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import com.letswecode.harsha.rewardz.fragments.HomeFragment;
 import com.letswecode.harsha.rewardz.fragments.MarketFragment;
 import com.letswecode.harsha.rewardz.fragments.NotificationFragment;
 import com.letswecode.harsha.rewardz.fragments.ProfileFragment;
+import com.letswecode.harsha.rewardz.service.DownloadRt;
 
 import java.util.List;
 //import com.letswecode.harsha.rewardz.fragments.SupportFragment;
@@ -60,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     fragment = new ProfileFragment();
                     break;
-                case R.id.navigation_notification:
-                    fragment = new NotificationFragment();
-                    break;
+//                case R.id.navigation_notification:
+//                    fragment = new NotificationFragment();
+//                    break;
             }
             return loadFragment(fragment);
         }
@@ -70,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme); //for slpash screen runs only app taking long time to initialize
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+//TODO: first check internet connection then proceed
         //checking first run of app
         checkFirstRun();
 
@@ -108,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+//TODO:uncmnt this service inoreder  to run service
+        //starting service
+        Intent intent = new Intent(MainActivity.this, DownloadRt.class);
+        ContextCompat.startForegroundService(this,intent);
     }
 
     private boolean loadFragment(Fragment fragment) {
