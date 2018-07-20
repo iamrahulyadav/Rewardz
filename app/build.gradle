@@ -37,6 +37,8 @@ dependencies {
 
     implementation 'org.apache.commons:commons-io:1.3.2'
 
+    implementation 'com.vipulasri:ticketview:1.0.5'// for coupon code layout
+
     implementation 'com.android.support:support-v4:27.1.1'
 
     implementation 'com.google.android.gms:play-services-base:15.0.1'

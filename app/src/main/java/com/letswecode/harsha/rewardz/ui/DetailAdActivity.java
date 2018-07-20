@@ -1,10 +1,15 @@
 package com.letswecode.harsha.rewardz.ui;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,7 +39,8 @@ public class DetailAdActivity extends AppCompatActivity {
     private static final String USER_ID_KEY ="user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code";
 
     ImageView Publisher_pic, Ad_banner;
-    TextView Publisher_name, Expires_on, Ad_description, Ad_url;
+    TextView Publisher_name, Expires_on, Ad_description, Ad_url, couponCode;
+    Dialog myDialog;
     VideoView Ad_video;
     Button Redeem_button;
     String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode;
@@ -161,6 +167,13 @@ public class DetailAdActivity extends AppCompatActivity {
 
     private void showCouponCode() {
         Log.d("coupon",adCouponCode);
+        myDialog = new Dialog(this);
+        myDialog.setContentView(R.layout.coupon_code_alert);
+        couponCode = myDialog.findViewById(R.id.copuon_code);
+        couponCode.setText(adCouponCode);
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.show();
+
         Toast.makeText(this, adCouponCode,Toast.LENGTH_LONG).show();
 
     }

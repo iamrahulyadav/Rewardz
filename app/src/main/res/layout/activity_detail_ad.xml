@@ -6,6 +6,7 @@
     android:background="@drawable/auth_bg_anim_list"
     android:orientation="vertical" >
 
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -97,5 +98,6 @@
             android:textColor="@android:color/white"
             android:text="Redeem"/>
     </LinearLayout>
+
 
 </LinearLayout>

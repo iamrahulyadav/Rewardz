@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.vipulasri.ticketview.TicketView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/ticketView"
+        android:layout_centerInParent="true"
+        app:orientation="horizontal"
+        app:scallopRadius="10dp"
+        app:showBorder="false"
+        app:scallopPositionPercent="50"
+        app:showDivider="false"
+        app:dividerType="normal"
+        app:dividerPadding="0dp"
+        app:ticketElevation="14dp" >
+
+    </com.vipulasri.ticketview.TicketView>
+    <TextView
+        android:id="@+id/copuon_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/coupon_code"
+        android:textSize="40sp"
+        android:textAlignment="center"
+        android:textColor="@color/purple_500"
+        />
+
+
+</RelativeLayout>
