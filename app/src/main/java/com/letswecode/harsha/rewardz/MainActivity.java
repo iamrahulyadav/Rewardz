@@ -1,6 +1,5 @@
 package com.letswecode.harsha.rewardz;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,27 +16,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.letswecode.harsha.rewardz.authentication.LoginActivity;
 import com.letswecode.harsha.rewardz.authentication.SignupActivity;
 import com.letswecode.harsha.rewardz.fragments.HomeFragment;
 import com.letswecode.harsha.rewardz.fragments.MarketFragment;
-import com.letswecode.harsha.rewardz.fragments.NotificationFragment;
 import com.letswecode.harsha.rewardz.fragments.ProfileFragment;
+import com.letswecode.harsha.rewardz.fragments.WalletFragment;
 import com.letswecode.harsha.rewardz.service.DownloadRt;
-
-import java.util.List;
 //import com.letswecode.harsha.rewardz.fragments.SupportFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     fragment = new ProfileFragment();
                     break;
-//                case R.id.navigation_notification:
-//                    fragment = new NotificationFragment();
-//                    break;
+                case R.id.navigation_wallet:
+                  fragment = new WalletFragment();
+                    break;
             }
             return loadFragment(fragment);
         }

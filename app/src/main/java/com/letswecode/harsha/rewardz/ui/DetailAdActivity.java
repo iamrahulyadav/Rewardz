@@ -29,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.letswecode.harsha.rewardz.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +38,8 @@ import javax.annotation.Nullable;
 
 public class DetailAdActivity extends AppCompatActivity {
 
-    private static final String USER_ID_KEY ="user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code";
+    private static final String USER_ID_KEY ="user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code",
+            TIMESTAMP_KEY = "time_stamp", PUBLISHER_NAME_KEY = "publisher_name", EXPIRES_ON_KEY = "expires_on";
 
     ImageView Publisher_pic, Ad_banner;
     TextView Publisher_name, Expires_on, Ad_description, Ad_url, couponCode;
@@ -102,18 +105,7 @@ public class DetailAdActivity extends AppCompatActivity {
 
 
 
-                //code to add transaction to db
-//                Map< String, Object > newUserTransaction = new HashMap< >();
-//                newUserTransaction.put(USER_ID_KEY, user.getUid());
-//                newUserTransaction.put(POINTS_KEY,adPoints);
-//                newUserTransaction.put(COUPON_CODE_KEY,adCouponCode);
-//
-//                db.collection("Transactions").add(newUserTransaction).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d("transaction", " success "+user.getUid());
-//                    }
-//                });
+
 
 
             }
@@ -166,6 +158,7 @@ public class DetailAdActivity extends AppCompatActivity {
     }
 
     private void showCouponCode() {
+        addTransactionToDB();
         Log.d("coupon",adCouponCode);
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.coupon_code_alert);
@@ -177,4 +170,35 @@ public class DetailAdActivity extends AppCompatActivity {
         Toast.makeText(this, adCouponCode,Toast.LENGTH_LONG).show();
 
     }
+
+    private void addTransactionToDB() {
+        //code to add transaction to db
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = sdf.format(c.getTime());
+
+
+        Map< String, Object > newUserTransaction = new HashMap< >();
+        newUserTransaction.put(USER_ID_KEY, user.getUid());
+        newUserTransaction.put(POINTS_KEY,adPoints);
+        newUserTransaction.put(PUBLISHER_NAME_KEY, adPublisherName);
+        newUserTransaction.put(COUPON_CODE_KEY,adCouponCode);
+        newUserTransaction.put(TIMESTAMP_KEY, timestamp);
+        newUserTransaction.put(EXPIRES_ON_KEY, adExpiresOn);
+
+        db.collection("Transactions").add(newUserTransaction).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d("transaction", " success "+user.getUid());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Unable to make transaction, please try later",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
 }
