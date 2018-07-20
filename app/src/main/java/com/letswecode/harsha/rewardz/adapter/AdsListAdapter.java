@@ -68,6 +68,7 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
                     intent.putExtra("adType", AdsList.get(position).getAd_type());
                     intent.putExtra("adVideoUrl", AdsList.get(position).getVideo_url());
                     intent.putExtra("adPoints", AdsList.get(position).getPoints());
+                    intent.putExtra("adCouponCode", AdsList.get(position).getCoupon_code());
                     context.startActivity(intent);
             }
         });

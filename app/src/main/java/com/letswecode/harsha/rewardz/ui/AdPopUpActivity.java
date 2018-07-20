@@ -165,13 +165,9 @@ public class AdPopUpActivity extends Activity {
     }
 
     private void callAd() {
-       // Random random = new Random();// TODO: remove all these cmnted stuff no need
-        //final int index = random.nextInt(adsID.size());
-       // Log.d("doc","size is: "+ adsID.size());
-       // Log.d("doc","index is: "+ index);
-        //Integer no = (int)(Math.random()*10);
+
         SharedPreferences sharedPreferences = getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-        String adID = sharedPreferences.getString(REWARDZ_TONE,"Jc6OL62fppCobePAgy0t");
+        String adID = sharedPreferences.getString(REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");
         Log.d("ringtone","adID from pref "+adID);
         DocumentReference randomAd = db.collection("Published Ads").document(adID);
         randomAd.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -229,6 +225,11 @@ public class AdPopUpActivity extends Activity {
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getApplicationContext(), "Rewards updated to: " + update_points + ".", Toast.LENGTH_SHORT).show();
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Unable to process request now, please try later.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -244,6 +245,7 @@ public class AdPopUpActivity extends Activity {
         intent.putExtra("adType", doc.get("ad_type").toString());
         intent.putExtra("adVideoUrl", doc.get("video_url").toString());
         intent.putExtra("adPoints",doc.get("points").toString());
+        intent.putExtra("adCouponCode", doc.get("coupon_code").toString());
 
         startActivity(intent);
 //removing the ad dailog activity from the stack.

@@ -111,9 +111,9 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             mobileNumber = extras.getString("MOBILE__NUMBER");
             city = extras.getString("CITY__NAME");
             adPublisher = extras.getString("AD__PUBLISHER");;
-            photoUri = extras.getString("PHOTO__URL");
+            photoUri = extras.getString("PHOTO__URI");
 
-            Log.d("extras", extras.toString());
+            Log.d("extras", photoUri);
 
             displaynameTV.setText(displayName);
             mobilenumberTV.setText(mobileNumber);
@@ -121,6 +121,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             adpublisherSW.setChecked(Boolean.parseBoolean(adPublisher));
             //imageViewIV.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131"));//(Uri.parse(photoUri));
             //TODO:apply glide properly and check it out later
+            Log.d("photo",extras.getString("PHOTO__URI"));
             Picasso.get()
                     .load(photoUri)//"https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131")
                     .into(imageViewIV);
@@ -203,7 +204,8 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     }
 
     private void addNewUser() {
-
+//TODO:MAKE sure user dont leave any field empty which in turn crashes app when we try to retrive data from FIREBASE
+        //TODO: if user wont upload a photo app crashes while retriving make it empty if not uploaded (code written test it once)
         progressBar2.setVisibility(View.VISIBLE);
 
         displayName = displaynameTV.getText().toString();
@@ -213,8 +215,13 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         city = cityTV.getText().toString();
         adPublisher = Boolean.toString(adpublisherSW.isChecked());
         rewards = "0";
-        photoUri = downloadUri.toString();
-        Log.i("photouri", photoUri);//TODO: change with uploaded image URL (guess finished have to check)
+        if(downloadUri.toString()!=null){
+            photoUri = downloadUri.toString();
+        }
+        else {
+            photoUri = " ";
+        }
+        Log.i("photouri", photoUri);//TODO: change with uploaded image URL - FINISHED
 
         Map< String, Object > newUser = new HashMap< >();
         newUser.put(NAME_KEY, displayName);
@@ -248,15 +255,15 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     }
 
-    //TODO: create a UpdateUser method if existing user came to this activity from profile page.
+    //TODO: create a UpdateUser method if existing user came to this activity from profile page.-- FINISHED
     private void updateUser() {
 
         progressBar2.setVisibility(View.VISIBLE);
         DocumentReference updatingProfile = db.collection("usersProfile").document(user.getUid());
-        updatingProfile.update(NAME_KEY, displayName);
-        updatingProfile.update(PHONE_KEY, mobileNumber);
-        updatingProfile.update(CITY_KEY, city);
-        updatingProfile.update(ADPUBLISHER_KEY, adPublisher);
+        updatingProfile.update(NAME_KEY, displaynameTV.getText().toString());
+        updatingProfile.update(PHONE_KEY, mobilenumberTV.getText().toString());
+        updatingProfile.update(CITY_KEY, cityTV.getText().toString());
+        updatingProfile.update(ADPUBLISHER_KEY, Boolean.toString(adpublisherSW.isChecked()));
         updatingProfile.update(PHOTOURI_KEY, photoUri).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

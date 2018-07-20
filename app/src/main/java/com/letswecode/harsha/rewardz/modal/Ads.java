@@ -13,8 +13,9 @@ public class Ads {
     String publisher_image;
     String publisher_name;
     String video_url;
+    String coupon_code;
 
-    public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city, String created_on, String expires_on, String points, String publisher_image, String publisher_name, String video_url) {
+    public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city, String created_on, String expires_on, String points, String publisher_image, String publisher_name, String video_url, String coupon_code) {
         this.ad_banner = ad_banner;
         this.ad_type = ad_type;
         this.ad_description = ad_description;
@@ -26,6 +27,7 @@ public class Ads {
         this.publisher_image = publisher_image;
         this.publisher_name = publisher_name;
         this.video_url = video_url;
+        this.coupon_code = coupon_code;
     }
 
 
@@ -34,18 +36,6 @@ public class Ads {
     }
 
 
-
-//    public Ads(String ad_banner, String ad_type, String city, String created_on, String expires_on, String points, String publisher_image, String publisher_name, String video_url) {
-//        this.ad_banner = ad_banner;
-//        this.ad_type = ad_type;
-//        this.city = city;
-//        this.created_on = created_on;
-//        this.expires_on = expires_on;
-//        this.points = points;
-//        this.publisher_image = publisher_image;
-//        this.publisher_name = publisher_name;
-//        this.video_url = video_url;
-//    }
 
 
     public String getAd_banner() {
@@ -134,6 +124,13 @@ public class Ads {
 
     public void setAd_url(String ad_url) {
         this.ad_url = ad_url;
+    }
+
+    public String getCoupon_code(){
+        return coupon_code;
+    }
+    public void setCoupon_code(String coupon_code){
+        this.coupon_code = coupon_code;
     }
 
 }

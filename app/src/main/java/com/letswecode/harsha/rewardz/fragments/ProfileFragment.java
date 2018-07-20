@@ -115,7 +115,7 @@ public class ProfileFragment extends Fragment {
                     _city = documentSnapshot.get("City").toString();
                     adPublisher.setChecked(Boolean.parseBoolean(documentSnapshot.get("AdPublisher").toString()));
                     _adPublisher = documentSnapshot.get("AdPublisher").toString();
-                    _photoUri = documentSnapshot.get("PhotoUri").toString();
+                    //_photoUri = documentSnapshot.get("PhotoUri").toString();
                     try{
                         Picasso.get()
                                 .load(documentSnapshot.get("PhotoUri").toString())
@@ -125,6 +125,8 @@ public class ProfileFragment extends Fragment {
                         Log.d("profile pic exception",error.getMessage());
                         Picasso.get().load(R.drawable.ic_account_circle_black_24dp).into(displayPic);
                     }
+                    _photoUri = documentSnapshot.getString("PhotoUri").toString();
+                    Log.d("photo",_photoUri);
 
                 }
             }

@@ -41,7 +41,7 @@ public class DownloadRt extends Service {
     FirebaseUser user;
     FirebaseStorage storage;
     public String ringtoneDownloadUrl;
-    public boolean downlaoded_for_today = true;
+   public boolean downlaoded_for_today = true;
 
     @Override
     public void onCreate() {
@@ -68,19 +68,21 @@ public class DownloadRt extends Service {
                .build();
        startForeground(1, notification);
 
-
-
-         storage = FirebaseStorage.getInstance();
-
-//TODO:get ringtones from firebase storage and save in user device. --FINISHED
-//TODO: dont download the songs ererytime take boolean in shared pref and check if they r downlaoded for today the stop the service
+        createFolder();
 
         //code to create a folder
+               stopSelf();
+
+        return START_STICKY;
+    }
+
+    private void createFolder() {
+
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
 
-                File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
-                        + getString(R.string.app_name));
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
+                    + getString(R.string.app_name));
             if(RewardzRingtoneFolder.isDirectory()){
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
@@ -91,8 +93,9 @@ public class DownloadRt extends Service {
             }
             Log.d("file", RewardzRingtoneFolder.getAbsolutePath());
             RewardzRingtoneFolder.mkdir();
-            downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile());
-        } else {
+           //downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
+        }
+        else {
             /* save the folder in internal memory of phone */
 
             File RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
@@ -107,17 +110,16 @@ public class DownloadRt extends Service {
                 }
             }
             RewardzRingtoneFolder.mkdir();
-            downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile());
+           // downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
             Log.d("file", RewardzRingtoneFolder.getAbsolutePath());
 
         }
-//        stopSelf();
 
-        return START_STICKY;
     }
 
     private void downloadRingtone(final File directory) {
 
+        storage = FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
