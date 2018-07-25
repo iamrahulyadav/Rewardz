@@ -2,6 +2,7 @@ package com.letswecode.harsha.rewardz.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -17,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -111,12 +114,36 @@ public class DetailAdActivity extends AppCompatActivity {
 
 
                 //code to show coupon code to user
-               deductRewardPoints();
+                user.reload();
+                if(user.isEmailVerified()){
+                    deductRewardPoints();
+                }
+               else{
+                    emailVerifyAlert();
+                }
 
             }
         });
 
     }
+
+    public  void sendEmailVerification() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Log.d("doc", "Verification email sent to " + user.getEmail());
+                        } else {
+                            Log.d("doc", "sendEmailVerification failed!", task.getException());
+                        }
+                    }
+                });
+    }
+
+
 
     private void deductRewardPoints() {
 
@@ -213,5 +240,42 @@ public class DetailAdActivity extends AppCompatActivity {
         });
     }
 
+    private void emailVerifyAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DetailAdActivity.this);
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.emailVerification_dailog_title));
+        // Setting Dialog Message
+        alertDialog.setMessage(getString(R.string.emailVerification_dailog_message));
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+        //make dailog stays on screen even clicks some where on screen
+        alertDialog.setCancelable(false);
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton(getString(R.string.resend_email), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed YES button. Write Logic Here
+                sendEmailVerification();
+                Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully), Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton(getString(R.string.dont_send_email), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed No button. Write Logic Here
+                Toast.makeText(getApplicationContext(), getString(R.string.dont_send_email_toast), Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Setting Netural "Cancel" Button
+        alertDialog.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed Cancel button. Write Logic Here
+                Toast.makeText(getApplicationContext(), "You clicked on Cancel",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
 
 }

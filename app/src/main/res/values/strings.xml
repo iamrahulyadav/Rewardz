@@ -30,6 +30,7 @@
     <string name="user_registred">User Registered.</string>
     <string name="updated_successfully">Updated Successfully</string>
     <string name="update_failed">Updated Failed, please try again</string>
+    <string name="btn_signOut">Sign out</string>
 
     <string name="display_name">Display name</string>
     <string name="city">City</string>
@@ -58,7 +59,14 @@
     <string name="dummy_timestamp">timestamp dummy</string>
     <string name="dummy_text">text status dummy</string>
     <string name="dummy_url">url dummy</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
-
+    <string name="emailVerification_dailog_title">Email not verified!</string>
+    <string name="emailVerification_dailog_message">You haven\'t verified your email. You can\'t redeem till you verify your email. Do you want us to send you verification link again! or will you check your mail!</string>
+    <string name="resend_email">Send me mail</string>
+    <string name="dont_send_email">No, don\'t send</string>
+    <string name="dont_send_email_toast">"You clicked on don\'t send eamil"</string>
+    <string name="email_sent_sucessfully">Email sent successfully, check your mail box..</string>
+    <string name="emailVerification_profile_text">Email not verified - CLICK TO VERIFY NOW!</string>
 
 </resources>

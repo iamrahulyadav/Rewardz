@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,13 +27,14 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.letswecode.harsha.rewardz.R;
+import com.letswecode.harsha.rewardz.authentication.LoginActivity;
 import com.letswecode.harsha.rewardz.ui.ProfileUpdateActivity;
 import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
 
     Button updateProfile;
-    TextView displayName, mobileNumber, city, rewardPoints;
+    TextView displayName, mobileNumber, city, rewardPoints ,emailVerified;
     Switch adPublisher;
     ImageView displayPic;
     ProgressBar progressBar;
@@ -41,6 +43,7 @@ public class ProfileFragment extends Fragment {
 
     FirebaseFirestore db;
     FirebaseUser user;
+
 
     @Nullable
     @Override
@@ -72,7 +75,19 @@ public class ProfileFragment extends Fragment {
         displayPic = view.findViewById(R.id.displaypic);
         progressBar = view.findViewById(R.id.progressBar);
         rewardPoints = view.findViewById(R.id.points);
+        emailVerified = view.findViewById(R.id.emailVerified);
+
         readUserProfile();
+        user.reload();
+        if(!user.isEmailVerified()){
+            emailVerified.setVisibility(View.VISIBLE);
+        }
+        emailVerified.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmailVerification();
+            }
+        });
 
 
         updateProfile.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +103,22 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             }
         });
+    }
+
+    public  void sendEmailVerification() {
+
+        user.sendEmailVerification()
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Log.d("doc", "Verification email sent to " + user.getEmail());
+                        } else {
+                            Log.d("doc", "sendEmailVerification failed!", task.getException());
+                        }
+                    }
+                });
     }
 
     //TODO: Add transaction history of user

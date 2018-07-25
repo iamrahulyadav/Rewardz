@@ -27,12 +27,15 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     public static final String REWARDZ_PREFS_TONE = "com.letswecode.harsha.rewardz.receiver";
     public static final String REWARDZ_TONE= "AD_ID";
     public static final String OLD_REWARDZ_TONE = "OLD_REWARDZ_TONE";
+    boolean isIncoming = false;
+    static long start_time, end_time;
 
     File[] ringtones;
     File RewardzRingtoneFolder, ringtoneFile, selectedRingtone;
     @Override
     public void onReceive(final Context context, final Intent intent) {
         String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+        isIncoming = true;
 
        try{
            if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)){
@@ -83,27 +86,32 @@ public class PhoneStateReceiver extends BroadcastReceiver {
            if ((state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))){
                //Toast.makeText(context,"Received State",Toast.LENGTH_SHORT).show();
                Log.d("phoneCall","Rceived state");
+               start_time = System.currentTimeMillis();
            }
            if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
-               //Toast.makeText(context,"Idle State",Toast.LENGTH_SHORT).show();
 
+               end_time = System.currentTimeMillis();
+               long total_time = end_time - start_time;
+               Log.d("doc",String.valueOf(total_time));
                 //Intent to call dailog activity to show ad and update reward points to user after call ends
-               final Intent i = new Intent(context, AdPopUpActivity.class);
-               i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-               i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-               i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+               if(total_time >= 30000 && isIncoming ){
+                   Toast.makeText(context,"call duration: "+ total_time,Toast.LENGTH_SHORT).show();
+                   final Intent i = new Intent(context, AdPopUpActivity.class);
+                   i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                   i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                   i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 
-
-               new Handler().postDelayed(new Runnable()
-               {
-                   @Override
-                   public void run()
+                   new Handler().postDelayed(new Runnable()
                    {
-                       context.startActivity(i);
-                   }
-               },500);
+                       @Override
+                       public void run()
+                       {
+                           context.startActivity(i);
+                       }
+                   },500);
 
-
+               }
+                    isIncoming = false;
            }
        }
        catch (Exception e) {

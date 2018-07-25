@@ -58,21 +58,25 @@ public class CouponsFragment extends Fragment {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+               try{
+                   for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                    if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-                        Transactions transactions = doc.getDocument().toObject(Transactions.class);
-                        TransactionsList.add(transactions);
-                        Log.d("doc", doc.getDocument().toString());
-                        try{
-                            couponsListAdapter.notifyDataSetChanged();
-                        }catch (Exception error){
-                            Log.d("rewardz", error.getMessage());
-                        }
+                       if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
+                           Transactions transactions = doc.getDocument().toObject(Transactions.class);
+                           TransactionsList.add(transactions);
+                           Log.d("doc", doc.getDocument().toString());
+                           try{
+                               couponsListAdapter.notifyDataSetChanged();
+                           }catch (Exception error){
+                               Log.d("rewardz", error.getMessage());
+                           }
 
-                    }
+                       }
 
-                }
+                   }
+               }catch (Exception err){
+                   Log.d("doc", "onErr: "+err.getMessage());
+               }
             }
         });
     }

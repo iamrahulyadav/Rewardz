@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -107,7 +108,8 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, getString(R.string.auth_failed)+ task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    addRewardsToUser();
+                                    addRewardsToUser();//adding rewadrs data to db under username
+                                    sendEmailVerification();
                                     startActivity(new Intent(SignupActivity.this, ProfileUpdateActivity.class));
                                     finish();
                                 }
@@ -116,6 +118,22 @@ public class SignupActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public  void sendEmailVerification() {
+
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Log.d("doc", "Verification email sent to " + user.getEmail());
+                        } else {
+                            Log.d("doc", "sendEmailVerification failed!", task.getException());
+                        }
+                    }
+                });
     }
 
     private void addRewardsToUser() {

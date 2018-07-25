@@ -231,58 +231,69 @@ public class HomeFragment extends Fragment {
 
     public void getCurrentCity(double Lat, double Lon) {
 
-        Geocoder gc = new Geocoder(getContext());
-        if(gc.isPresent()){
-            List<Address> list = null;
-            try {
-                list = gc.getFromLocation(Lat, Lon,1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try{
-                Address address = list.get(0);
-                StringBuilder str = new StringBuilder();
-                str.append("Name:" + address.getLocality() + "\n");
-                str.append("Sub-Admin Ares: " + address.getSubAdminArea() +"\n");
-                str.append("Admin Area: " + address.getAdminArea() + "\n");
-                str.append("Country: " + address.getCountryName() + "\n");
-                str.append("Country Code: " + address.getCountryCode() + "\n");
-                String strAddress = str.toString();
-                Log.d("address", strAddress);
-                currentLocation = address.getLocality().trim().toLowerCase().toString();
-                Toast.makeText(getActivity(), "one "+currentLocation,
-                        Toast.LENGTH_LONG).show();
-                Log.d("city", currentLocation);
-            }catch (Exception e){
-                Log.d("error in location", e.getMessage());
-            }
+        try{
+            Geocoder gc = new Geocoder(getContext());
+
+            if(gc.isPresent()){
+                List<Address> list = null;
+                try {
+                    list = gc.getFromLocation(Lat, Lon,1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try{
+                    Address address = list.get(0);
+                    StringBuilder str = new StringBuilder();
+                    str.append("Name:" + address.getLocality() + "\n");
+                    str.append("Sub-Admin Ares: " + address.getSubAdminArea() +"\n");
+                    str.append("Admin Area: " + address.getAdminArea() + "\n");
+                    str.append("Country: " + address.getCountryName() + "\n");
+                    str.append("Country Code: " + address.getCountryCode() + "\n");
+                    String strAddress = str.toString();
+                    Log.d("address", strAddress);
+                    currentLocation = address.getLocality().trim().toLowerCase().toString();
+                    Toast.makeText(getActivity(), "one "+currentLocation,
+                            Toast.LENGTH_LONG).show();
+                    Log.d("city", currentLocation);
+                }catch (Exception e){
+                    Log.d("error in location", e.getMessage());
+                }
 
 
 
 
-           if(user!= null){
-               db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                   @Override
-                   public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if(user!= null){
+                    db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                       for (final DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                            try{
+                                for (final DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                           if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.MODIFIED
-                               checkAlreadyRedeemed(doc);
-                                    Log.d("doc", "inside");
+                                    if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.MODIFIED
+                                        checkAlreadyRedeemed(doc);
+                                        Log.d("doc", "inside");
 //                                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
 //                                    AdsList.add(ads);
 //                                    Log.d("doc", doc.getDocument().getId().toString());
-                                   // adsListAdapter.notifyDataSetChanged();
+                                        // adsListAdapter.notifyDataSetChanged();
 
 
-                           }
+                                    }
 
-                       }
-                   }
-               });
-           }
+                                }
+                            }catch (Exception err){
+                                Log.d("doc", "onErrr: "+err.getMessage());
+                            }
+
+                        }
+                    });
+                }
+            }
+        }catch (Exception err){
+            Log.d("doc", err.getMessage());
         }
+
     }
 
 
@@ -294,17 +305,22 @@ public class HomeFragment extends Fragment {
         db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc.getDocument().getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
-                if(queryDocumentSnapshots.size()!= 0){
-                    alreadyReddemed[0] = true;
-                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-                }else {
-                    alreadyReddemed[0] = false;
-                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
-                    AdsList.add(ads);
-                    adsListAdapter.notifyDataSetChanged();
-                    Log.d("doc", doc.getDocument().getId().toString());
-                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+
+                try{
+                    Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
+                    if(queryDocumentSnapshots.size()!= 0){
+                        alreadyReddemed[0] = true;
+                        Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                    }else {
+                        alreadyReddemed[0] = false;
+                        Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
+                        AdsList.add(ads);
+                        adsListAdapter.notifyDataSetChanged();
+                        Log.d("doc", doc.getDocument().getId().toString());
+                        Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                    }
+                }catch (Exception err){
+                    Log.d("doc",err.getMessage());
                 }
             }
         });

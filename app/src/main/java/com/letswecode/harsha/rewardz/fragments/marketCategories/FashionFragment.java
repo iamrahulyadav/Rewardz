@@ -57,16 +57,20 @@ public class FashionFragment extends Fragment {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges()){
+                try{
+                    for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges()){
 
-                    if(doc.getType() == DocumentChange.Type.ADDED){ //DocumentChange.Type.ADDED
-                        checkAlreadyRedeemed(doc);
+                        if(doc.getType() == DocumentChange.Type.ADDED){ //DocumentChange.Type.ADDED
+                            checkAlreadyRedeemed(doc);
 //                        Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
 //                        AdsList.add(ads);
 //                        Log.d("doc", doc.getDocument().toString());
 //                        adsListAdapter.notifyDataSetChanged();
-                    }
+                        }
 
+                    }
+                }catch (Exception err){
+                    Log.d("doc","err "+err.getMessage());
                 }
             }
         });

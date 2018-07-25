@@ -18,6 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.letswecode.harsha.rewardz.authentication.LoginActivity;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    FirebaseUser user;
+    boolean emailVerified;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -94,7 +98,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
+        //reloading user to check wheter his/her email is verified or not(As firebase cache user data we have to reload)
+        user.reload();
+        emailVerified = user.isEmailVerified();
+        Log.d("doc", String.valueOf(emailVerified));
+        if(!emailVerified){
+            emailVerifyAlert();
+        }
         //loading the default home fragment
         loadFragment(new HomeFragment());
 
@@ -104,6 +114,60 @@ public class MainActivity extends AppCompatActivity {
         //starting service
         Intent intent = new Intent(MainActivity.this, DownloadRt.class);
         ContextCompat.startForegroundService(this,intent);
+    }
+
+    private void emailVerifyAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.emailVerification_dailog_title));
+        // Setting Dialog Message
+        alertDialog.setMessage(getString(R.string.emailVerification_dailog_message));
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+        //make dailog stays on screen even clicks some where on screen
+        alertDialog.setCancelable(false);
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton(getString(R.string.resend_email), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed YES button. Write Logic Here
+                sendEmailVerification();
+                Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully), Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton(getString(R.string.dont_send_email), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed No button. Write Logic Here
+                Toast.makeText(getApplicationContext(), getString(R.string.dont_send_email_toast), Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Setting Netural "Cancel" Button
+        alertDialog.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed Cancel button. Write Logic Here
+                Toast.makeText(getApplicationContext(), "You clicked on Cancel",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    public  void sendEmailVerification() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Log.d("doc", "Verification email sent to " + user.getEmail());
+                        } else {
+                            Log.d("doc", "sendEmailVerification failed!", task.getException());
+                        }
+                    }
+                });
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -135,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
                 //startActivity(new Intent(MainActivity.this, SettingActivity.class));
                 Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
                 return true;
+
+            case R.id.signOut:
+                auth.signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
 
             default:
                 return super.onOptionsItemSelected(item);
