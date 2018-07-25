@@ -23,7 +23,8 @@
         android:theme="@style/SplashTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,25 +33,31 @@
         </activity>
         <activity
             android:name=".authentication.SignupActivity"
-            android:theme="@style/AppThemeNoActionBar" />
+            android:theme="@style/AppThemeNoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".authentication.LoginActivity"
-            android:theme="@style/AppThemeNoActionBar" />
+            android:theme="@style/AppThemeNoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".authentication.ResetPasswordActivity"
-            android:theme="@style/AppThemeNoActionBar" />
+            android:theme="@style/AppThemeNoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.ProfileUpdateActivity"
             android:label="@string/title_Profile"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.DetailAdActivity"
             android:label="@string/title_DetailAd"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.AdPopUpActivity"
             android:noHistory="true"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@android:style/Theme.Dialog"
+            android:configChanges="orientation|screenSize"/>
 
         <receiver
             android:name=".receiver.PhoneStateReceiver"

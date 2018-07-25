@@ -66,7 +66,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     ImageView imageViewIV;
     ProgressBar progressBar, progressBar2;
 
-    private String displayName, city, mobileNumber, userId, photoUri, adPublisher, email, rewards, uploadedImage= "hh";
+    private String displayName, city, mobileNumber, userId, photoUri, adPublisher, email, rewards, updatedprofilepic;
     private Boolean updateProfile = false;
     private static final int PICK_IMAGE_REQUEST = 234;
     //a Uri object to store file path
@@ -104,35 +104,43 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         progressBar2 =  findViewById(R.id.progressBar2);
 
 
-        //filling the details into rersp. fields when user came from profile page to update GET ALL DATA THROUGH INTENT EXTRAS
-        //TODO:DOnt forget to get intent extras from profile page while updating a user data.
-        if(updateProfile == true){
+        //filling the details into resp. fields when user came from profile page to update GET ALL DATA THROUGH INTENT EXTRAS
+        //TODO:DOnt forget to get intent extras from profile page while updating a user data. -- FINISHED
+        if(updateProfile){
             displayName = extras.getString("DISPLAY__NAME");
             mobileNumber = extras.getString("MOBILE__NUMBER");
             city = extras.getString("CITY__NAME");
-            adPublisher = extras.getString("AD__PUBLISHER");;
+            adPublisher = extras.getString("AD__PUBLISHER");
             photoUri = extras.getString("PHOTO__URI");
 
-            Log.d("extras", photoUri);
+
 
             displaynameTV.setText(displayName);
             mobilenumberTV.setText(mobileNumber);
             cityTV.setText(city);
             adpublisherSW.setChecked(Boolean.parseBoolean(adPublisher));
             //imageViewIV.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131"));//(Uri.parse(photoUri));
-            //TODO:apply glide properly and check it out later
-            Log.d("photo",extras.getString("PHOTO__URI"));
-            Picasso.get()
-                    .load(photoUri)//"https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131")
-                    .into(imageViewIV);
-            //GlideApp.with(this).load(photoUri).into(imageViewIV);
+            //TODO:apply glide properly and check it out later -- FINISHED(instead of glide used PICASSO)
+
+
+            try{
+                Picasso.get()
+                        .load(photoUri)
+                        .placeholder(R.drawable.ic_account_circle_black_24dp)//"https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131")
+                        .into(imageViewIV);
+            }
+            catch (Exception error){
+                Log.d("profile pic exception",error.getMessage());
+                Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(imageViewIV);
+            }
+
         }
 
 
         savedetialsBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(updateProfile == false){
+                if(!updateProfile){
                     addNewUser();
                 }
                 else {
@@ -148,7 +156,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.intent_choose_image)), PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -191,7 +199,8 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUri = task.getResult();
-                    uploadedImage = task.getResult().toString();
+                    updatedprofilepic = String.valueOf(task.getResult());
+                    //uploadedImage = task.getResult().toString();
                     progressBar.setVisibility(View.INVISIBLE);
                     Log.i("url",downloadUri.toString());
 
@@ -208,11 +217,21 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         //TODO: if user wont upload a photo app crashes while retriving make it empty if not uploaded (code written test it once)
         progressBar2.setVisibility(View.VISIBLE);
 
-        displayName = displaynameTV.getText().toString();
+        if(!displaynameTV.getText().toString().isEmpty()){
+            displayName = displaynameTV.getText().toString();
+        }else {displayName = " ";}
+
         email = user.getEmail();
         userId = user.getUid();
-        mobileNumber = mobilenumberTV.getText().toString();
-        city = cityTV.getText().toString();
+
+        if(!mobilenumberTV.getText().toString().isEmpty()){
+            mobileNumber = mobilenumberTV.getText().toString();
+        }else { mobileNumber = " ";}
+
+        if(!cityTV.getText().toString().isEmpty()){
+            city = cityTV.getText().toString();
+        }else { city = " ";}
+
         adPublisher = Boolean.toString(adpublisherSW.isChecked());
         rewards = "0";
         if(downloadUri.toString()!=null){
@@ -238,7 +257,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         progressBar2.setVisibility(View.INVISIBLE);
-                        Toast.makeText(ProfileUpdateActivity.this, "User Registered",
+                        Toast.makeText(ProfileUpdateActivity.this, getString(R.string.user_registred),
                                 Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(ProfileUpdateActivity.this, MainActivity.class));
                     }
@@ -247,7 +266,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressBar2.setVisibility(View.INVISIBLE);
-                        Toast.makeText(ProfileUpdateActivity.this, "ERROR" + e.toString(),
+                        Toast.makeText(ProfileUpdateActivity.this, getString(R.string.error_occured) + e.toString(),
                                 Toast.LENGTH_SHORT).show();
                         Log.d("DATABASE ERROR", e.toString());
                     }
@@ -264,11 +283,11 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         updatingProfile.update(PHONE_KEY, mobilenumberTV.getText().toString());
         updatingProfile.update(CITY_KEY, cityTV.getText().toString());
         updatingProfile.update(ADPUBLISHER_KEY, Boolean.toString(adpublisherSW.isChecked()));
-        updatingProfile.update(PHOTOURI_KEY, photoUri).addOnSuccessListener(new OnSuccessListener<Void>() {
+        updatingProfile.update(PHOTOURI_KEY, updatedprofilepic).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 progressBar2.setVisibility(View.INVISIBLE);
-                Toast.makeText(ProfileUpdateActivity.this, "Updated Successfully",
+                Toast.makeText(ProfileUpdateActivity.this, getString(R.string.updated_successfully),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -276,7 +295,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressBar2.setVisibility(View.INVISIBLE);
-                Toast.makeText(ProfileUpdateActivity.this, "Updated Failed, please try again",
+                Toast.makeText(ProfileUpdateActivity.this, getString(R.string.update_failed),
                         Toast.LENGTH_SHORT).show();
             }
         });

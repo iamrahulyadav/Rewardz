@@ -81,8 +81,9 @@ public class DownloadRt extends Service {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
 
-            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
-                    + getString(R.string.app_name));
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"Rewardz");
+//            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
+//                    + getString(R.string.app_name)); //TODO: re check this cmnt
             if(RewardzRingtoneFolder.isDirectory()){
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
@@ -92,15 +93,19 @@ public class DownloadRt extends Service {
                 }
             }
             Log.d("file", RewardzRingtoneFolder.getAbsolutePath());
-            RewardzRingtoneFolder.mkdir();
-           //downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
+            if(!RewardzRingtoneFolder.exists()){
+                boolean  file_created = RewardzRingtoneFolder.mkdir();
+                Log.i("rewardz","file created"+file_created);
+            }
+
+           downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
         }
         else {
             /* save the folder in internal memory of phone */
 
-            File RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
-                    + File.separator + getString(R.string.app_name));
-
+           /* File RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
+                    + File.separator + getString(R.string.app_name));*/ //TODO:Re check and uncmnt this line
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"Rewardz");
             if(RewardzRingtoneFolder.isDirectory()){
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
@@ -109,8 +114,9 @@ public class DownloadRt extends Service {
                     e.printStackTrace();
                 }
             }
-            RewardzRingtoneFolder.mkdir();
-           // downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
+            boolean  file_created = RewardzRingtoneFolder.mkdir();
+            Log.d("rewardz","file created"+file_created);
+           downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
             Log.d("file", RewardzRingtoneFolder.getAbsolutePath());
 
         }
@@ -132,10 +138,9 @@ public class DownloadRt extends Service {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("ringtone", document.getId());
                                 ringtoneDownloadUrl = document.get("ringtone_url").toString();
-                                //ringtoneDownloadUrl = document.get("ringtone_url").toString();//TODO:get this uncmnt and remove next line
-                                //ringtoneDownloadUrl = "https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2FBwAA7E3BJlRIevhl55h4YXDAZPg2.jpg?alt=media&token=c3432851-b6ca-4398-83dc-5c5c309a2dde";
+
                                 try {
-                                    File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                    File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3 -- FINISHED
                                     Log.d("ringtone", document.getId());
                                     StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
                                     httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

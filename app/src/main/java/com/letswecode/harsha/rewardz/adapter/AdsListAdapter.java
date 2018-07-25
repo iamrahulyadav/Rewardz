@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.letswecode.harsha.rewardz.ui.DetailAdActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
 
 public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHolder> {
 
@@ -48,9 +50,11 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         Picasso.get().load(AdsList.get(position).getPublisher_image()).into(holder.profile_pic);
+        Log.d("doc",AdsList.get(position).getPublisher_image());
         holder.publisher_name.setText(AdsList.get(position).getPublisher_name());
         holder.expires_on.setText(AdsList.get(position).getExpires_on());
         Picasso.get().load(AdsList.get(position).getAd_banner()).into(holder.ad_banner);
+        Log.d("doc",AdsList.get(position).getAd_banner());
         holder.ad_description.setText(AdsList.get(position).getAd_description());
         holder.ad_url.setText(AdsList.get(position).getAd_url());
 
@@ -69,6 +73,7 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
                     intent.putExtra("adVideoUrl", AdsList.get(position).getVideo_url());
                     intent.putExtra("adPoints", AdsList.get(position).getPoints());
                     intent.putExtra("adCouponCode", AdsList.get(position).getCoupon_code());
+                    intent.putExtra("adID", AdsList.get(position).getKey());
                     context.startActivity(intent);
             }
         });

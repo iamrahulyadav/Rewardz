@@ -1,5 +1,9 @@
 package com.letswecode.harsha.rewardz.modal;
 
+import android.support.annotation.NonNull;
+
+import com.google.firebase.firestore.Exclude;
+
 public class Ads {
 
     String ad_banner;
@@ -14,6 +18,8 @@ public class Ads {
     String publisher_name;
     String video_url;
     String coupon_code;
+    @Exclude
+    private String key;
 
     public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city, String created_on, String expires_on, String points, String publisher_image, String publisher_name, String video_url, String coupon_code) {
         this.ad_banner = ad_banner;
@@ -35,8 +41,16 @@ public class Ads {
     public Ads() {
     }
 
+    public <T extends Ads> T withId(@NonNull final String id) {
+        this.key = id;
+        return (T) this;
+    }
 
 
+
+    public String getKey(){
+        return key;
+    }
 
     public String getAd_banner() {
         return ad_banner;

@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -69,6 +71,9 @@ public class HomeFragment extends Fragment {
     private List<Ads> AdsList;
     public String currentLocation;
     double Lat, Lon;
+    boolean[] alreadyReddemed;
+
+    //public static List<String> AdsIDs;
 
     private ShimmerFrameLayout mShimmerViewContainer;
 
@@ -103,6 +108,7 @@ public class HomeFragment extends Fragment {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
                               //  Toast.makeText(getContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
+                                Log.d("rewardz","all permissions granted");
                             }
                             if (report.isAnyPermissionPermanentlyDenied()) {
                                 // show alert dialog navigating to Settings
@@ -117,7 +123,7 @@ public class HomeFragment extends Fragment {
                     }).withErrorListener(new PermissionRequestErrorListener() {
                 @Override
                 public void onError(DexterError error) {
-                    Toast.makeText(getActivity(), "Error occurred!! "+ error.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_occured)+ error.toString(), Toast.LENGTH_SHORT).show();
                 }
             }).onSameThread()
                     .check();
@@ -125,7 +131,7 @@ public class HomeFragment extends Fragment {
 
             return;
         }
-//TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW
+//TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW --FINISHED
         //code block to get the write_settings permission
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             boolean settingsCanWrite = Settings.System.canWrite(getContext());
@@ -165,9 +171,6 @@ public class HomeFragment extends Fragment {
 
         if(user != null){
             String userCurrentLocation = currentLocation;
-            Toast.makeText(getActivity(), "one "+userCurrentLocation+" two "+currentLocation,
-                    Toast.LENGTH_SHORT).show();
-
             //Here I had the code of getting ads from db, but i moved it down
 
         }
@@ -198,16 +201,16 @@ public class HomeFragment extends Fragment {
 
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Need Permissions");
-        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.permissions_title));
+        builder.setMessage(getString(R.string.permissions_message));
+        builder.setPositiveButton(getString(R.string.permissions_goto_settings), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
                 openSettings();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -262,13 +265,17 @@ public class HomeFragment extends Fragment {
                    @Override
                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                       for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                       for (final DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                           if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-                               Ads ads = doc.getDocument().toObject(Ads.class);
-                               AdsList.add(ads);
-                               Log.d("doc", doc.getDocument().toString());
-                               adsListAdapter.notifyDataSetChanged();
+                           if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.MODIFIED
+                               checkAlreadyRedeemed(doc);
+                                    Log.d("doc", "inside");
+//                                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
+//                                    AdsList.add(ads);
+//                                    Log.d("doc", doc.getDocument().getId().toString());
+                                   // adsListAdapter.notifyDataSetChanged();
+
+
                            }
 
                        }
@@ -276,6 +283,34 @@ public class HomeFragment extends Fragment {
                });
            }
         }
+    }
+
+
+    public void checkAlreadyRedeemed(final DocumentChange doc) {
+
+        alreadyReddemed = new boolean[1];
+
+        //Log.d("doc","user: "+user.getUid()+" ad_id "+adID);
+        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc.getDocument().getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
+                if(queryDocumentSnapshots.size()!= 0){
+                    alreadyReddemed[0] = true;
+                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                }else {
+                    alreadyReddemed[0] = false;
+                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
+                    AdsList.add(ads);
+                    adsListAdapter.notifyDataSetChanged();
+                    Log.d("doc", doc.getDocument().getId().toString());
+                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                }
+            }
+        });
+
+
+        //return alreadyReddemed[0];
     }
 
 }

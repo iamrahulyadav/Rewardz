@@ -44,7 +44,7 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         //background gradient animation
-        constraintLayout = (ConstraintLayout)findViewById(R.id.constrainLayout);
+        constraintLayout = findViewById(R.id.constrainLayout);
         animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
         animationDrawable.setEnterFadeDuration(5000);
         animationDrawable.setExitFadeDuration(2000);
@@ -54,11 +54,11 @@ public class SignupActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
-        btnSignIn = (Button) findViewById(R.id.sign_in_button);
-        btnSignUp = (Button) findViewById(R.id.sign_up_button);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        btnSignIn =  findViewById(R.id.sign_in_button);
+        btnSignUp =  findViewById(R.id.sign_up_button);
+        inputEmail =  findViewById(R.id.email);
+        inputPassword =  findViewById(R.id.password);
+        progressBar =  findViewById(R.id.progressBar);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,14 +97,14 @@ public class SignupActivity extends AppCompatActivity {
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignupActivity.this, getString(R.string.user_created) + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
 
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
+                                    Toast.makeText(SignupActivity.this, getString(R.string.auth_failed)+ task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     addRewardsToUser();

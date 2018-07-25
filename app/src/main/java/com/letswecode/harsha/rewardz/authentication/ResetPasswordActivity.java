@@ -33,15 +33,15 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         //background gradient animation
-        constraintLayout = (ConstraintLayout)findViewById(R.id.constrainLayout);
+        constraintLayout = findViewById(R.id.constrainLayout);
         animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
         animationDrawable.setEnterFadeDuration(5000);
         animationDrawable.setExitFadeDuration(2000);
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        btnReset = (Button) findViewById(R.id.btn_reset_password);
-        btnBack = (Button) findViewById(R.id.btn_back);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        inputEmail = findViewById(R.id.email);
+        btnReset =  findViewById(R.id.btn_reset_password);
+        btnBack =  findViewById(R.id.btn_back);
+        progressBar =  findViewById(R.id.progressBar); //TODO: allign progressbar in middle of screen in XML for login signup and reset
 
         auth = FirebaseAuth.getInstance();
 

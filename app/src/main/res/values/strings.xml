@@ -16,6 +16,7 @@
     <string name="btn_forgot_password">Forgot Password</string>
     <string name="btn_link_to_register">New user! Register.</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
+    <string name="user_created">"created user with email: "</string>
     <string name="auth_failed">Authentication failed! please try Again.</string>
     <string name="blank_password">Please enter password</string>
     <string name="blank_email">Please enter email</string>
@@ -25,6 +26,10 @@
     <string name="btn_back">Back</string>
     <string name="reset_password_mail_sent">We have sent you instructions to reset your password!</string>
     <string name="reset_password_mail_sent_error">Failed to send reset email!</string>
+    <string name="error_occured">"Error occurred!! "</string>
+    <string name="user_registred">User Registered.</string>
+    <string name="updated_successfully">Updated Successfully</string>
+    <string name="update_failed">Updated Failed, please try again</string>
 
     <string name="display_name">Display name</string>
     <string name="city">City</string>
@@ -35,6 +40,25 @@
     <string name="signout">Sign Out</string>
     <string name="title_activity_settings">Settings</string>
     <string name="coupon_code">Coupon code</string>
+    <string name="offer_redeemed">Redeemed from</string>
+    <string name="redeem">Redeem</string>
+    <string name="offer_expires_on">Expires on</string>
+    <string name="rewards_updated">Rewards updated to: </string>
+    <string name="low_in_wallet">No enough points in wallet</string>
+
+    <string name="permissions_title">Need Permissions</string>
+    <string name="permissions_message">This app needs permission to use this feature. You can grant them in app settings.</string>
+    <string name="permissions_goto_settings">GOTO SETTINGS</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="processing_failure">Unable to process request now, please try later.</string>
+    <string name="intent_choose_image">Select Picture</string>
+    <string name="profile_pic_description">Profile pic of publisher</string>
+    <string name="dummy_publisher_name">Publisher name dummy</string>
+    <string name="dummy_timestamp">timestamp dummy</string>
+    <string name="dummy_text">text status dummy</string>
+    <string name="dummy_url">url dummy</string>
+
 
 
 </resources>

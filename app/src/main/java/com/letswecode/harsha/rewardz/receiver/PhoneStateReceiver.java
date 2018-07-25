@@ -37,8 +37,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
        try{
            if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)){
 
-                RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
-                       + "Rewardz");
+               RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"Rewardz");
                 Log.d("ringtone", "path is :"+RewardzRingtoneFolder.toString());
                ringtones = RewardzRingtoneFolder.listFiles();
                //Log.d("ringtone", ringtones.clone().toString());
@@ -71,18 +70,22 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                        newUri);
 
                SharedPreferences sharedPreferences = context.getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-               sharedPreferences.edit().putString("REWARDZ_TONE", selectedRingtone.getName().substring(0,20));
+               String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");
+               sharedPreferences.edit().putString(OLD_REWARDZ_TONE,OLD_TONE).apply();
+               sharedPreferences.edit().putString(REWARDZ_TONE, selectedRingtone.getName().substring(0,20)).apply();
                Log.d("ringtone","subString "+selectedRingtone.getName().substring(0,20));
 
-               Toast.makeText(context,"Ringing State ",Toast.LENGTH_SHORT).show();//TODO: removes toasts here in this file
+              //TODO: removes toasts here in this file
+               //TODO:properly match ringtone with ad, tweak code here
 
 
            }
            if ((state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))){
-               Toast.makeText(context,"Received State",Toast.LENGTH_SHORT).show();
+               //Toast.makeText(context,"Received State",Toast.LENGTH_SHORT).show();
+               Log.d("phoneCall","Rceived state");
            }
            if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
-               Toast.makeText(context,"Idle State",Toast.LENGTH_SHORT).show();
+               //Toast.makeText(context,"Idle State",Toast.LENGTH_SHORT).show();
 
                 //Intent to call dailog activity to show ad and update reward points to user after call ends
                final Intent i = new Intent(context, AdPopUpActivity.class);

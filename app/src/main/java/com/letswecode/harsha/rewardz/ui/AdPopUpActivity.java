@@ -100,7 +100,8 @@ public class AdPopUpActivity extends Activity {
                 }
             });
 
-            //TODO: remove this block of code and repalce it with the code to read from the shared pefs for ad_id and then call "callAD()" mehod with id as a string arg
+            //TODO: remove this block of code and repalce it with the code to read from the shared pefs
+            // TODO: CONTINUE -- for ad_id and then call "callAD()" mehod with id as a string arg
               callAd();
 //              db.collection("Published Ads")
 //                    .get()
@@ -157,17 +158,14 @@ public class AdPopUpActivity extends Activity {
 
     private void closeAdActivity() {
 
-        //TODO: send this ad to notifications sections of user so that they can view later
-
         AdPopUpActivity.this.finish();
-
         System.exit(0);
     }
 
     private void callAd() {
 
         SharedPreferences sharedPreferences = getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-        String adID = sharedPreferences.getString(REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");
+        String adID = sharedPreferences.getString(OLD_REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");
         Log.d("ringtone","adID from pref "+adID);
         DocumentReference randomAd = db.collection("Published Ads").document(adID);
         randomAd.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -178,7 +176,7 @@ public class AdPopUpActivity extends Activity {
                     doc = task.getResult();
                     mShimmerViewContainer.stopShimmerAnimation();
                     parentLayout.setVisibility(View.VISIBLE);
-                    mShimmerViewContainer.setVisibility(View.INVISIBLE);//TODO: check how shimmer layout working IT has to overlap on Below layout, IF needed change root layout to relative
+                    mShimmerViewContainer.setVisibility(View.INVISIBLE);//TODO: check how shimmer layout working IT has to overlap on Below layout, IF needed change root layout to relative -- FINISHED
 
                     Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
                     Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
@@ -223,12 +221,12 @@ public class AdPopUpActivity extends Activity {
         updatingRewards.update("Rewards", update_points).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Rewards updated to: " + update_points + ".", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),  getString(R.string.rewards_updated)+ update_points + ".", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Unable to process request now, please try later.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.processing_failure), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -246,6 +244,7 @@ public class AdPopUpActivity extends Activity {
         intent.putExtra("adVideoUrl", doc.get("video_url").toString());
         intent.putExtra("adPoints",doc.get("points").toString());
         intent.putExtra("adCouponCode", doc.get("coupon_code").toString());
+        intent.putExtra("adID", doc.getId());
 
         startActivity(intent);
 //removing the ad dailog activity from the stack.

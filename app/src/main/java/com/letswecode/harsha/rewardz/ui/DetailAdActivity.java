@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.R;
 import com.squareup.picasso.Picasso;
 
@@ -39,18 +40,19 @@ import javax.annotation.Nullable;
 public class DetailAdActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY ="user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code",
-            TIMESTAMP_KEY = "time_stamp", PUBLISHER_NAME_KEY = "publisher_name", EXPIRES_ON_KEY = "expires_on";
+            TIMESTAMP_KEY = "time_stamp", PUBLISHER_NAME_KEY = "publisher_name", EXPIRES_ON_KEY = "expires_on", AD_ID_KEY = "ad_id";
 
     ImageView Publisher_pic, Ad_banner;
     TextView Publisher_name, Expires_on, Ad_description, Ad_url, couponCode;
     Dialog myDialog;
     VideoView Ad_video;
     Button Redeem_button;
-    String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode;
+    String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode, adID;
     double userTotalPoints, pointsAfterDeduction;
 
     FirebaseFirestore db;
     FirebaseUser user;
+    boolean redeemed;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,8 @@ public class DetailAdActivity extends AppCompatActivity {
         adVideoUrl = extras.get("adVideoUrl").toString();
         adPoints = extras.get("adPoints").toString();
         adCouponCode = extras.get("adCouponCode").toString();
-
+        adID = extras.get("adID").toString();
+        Log.d("doc", adID);//TODO:remove this in release build
 
         Publisher_pic =  findViewById(R.id.profilePic);
         Publisher_name = findViewById(R.id.name);
@@ -89,30 +92,29 @@ public class DetailAdActivity extends AppCompatActivity {
         if(adType.equals("video")){
             Ad_video.setVideoURI(Uri.parse(adVideoUrl));
         }
-        Redeem_button.setText("Redeem "+adPoints);
+        Redeem_button.setText(getString(R.string.redeem)+adPoints);
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+
+        //TODO: disable button after user pressing the redeem button while transaction is processing and add a progressbar as indication on button
         Redeem_button.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                //TODO: deduct the points from user wallet in DB. and add this to transaction table
-                //TODO: ->which contains AD-id, User-id, TimeSpan.
-                //TODO: ADD coupon code attribute to published adds document and show the code here after deducting the points
+                //TODO: deduct the points from user wallet in DB. and add this to transaction table -- FNISHED
+                //TODO: ->which contains AD-id, User-id, TimeSpan. --FINISHED
+                //TODO: ADD coupon code attribute to published adds document and show the code here after deducting the points __FINISHED
+
 
                 //code to show coupon code to user
-                deductRewardPoints();
-
-
-
-
-
+               deductRewardPoints();
 
             }
         });
-
-
-
 
     }
 
@@ -125,7 +127,7 @@ public class DetailAdActivity extends AppCompatActivity {
                //TODO:uncmnt unnecessary toasts and logs
                 //AFter getting userTotalPoints check they r more than req. and take necessary steps
                 if(userTotalPoints < Double.parseDouble(adPoints)){
-                    Toast.makeText(getApplicationContext(), "No enough points in wallet", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.low_in_wallet), Toast.LENGTH_LONG).show();
 
                 }
                 else{
@@ -134,13 +136,13 @@ public class DetailAdActivity extends AppCompatActivity {
                     updatingRewards.update("Rewards", pointsAfterDeduction).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(getApplicationContext(), "Rewards updated to: " + pointsAfterDeduction + ".", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.rewards_updated) + pointsAfterDeduction + ".", Toast.LENGTH_SHORT).show();
                             showCouponCode();//code to display coupon code
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Unable to process request now, please try later.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.processing_failure), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -151,7 +153,7 @@ public class DetailAdActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "unable to process now. please try later", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.processing_failure), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -160,15 +162,25 @@ public class DetailAdActivity extends AppCompatActivity {
     private void showCouponCode() {
         addTransactionToDB();
         Log.d("coupon",adCouponCode);
+        displayCouponCode();
+//        myDialog = new Dialog(this);
+//        myDialog.setContentView(R.layout.coupon_code_alert);
+//        couponCode = myDialog.findViewById(R.id.copuon_code);
+//        couponCode.setText(adCouponCode);
+//        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        myDialog.show();
+
+        //Toast.makeText(this, adCouponCode,Toast.LENGTH_LONG).show();
+
+    }
+
+    private void displayCouponCode(){
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.coupon_code_alert);
         couponCode = myDialog.findViewById(R.id.copuon_code);
         couponCode.setText(adCouponCode);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
-
-        Toast.makeText(this, adCouponCode,Toast.LENGTH_LONG).show();
-
     }
 
     private void addTransactionToDB() {
@@ -186,6 +198,7 @@ public class DetailAdActivity extends AppCompatActivity {
         newUserTransaction.put(COUPON_CODE_KEY,adCouponCode);
         newUserTransaction.put(TIMESTAMP_KEY, timestamp);
         newUserTransaction.put(EXPIRES_ON_KEY, adExpiresOn);
+        newUserTransaction.put(AD_ID_KEY, adID);
 
         db.collection("Transactions").add(newUserTransaction).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
@@ -195,7 +208,7 @@ public class DetailAdActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),"Unable to make transaction, please try later",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),getString(R.string.processing_failure),Toast.LENGTH_LONG).show();
             }
         });
     }

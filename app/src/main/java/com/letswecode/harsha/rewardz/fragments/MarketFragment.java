@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -22,12 +26,110 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.adapter.AdsListAdapter;
+import com.letswecode.harsha.rewardz.fragments.marketCategories.AutoMobileFragment;
+import com.letswecode.harsha.rewardz.fragments.marketCategories.EntertainmentFragment;
+import com.letswecode.harsha.rewardz.fragments.marketCategories.FashionFragment;
+import com.letswecode.harsha.rewardz.fragments.marketCategories.FoodFragment;
 import com.letswecode.harsha.rewardz.modal.Ads;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MarketFragment extends Fragment {
+
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+
+    FirebaseFirestore db;
+    FirebaseUser user;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_market, container, false);
+
+        viewPager =  view.findViewById(R.id.viewpager);
+        viewPagerAdapter = new MarketFragment.ViewPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+        return view;
+
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // do your variables initialisations here except Views!!!
+        db = FirebaseFirestore.getInstance();
+
+        //get current user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+//
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private static final int NUM_ITEMS = 4;
+
+        public ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {//TODO: use switch case for categories
+            switch (position){
+                case 0 :
+                    return FoodFragment.newInstance();
+
+                case 1 :
+                    return EntertainmentFragment.newInstance();
+
+                case 2 :
+                    return FashionFragment.newInstance();
+
+                case 3 :
+                    return AutoMobileFragment.newInstance();
+
+                    default:
+                     return FoodFragment.newInstance();
+            }
+
+
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+           //TODO: use switch case to get page titles for categories name.
+            switch (position){
+                case 0 :
+                    return FoodFragment.PAGE_TITLE;
+
+                case 1 :
+                    return EntertainmentFragment.PAGE_TITLE;
+
+                case 2 :
+                    return FashionFragment.PAGE_TITLE;
+
+                case 3 :
+                    return AutoMobileFragment.PAGE_TITLE;
+
+                default:
+                    return FoodFragment.PAGE_TITLE;
+            }
+        }
+    }
+}
+/*public class MarketFragment extends Fragment {
 
     FirebaseFirestore db;
     FirebaseUser user;
@@ -94,4 +196,4 @@ public class MarketFragment extends Fragment {
         mainlist.setAdapter(adsListAdapter);
 
     }
-}
+}*/

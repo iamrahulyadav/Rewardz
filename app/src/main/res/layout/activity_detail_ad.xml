@@ -30,19 +30,20 @@
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_account_circle_black_24dp"></ImageView>
+                android:contentDescription="@string/profile_pic_description"
+                app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/feed_item_profile_info_padd" >
+                android:paddingStart="@dimen/feed_item_profile_info_padd" >
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Publisher name dummy"
+                    android:text="@string/dummy_publisher_name"
                     android:textSize="@dimen/feed_item_profile_name"
                     android:textStyle="bold" />
 
@@ -50,7 +51,7 @@
                     android:id="@+id/expireson"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="timestamp dummy"
+                    android:text="@string/dummy_timestamp"
                     android:textColor="@color/timestamp"
                     android:textSize="@dimen/feed_item_timestamp" />
             </LinearLayout>
@@ -64,7 +65,7 @@
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:paddingTop="@dimen/feed_item_status_pad_top"
-            android:text="text status dummy" />
+            android:text="@string/dummy_text" />
 
         <TextView
             android:id="@+id/txtUrl"
@@ -74,7 +75,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:text="url dummy"
+            android:text="@string/dummy_url"
             android:textColorLink="@color/link" />
 
         <ImageView
@@ -84,6 +85,7 @@
             android:background="@android:color/white"
             android:scaleType="fitXY"
             android:visibility="visible"
+            android:contentDescription="@string/profile_pic_description"
             app:srcCompat="@drawable/ic_dashboard_black_24dp" />
         <VideoView
             android:layout_width="match_parent"
@@ -96,7 +98,7 @@
             android:id="@+id/redeemButton"
             android:background="@drawable/auth_bg_gradient_two"
             android:textColor="@android:color/white"
-            android:text="Redeem"/>
+            android:text="@string/redeem"/>
     </LinearLayout>
 
 

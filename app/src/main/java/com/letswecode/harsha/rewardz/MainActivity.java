@@ -98,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
         //loading the default home fragment
         loadFragment(new HomeFragment());
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation =  findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//TODO:uncmnt this service inoreder  to run service
+//TODO:uncmnt this service inoreder  to run service -- FINISHED
         //starting service
         Intent intent = new Intent(MainActivity.this, DownloadRt.class);
         ContextCompat.startForegroundService(this,intent);
@@ -166,35 +166,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "First RUN",Toast.LENGTH_SHORT).show();
 
             // TODO This is a new install (or the user cleared the shared preferences)
-//            Dexter.withActivity(this)
-//                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
-//                    .withListener(new MultiplePermissionsListener() {
-//                        @Override
-//                        public void onPermissionsChecked(MultiplePermissionsReport report) {
-//                            // check if all permissions are granted
-//                            if (report.areAllPermissionsGranted()) {
-//                                Toast.makeText(getApplicationContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
-//                            }
-//                            if (report.isAnyPermissionPermanentlyDenied()) {
-//                                // show alert dialog navigating to Settings
-//                                showSettingsDialog();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-//                            token.continuePermissionRequest();
-//                        }
-//                    }).withErrorListener(new PermissionRequestErrorListener() {
-//                @Override
-//                public void onError(DexterError error) {
-//                    Toast.makeText(getApplicationContext(), "Error occurred!!!! "+ error.toString(), Toast.LENGTH_LONG).show();
-//                    Log.d("permission error", error.toString());
-//                    System.out.println(error.toString());
-//                }
-//            }).onSameThread()
-//                    .check();
-
         } else if (currentVersionCode > savedVersionCode) {
 
             // TODO This is an upgrade
@@ -202,35 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Update the shared preferences with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
-    }
-
-    private void showSettingsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Need Permissions");
-        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                openSettings();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
-
-    }
-
-    // navigating user to app settings
-    private void openSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivityForResult(intent, 101);
     }
 
 }

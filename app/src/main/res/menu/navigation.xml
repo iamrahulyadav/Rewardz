@@ -12,12 +12,14 @@
         android:title="@string/title_market" />
 
     <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_account_circle_black_24dp"
-        android:title="@string/title_Profile" />
-    <item
         android:id="@+id/navigation_wallet"
         android:icon="@drawable/ic_account_balance_wallet_black_24dp"
         android:title="@string/title_wallet" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/title_Profile" />
+
 
 </menu>

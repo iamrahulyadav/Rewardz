@@ -119,14 +119,21 @@ public class ProfileFragment extends Fragment {
                     try{
                         Picasso.get()
                                 .load(documentSnapshot.get("PhotoUri").toString())
+                                .placeholder(R.drawable.ic_account_circle_black_24dp)
                                 .into(displayPic);
                     }
                     catch (Exception error ){
                         Log.d("profile pic exception",error.getMessage());
-                        Picasso.get().load(R.drawable.ic_account_circle_black_24dp).into(displayPic);
+                        Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(displayPic);
                     }
-                    _photoUri = documentSnapshot.getString("PhotoUri").toString();
-                    Log.d("photo",_photoUri);
+                    try{
+                        _photoUri = documentSnapshot.getString("PhotoUri").toString();
+                    }
+                    catch (Exception error){
+                        _photoUri = null;
+                    }
+
+
 
                 }
             }
