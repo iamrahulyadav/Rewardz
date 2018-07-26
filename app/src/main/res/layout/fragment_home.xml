@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
-    tools:context="com.letswecode.harsha.rewardz.MainActivity">
+    tools:context="com.letswecode.harsha.rewardz.ui.MainActivity">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view_container"

@@ -1,12 +1,10 @@
-package com.letswecode.harsha.rewardz;
+package com.letswecode.harsha.rewardz.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -22,7 +20,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.letswecode.harsha.rewardz.BuildConfig;
+import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.authentication.LoginActivity;
+import com.letswecode.harsha.rewardz.helper.PrefManager;
 import com.letswecode.harsha.rewardz.authentication.SignupActivity;
 import com.letswecode.harsha.rewardz.fragments.HomeFragment;
 import com.letswecode.harsha.rewardz.fragments.MarketFragment;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseUser user;
     boolean emailVerified;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme); //for slpash screen runs only app taking long time to initialize
+        setTheme(R.style.AppTheme); //for splash screen runs only app taking long time to initialize
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //TODO: first check internet connection then proceed
@@ -98,13 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        //reloading user to check wheter his/her email is verified or not(As firebase cache user data we have to reload)
-        user.reload();
-        emailVerified = user.isEmailVerified();
-        Log.d("doc", String.valueOf(emailVerified));
-        if(!emailVerified){
-            emailVerifyAlert();
+        //reloading user to check whether his/her email is verified or not(As firebase cache user data we have to reload)
+        if(user != null){
+            user.reload();
+            emailVerified = user.isEmailVerified();
+            Log.d("doc", String.valueOf(emailVerified));
+            if(!emailVerified){
+                emailVerifyAlert();
+            }
         }
+
         //loading the default home fragment
         loadFragment(new HomeFragment());
 
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, DownloadRt.class);
         ContextCompat.startForegroundService(this,intent);
     }
+
 
     private void emailVerifyAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -195,11 +201,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_settings:
-                //startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
+//            case R.id.menu_settings:
+//                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
+//                return true;
+            case R.id.menu_about:
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 return true;
-
             case R.id.signOut:
                 auth.signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -233,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (savedVersionCode == DOESNT_EXIST) {
 
             Toast.makeText(MainActivity.this, "First RUN",Toast.LENGTH_SHORT).show();
+
 
             // TODO This is a new install (or the user cleared the shared preferences)
         } else if (currentVersionCode > savedVersionCode) {

@@ -6,6 +6,7 @@
     <string name="title_wallet">Wallet</string>
     <string name="title_settings">Settings</string>
     <string name="title_DetailAd">Detail AD</string>
+    <string name="title_AboutUS">About us</string>
 
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -47,7 +48,7 @@
     <string name="rewards_updated">Rewards updated to: </string>
     <string name="low_in_wallet">No enough points in wallet</string>
 
-    <string name="permissions_title">Need Permissions</string>
+    <string name="permissions_title">Need some Permissions</string>
     <string name="permissions_message">This app needs permission to use this feature. You can grant them in app settings.</string>
     <string name="permissions_goto_settings">GOTO SETTINGS</string>
     <string name="cancel">Cancel</string>
@@ -61,6 +62,7 @@
     <string name="dummy_url">url dummy</string>
     <string name="title_activity_main2">Main2Activity</string>
 
+    <!--email verification -->
     <string name="emailVerification_dailog_title">Email not verified!</string>
     <string name="emailVerification_dailog_message">You haven\'t verified your email. You can\'t redeem till you verify your email. Do you want us to send you verification link again! or will you check your mail!</string>
     <string name="resend_email">Send me mail</string>
@@ -69,4 +71,28 @@
     <string name="email_sent_sucessfully">Email sent successfully, check your mail box..</string>
     <string name="emailVerification_profile_text">Email not verified - CLICK TO VERIFY NOW!</string>
 
+    <!--intro page -->
+    <string name="intro_slide1_title">Great to have you on board</string>
+    <string name="intro_slide1_description">Ready to try us?</string>
+    <string name="intro_slide1_message">Get Started</string>
+    <string name="intro_slide1_button_text">Click next button to move further.</string>
+    <string name="t_and_c_error_message">Please accept terms and conditions first.</string>
+    <string name="check_to_pass">I accept terms and conditions.</string>
+    <string name="t_and_c_message">Lorem ipsum \n\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure</string>
+    <string name="intro_slide3_permission_description">We require some permissions to provide best from our app.</string>
+    <string name="intro_slide3_button_text">Grant permissions</string>
+    <string name="intro_slide3_mesasge">All permissions are granted</string>
+    <string name="intro_slide4_finish_title">That\'s it</string>
+    <string name="intro_slide4_finish_description">You are all set to use our app.</string>
+
+    <!--about page -->
+    <string name="about_page_group_name">Contact us</string>
+    <string name="about_page_company_description">Company description goes here</string>
+    <string name="about_paage_developer_email_address">email@address.com</string>
+    <string name="about_paage_developer_website">https://www.website.com</string>
+    <string name="about_paage_developer_facebook_address">facebook username</string>
+    <string name="about_paage_developer_twitter_address">twitter username</string>
+    <string name="about_paage_developer_playStore_address">playstore address</string>
+    <string name="about_page_company_name">D Thoughts innolabs</string>
+    <string name="copy_right" translatable="false">Copyrights © %1$d</string>"
 </resources>

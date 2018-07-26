@@ -39,6 +39,10 @@ dependencies {
 
     implementation 'com.vipulasri:ticketview:1.0.5'// for coupon code layout
 
+    implementation 'agency.tango.android:material-intro-screen:0.0.5'//for intro
+
+    implementation 'com.github.medyo:android-about-page:1.2.4'//for about page
+
     implementation 'com.android.support:support-v4:27.1.1'
 
     implementation 'com.google.android.gms:play-services-base:15.0.1'

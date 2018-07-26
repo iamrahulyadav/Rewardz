@@ -1,6 +1,5 @@
 package com.letswecode.harsha.rewardz.adapter;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.letswecode.harsha.rewardz.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.modal.Ads;
 import com.letswecode.harsha.rewardz.ui.DetailAdActivity;

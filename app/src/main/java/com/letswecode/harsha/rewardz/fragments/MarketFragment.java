@@ -1,42 +1,26 @@
 package com.letswecode.harsha.rewardz.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.letswecode.harsha.rewardz.MainActivity;
 import com.letswecode.harsha.rewardz.R;
-import com.letswecode.harsha.rewardz.adapter.AdsListAdapter;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.AutoMobileFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.EntertainmentFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.FashionFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.FoodFragment;
-import com.letswecode.harsha.rewardz.modal.Ads;
 import com.letswecode.harsha.rewardz.ui.AddNewAd;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MarketFragment extends Fragment {
 

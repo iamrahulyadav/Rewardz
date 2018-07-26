@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.letswecode.harsha.rewardz.MainActivity;
+import com.letswecode.harsha.rewardz.ui.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 
 import org.apache.commons.io.FileUtils;

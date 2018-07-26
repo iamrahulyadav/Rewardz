@@ -21,7 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.letswecode.harsha.rewardz.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.ui.ProfileUpdateActivity;
 
