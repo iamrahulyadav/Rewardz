@@ -60,8 +60,8 @@ public class DownloadRt extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,123, notificationIntent, 0);
        Notification notification = new NotificationCompat.Builder(this, CHANNELID)
-               .setContentTitle("Rewardz")
-               .setContentText("Looking for new Ring tones")
+               .setContentTitle(getString(R.string.app_name))
+               .setContentText(getString(R.string.service_notification_text))
                .setSmallIcon(R.mipmap.ic_launcher_round)
                .setContentIntent(pendingIntent)
                .build();
@@ -80,7 +80,7 @@ public class DownloadRt extends Service {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
 
-            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"Rewardz");
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"AdzApp");
 //            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
 //                    + getString(R.string.app_name)); //TODO: re check this cmnt
             if(RewardzRingtoneFolder.isDirectory()){

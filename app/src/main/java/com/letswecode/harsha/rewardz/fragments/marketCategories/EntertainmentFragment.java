@@ -102,7 +102,7 @@ public class EntertainmentFragment extends Fragment {
         db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc.getDocument().getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
+                //Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
                 if(queryDocumentSnapshots.size()!= 0){
                     //alreadyReddemed[0] = true;
                     // Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));

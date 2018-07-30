@@ -108,7 +108,7 @@ public class SignupActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     addRewardsToUser();//adding rewadrs data to db under username
-                                    sendEmailVerification();
+                                    //sendEmailVerification();//TODO:uncmnt this while making relase build as IT WILL SEND EMAIL VERIFICATION to user
                                     startActivity(new Intent(SignupActivity.this, ProfileUpdateActivity.class));
                                     finish();
                                 }
@@ -148,8 +148,8 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignupActivity.this, "Rewards  failed.",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignupActivity.this, "Rewards  failed."+e.getMessage(),
+                                Toast.LENGTH_LONG).show();
                     }
                 });
 

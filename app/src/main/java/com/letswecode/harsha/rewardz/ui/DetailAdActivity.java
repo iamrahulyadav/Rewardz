@@ -151,7 +151,7 @@ public class DetailAdActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 userTotalPoints = documentSnapshot.getDouble("Rewards");
-               //TODO:uncmnt unnecessary toasts and logs
+               //TODO:uncmnt unnecessary toasts and logs , use try catch for null in above line
                 //AFter getting userTotalPoints check they r more than req. and take necessary steps
                 if(userTotalPoints < Double.parseDouble(adPoints)){
                     Toast.makeText(getApplicationContext(), getString(R.string.low_in_wallet), Toast.LENGTH_LONG).show();

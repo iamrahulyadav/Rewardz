@@ -73,6 +73,7 @@ public class AdPopUpActivity extends Activity {
 
         initializeView();
 
+
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -178,12 +179,17 @@ public class AdPopUpActivity extends Activity {
                     parentLayout.setVisibility(View.VISIBLE);
                     mShimmerViewContainer.setVisibility(View.INVISIBLE);//TODO: check how shimmer layout working IT has to overlap on Below layout, IF needed change root layout to relative -- FINISHED
 
-                    Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
-                    Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
-                    publisher_name.setText(doc.get("publisher_name").toString());
-                    expires_on.setText(doc.get("expires_on").toString());
-                    ad_description.setText(doc.get("ad_description").toString());
-                    ad_url.setText(doc.get("ad_url").toString());
+                    try{
+                        Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
+                        Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
+                        publisher_name.setText(doc.get("publisher_name").toString());
+                        expires_on.setText(doc.get("expires_on").toString());
+                        ad_description.setText(doc.get("ad_description").toString());
+                        ad_url.setText(doc.get("ad_url").toString());
+                    }catch (Exception errr){
+                        Log.d("doc", errr.getMessage());
+                    }
+
 
                     //PUSHING THIS AD TO USER NOTIFICATIONS THROUGH THIS METHOD
                     //sendAdtoNotif(adsID.get(index));

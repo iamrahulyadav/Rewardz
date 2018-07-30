@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
 //            case R.id.menu_settings:
 //                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
-//                return true;
+//              return true;
             case R.id.menu_about:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 return true;

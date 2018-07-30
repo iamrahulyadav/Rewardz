@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 import com.letswecode.harsha.rewardz.R;
+import com.letswecode.harsha.rewardz.helper.ColorChooser;
 import com.letswecode.harsha.rewardz.modal.Ads;
 import com.letswecode.harsha.rewardz.ui.DetailAdActivity;
 import com.squareup.picasso.Picasso;
@@ -45,6 +46,8 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+
+        holder.parentLayout.setBackground(ColorChooser.ColorChooser());//settings a random color as background dynamically
 
         Picasso.get().load(AdsList.get(position).getPublisher_image()).into(holder.profile_pic);
         Log.d("doc",AdsList.get(position).getPublisher_image());

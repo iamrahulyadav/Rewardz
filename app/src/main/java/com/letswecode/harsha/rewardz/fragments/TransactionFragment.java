@@ -56,21 +56,25 @@ public class TransactionFragment extends Fragment {
         db.collection("Transactions").whereEqualTo("user_id", user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                try{
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
 
-                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
+                            Transactions ads = doc.getDocument().toObject(Transactions.class);
+                            TransactionsList.add(ads);
+                            Log.d("doc", doc.getDocument().toString());
+                            try{
+                                transactionsListAdapter.notifyDataSetChanged();
+                            }catch (Exception error){
+                                Log.d("rewardz",error.getMessage());
+                            }
 
-                    if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-                        Transactions ads = doc.getDocument().toObject(Transactions.class);
-                        TransactionsList.add(ads);
-                        Log.d("doc", doc.getDocument().toString());
-                        try{
-                            transactionsListAdapter.notifyDataSetChanged();
-                        }catch (Exception error){
-                            Log.d("rewardz",error.getMessage());
                         }
 
                     }
 
+                }catch (Exception errr){
+                    Log.d("doc",errr.getMessage());
                 }
             }
         });

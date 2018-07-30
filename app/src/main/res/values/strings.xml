@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rewardz</string>
+    <string name="app_name">AdzApp</string>
     <string name="title_home">For you</string>
     <string name="title_market">Ads Market</string>
     <string name="title_Profile">Profile</string>
@@ -32,6 +32,7 @@
     <string name="updated_successfully">Updated Successfully</string>
     <string name="update_failed">Updated Failed, please try again</string>
     <string name="btn_signOut">Sign out</string>
+    <string name="service_notification_text">Looking for tunes</string>
 
     <string name="display_name">Display name</string>
     <string name="city">City</string>
@@ -78,7 +79,32 @@
     <string name="intro_slide1_button_text">Click next button to move further.</string>
     <string name="t_and_c_error_message">Please accept terms and conditions first.</string>
     <string name="check_to_pass">I accept terms and conditions.</string>
-    <string name="t_and_c_message">Lorem ipsum \n\ndolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure</string>
+    <string name="t_and_c_message">Terms and Conditions\n
+
+By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. You’re not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you also shouldn’t try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to D Thoughts Innolabs.\n
+
+D Thoughts Innolabs is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you’re paying for.\n
+
+The AdzApp app stores and processes personal data that you have provided to us, in order to provide our Service. It’s your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could mean that the AdzApp app won’t work properly or at all.\n
+
+You should be aware that there are certain things that D Thoughts Innolabs will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but D Thoughts Innolabs cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.\n
+
+If you’re using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third party charges. In using the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.\n
+
+Along the same lines, D Thoughts Innolabs cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service, D Thoughts Innolabs cannot accept responsibility\n
+
+With respect to D Thoughts Innolabs’s responsibility for your use of the app, when you’re using the app, it’s important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. D Thoughts Innolabs accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.\n
+
+At some point, we may wish to update the app. The app is currently available on Android and iOS – the requirements for both systems (and for any additional systems we decide to extend the availability of the app to) may change, and you’ll need to download the updates if you want to keep using the app. D Thoughts Innolabs does not promise that it will always update the app so that it is relevant to you and/or works with the iOS/Android version that you have installed on your device. However, you promise to always accept updates to the application when offered to you, We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.\n
+
+Changes to This Terms and Conditions\n
+
+We may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Terms and Conditions on this page. These changes are effective immediately after they are posted on this page.\n
+
+Contact Us\n
+
+If you have any questions or suggestions about our Terms and Conditions, do not hesitate to contact us.\n
+</string>
     <string name="intro_slide3_permission_description">We require some permissions to provide best from our app.</string>
     <string name="intro_slide3_button_text">Grant permissions</string>
     <string name="intro_slide3_mesasge">All permissions are granted</string>
@@ -94,5 +120,12 @@
     <string name="about_paage_developer_twitter_address">twitter username</string>
     <string name="about_paage_developer_playStore_address">playstore address</string>
     <string name="about_page_company_name">D Thoughts innolabs</string>
-    <string name="copy_right" translatable="false">Copyrights © %1$d</string>"
+    <string name="copy_right" translatable="false">Copyrights © %1$d</string>
+
+    <!-- third party license, privacy policy, terms and conditions -->
+    <string name="Third_party_licenses">Third party licenses</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="terms_and_conditions">Terms and conditions</string>
+    <string name="privacy_policy_url">http://www.adzapp.in/privacy_policy.html</string>
+    <string name="terms_and_conditions_url">http://www.adzapp.in/terms_and_conditions.html</string>
 </resources>

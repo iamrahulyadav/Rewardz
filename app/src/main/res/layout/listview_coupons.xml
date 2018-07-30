@@ -40,7 +40,7 @@
 
                 <TextView
                     android:id="@+id/publisherName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/dummy_publisher_name"
                     android:textSize="@dimen/feed_item_profile_name"

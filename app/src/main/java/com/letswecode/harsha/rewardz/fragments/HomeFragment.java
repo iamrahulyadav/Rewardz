@@ -2,6 +2,7 @@ package com.letswecode.harsha.rewardz.fragments;
 
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment {
     //public static List<String> AdsIDs;
 
     private ShimmerFrameLayout mShimmerViewContainer;
-
+    private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -126,14 +127,15 @@ public class HomeFragment extends Fragment {
             return;
         }
 //TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW --FINISHED
-        //code block to get the write_settings permission
+       //code block to get the write_settings permission
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             boolean settingsCanWrite = Settings.System.canWrite(getContext());
             if(!settingsCanWrite){
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + getContext().getPackageName()));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startActivityForResult(intent,CODE_WRITE_SETTINGS_PERMISSION);
+                //startActivity(intent);
             }
         }//end of obtaining permission to write settings. WE NEED THIS IN ORDER TO CHANGE RINGTONE.
 
@@ -322,5 +324,16 @@ public class HomeFragment extends Fragment {
 
         //return alreadyReddemed[0];
     }
+
+    @TargetApi(23)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(getContext())){
+            Log.d("TAG", "CODE_WRITE_SETTINGS_PERMISSION success");
+
+        }
+    }
+
 
 }

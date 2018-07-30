@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -80,6 +82,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         if(extras != null){
              updateProfile = extras.getBoolean("UPDATE__PROFILE", false);
         }
+
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -231,12 +234,18 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
         adPublisher = Boolean.toString(adpublisherSW.isChecked());
         rewards = "0";
-        if(downloadUri.toString()!=null){
-            photoUri = downloadUri.toString();
-        }
-        else {
+        try{
+            if(downloadUri.toString()!=null){
+                photoUri = downloadUri.toString();
+            }
+            else {
+                photoUri = " ";
+            }
+        }catch (Exception errr){
+            Log.d("doc",errr.getMessage());
             photoUri = " ";
         }
+
         Log.i("photouri", photoUri);//TODO: change with uploaded image URL - FINISHED
 
         Map< String, Object > newUser = new HashMap< >();
@@ -292,7 +301,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressBar2.setVisibility(View.INVISIBLE);
-                Toast.makeText(ProfileUpdateActivity.this, getString(R.string.update_failed),
+                Toast.makeText(ProfileUpdateActivity.this, getString(R.string.update_failed)+e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         });

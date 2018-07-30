@@ -14,10 +14,8 @@ public class ColorChooser {
         GradientDrawable gd = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM, colors);
 
-        gd.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        gd.setGradientRadius(300f);
-        gd.setCornerRadius(0f);
-
+        gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        gd.setOrientation(GradientDrawable.Orientation.TL_BR);
 
         return gd;
     }

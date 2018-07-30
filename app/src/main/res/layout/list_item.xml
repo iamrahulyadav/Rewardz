@@ -44,6 +44,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/dummy_publisher_name"
                     android:textSize="@dimen/feed_item_profile_name"
+                    android:textColor="@color/listItem_mainText"
                     android:textStyle="bold" />
 
                 <TextView
@@ -64,7 +65,8 @@
             android:paddingLeft="@dimen/feed_item_status_pad_left_right"
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:paddingTop="@dimen/feed_item_status_pad_top"
-            android:text="@string/dummy_text" />
+            android:text="@string/dummy_text"
+            android:textColor="@color/listItem_mainText"/>
 
         <TextView
             android:id="@+id/txtUrl"
@@ -76,7 +78,7 @@
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:text="@string/dummy_url"
             android:visibility="gone"
-            android:textColorLink="@color/link" />
+            android:textColor="@color/link" />
 
         <ImageView
             android:id="@+id/adBanner"

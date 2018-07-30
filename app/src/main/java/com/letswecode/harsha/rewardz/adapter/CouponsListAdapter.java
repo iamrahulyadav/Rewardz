@@ -43,7 +43,7 @@ public class CouponsListAdapter extends RecyclerView.Adapter<CouponsListAdapter.
 
         holder.parentLayout.setBackground(ColorChooser.ColorChooser());//settings a random color as background dynamically
 
-        holder.publisherName.setText(context.getResources().getString(R.string.offer_redeemed) +" " +TransactionsList.get(position).getPublisher_name());
+        holder.publisherName.setText(TransactionsList.get(position).getPublisher_name());
         holder.expiresOn.setText(context.getResources().getString(R.string.offer_expires_on)  +" " +TransactionsList.get(position).getExpires_on()); //TODO:chnge hard coded strings to strings.xml
         holder.couponCode.setText(TransactionsList.get(position).getCoupon_code());
     }
