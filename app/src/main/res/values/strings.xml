@@ -128,4 +128,8 @@ If you have any questions or suggestions about our Terms and Conditions, do not 
     <string name="terms_and_conditions">Terms and conditions</string>
     <string name="privacy_policy_url">http://www.adzapp.in/privacy_policy.html</string>
     <string name="terms_and_conditions_url">http://www.adzapp.in/terms_and_conditions.html</string>
+
+    <!-- feedback -->
+    <string name="Feedback_success">Feedback sent successfully</string>
+    <string name="Feedback_failure">Unable to send feedback.</string>
 </resources>

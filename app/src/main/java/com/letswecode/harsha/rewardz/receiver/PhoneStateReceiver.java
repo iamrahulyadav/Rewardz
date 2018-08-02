@@ -17,6 +17,7 @@ import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.letswecode.harsha.rewardz.R;
+import com.letswecode.harsha.rewardz.helper.PrefManager;
 import com.letswecode.harsha.rewardz.ui.AdPopUpActivity;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     public static final String OLD_REWARDZ_TONE = "OLD_REWARDZ_TONE";
     boolean isIncoming = false;
     static long start_time, end_time;
+    private PrefManager prefManager;
 
     File[] ringtones;
     File RewardzRingtoneFolder, ringtoneFile, selectedRingtone;
@@ -40,7 +42,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
        try{
            if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)){
 
-               RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"Rewardz");
+               RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
                 Log.d("ringtone", "path is :"+RewardzRingtoneFolder.toString());
                ringtones = RewardzRingtoneFolder.listFiles();
                //Log.d("ringtone", ringtones.clone().toString());
@@ -90,12 +92,14 @@ public class PhoneStateReceiver extends BroadcastReceiver {
            }
            if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
 
-               end_time = System.currentTimeMillis();
-               long total_time = end_time - start_time;
-               Log.d("doc",String.valueOf(total_time));
-                //Intent to call dailog activity to show ad and update reward points to user after call ends
-               if(total_time >= 30000 && isIncoming ){
-                   Toast.makeText(context,"call duration: "+ total_time,Toast.LENGTH_SHORT).show();
+               prefManager = new PrefManager(context);
+               if (!prefManager.isFirstTimeRinging()) {
+
+                   end_time = System.currentTimeMillis();
+                   long total_time = end_time - start_time;
+                   Log.d("doc",String.valueOf(total_time));
+                   //Intent to call dailog activity to show ad and update reward points to user after call ends
+                   //  if(total_time >= 30000 && isIncoming ){
                    final Intent i = new Intent(context, AdPopUpActivity.class);
                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                    i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -110,8 +114,14 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                        }
                    },500);
 
+                   // }
+                   isIncoming = false;
                }
-                    isIncoming = false;
+               else {
+                   prefManager.setIsFirstTimeRinging(false);
+               }
+
+
            }
        }
        catch (Exception e) {

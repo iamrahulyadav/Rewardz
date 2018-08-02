@@ -87,10 +87,10 @@
             android:visibility="visible"
             android:contentDescription="@string/profile_pic_description"
             app:srcCompat="@drawable/ic_dashboard_black_24dp" />
-        <VideoView
+        <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
+            android:id="@+id/adVideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/adVideo"
             android:visibility="gone"/>
         <Button
             android:layout_width="match_parent"

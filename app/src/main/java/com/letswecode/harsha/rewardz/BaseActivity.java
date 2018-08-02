@@ -33,5 +33,14 @@ public class BaseActivity extends AppCompatActivity {
             finish();
         }
         setContentView(R.layout.activity_login);
+        onNewIntent(getIntent());
+    }
+    protected void onNewIntent(Intent intent) {
+        String action = intent.getAction();
+        String data = intent.getDataString();
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            //String recipeId = data.substring(data.lastIndexOf("/") + 1);
+
+        }
     }
 }

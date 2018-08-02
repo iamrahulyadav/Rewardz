@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.letswecode.harsha.rewardz.helper.PrefManager;
 import com.letswecode.harsha.rewardz.ui.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 
@@ -40,7 +41,7 @@ public class DownloadRt extends Service {
     FirebaseUser user;
     FirebaseStorage storage;
     public String ringtoneDownloadUrl;
-   public boolean downlaoded_for_today = true;
+    private PrefManager prefManager;
 
     @Override
     public void onCreate() {
@@ -51,11 +52,7 @@ public class DownloadRt extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if(downlaoded_for_today){
-            stopSelf();
-        }
-
-        Log.d("FGservice", "Start foreground service.");
+        Log.d("doc1", "Start foreground service.");
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,123, notificationIntent, 0);
@@ -70,7 +67,7 @@ public class DownloadRt extends Service {
         createFolder();
 
         //code to create a folder
-               stopSelf();
+               //stopSelf();
 
         return START_STICKY;
     }
@@ -104,7 +101,7 @@ public class DownloadRt extends Service {
 
            /* File RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
                     + File.separator + getString(R.string.app_name));*/ //TODO:Re check and uncmnt this line
-            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"Rewardz");
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"AdzApp");
             if(RewardzRingtoneFolder.isDirectory()){
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
@@ -128,7 +125,7 @@ public class DownloadRt extends Service {
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        db.collection("Published Ads")//.whereEqualTo("ringtone_available", "yes")
+        db.collection("Published Ads").whereEqualTo("ringtone_available", "true")//.whereEqualTo("ad_type", "premium")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -145,7 +142,7 @@ public class DownloadRt extends Service {
                                     httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            Log.d("ringtone","downloaded");
+                                            Log.d("doc1","downloaded");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -158,7 +155,10 @@ public class DownloadRt extends Service {
                                 }
 
                             }
-
+                            prefManager = new PrefManager(getApplicationContext());
+                            prefManager.setFirstTimeLaunchInDay(false);
+                            stopSelf();
+                            Log.d("doc1","stopped foreground service");
                         } else {
                             Log.d("doc", "Error getting documents: ", task.getException());
                         }
@@ -174,10 +174,10 @@ public class DownloadRt extends Service {
 
     @Override
     public void onDestroy() {
-        // I want to restart this service again in one hour
+        // In order to restart this service again in one day
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarm.set(
-                alarm.RTC_WAKEUP,
+                alarm.RTC_WAKEUP, //TODO: CHANGE IT TO 1000*60*60*24
                 System.currentTimeMillis() + (1000 * 60 * 60 * 24 ),//runs for every 24hrs from time of app install(from time at which first time service run)
                 PendingIntent.getService(this, 0, new Intent(this, DownloadRt.class), 0)
         );

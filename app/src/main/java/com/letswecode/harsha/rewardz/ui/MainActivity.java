@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseUser user;
     boolean emailVerified;
+    private PrefManager prefManager;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -116,9 +117,15 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation =  findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 //TODO:uncmnt this service inoreder  to run service -- FINISHED
-        //starting service
-        Intent intent = new Intent(MainActivity.this, DownloadRt.class);
-        ContextCompat.startForegroundService(this,intent);
+        prefManager = new PrefManager(this);
+        if (prefManager.isFirstTimeLaunchInDay()) {
+            //starting service
+            Intent intent = new Intent(MainActivity.this, DownloadRt.class);
+            ContextCompat.startForegroundService(this,intent);
+            Log.d("doc","first time in day "+String.valueOf(prefManager.isFirstTimeLaunchInDay()));
+            //prefManager.setFirstTimeLaunchInDay(false);
+        }
+
     }
 
 

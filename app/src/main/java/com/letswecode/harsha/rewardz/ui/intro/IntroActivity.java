@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
+import com.letswecode.harsha.rewardz.service.DownloadRt;
 import com.letswecode.harsha.rewardz.ui.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 

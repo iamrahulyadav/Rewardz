@@ -35,6 +35,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.modal.Ads;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.letswecode.harsha.rewardz.helper.GetYtId.getYoutubeID;
 import static com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver.OLD_REWARDZ_TONE;
 import static com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver.REWARDZ_PREFS_TONE;
 import static com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver.REWARDZ_TONE;
@@ -59,6 +64,7 @@ public class AdPopUpActivity extends Activity {
      ImageButton ad_close;
      LinearLayout parentLayout;
      RelativeLayout rootLayout;
+    YouTubePlayerView Ad_video;
 
     DocumentSnapshot doc;
 
@@ -138,6 +144,8 @@ public class AdPopUpActivity extends Activity {
         ad_close =  findViewById(R.id.closeAd);
         mShimmerViewContainer =  findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmerAnimation();
+        Ad_video = findViewById(R.id.adVideo);
+
 
         parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +189,29 @@ public class AdPopUpActivity extends Activity {
 
                     try{
                         Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
-                        Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
+                        if(doc.get("ad_type").toString().equals("standard") || doc.get("ad_type").toString().equals("basic")){
+                            Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
+                        }
+                        if(doc.get("ad_type").toString().equals("premium")){
+                            ad_banner.setVisibility(View.INVISIBLE);
+                            Ad_video.setVisibility(View.VISIBLE);
+                            //initializing the youtube player and sending youtube video ID to stream.
+                            Ad_video.initialize(new YouTubePlayerInitListener() {
+                                @Override
+                                public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {
+                                    initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
+                                        @Override
+                                        public void onReady() {
+                                            String videoId = getYoutubeID(doc.get("video_url").toString());
+
+                                            initializedYouTubePlayer.loadVideo(videoId,0);
+                                        }
+                                    });
+                                }
+                            }, true);
+                            //end of youtube player
+                        }
+
                         publisher_name.setText(doc.get("publisher_name").toString());
                         expires_on.setText(doc.get("expires_on").toString());
                         ad_description.setText(doc.get("ad_description").toString());

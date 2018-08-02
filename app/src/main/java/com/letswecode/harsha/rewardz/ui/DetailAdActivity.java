@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +34,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.R;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -40,15 +47,18 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import static com.letswecode.harsha.rewardz.helper.GetYtId.getYoutubeID;
+
 public class DetailAdActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY ="user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code",
-            TIMESTAMP_KEY = "time_stamp", PUBLISHER_NAME_KEY = "publisher_name", EXPIRES_ON_KEY = "expires_on", AD_ID_KEY = "ad_id";
+            TIMESTAMP_KEY = "time_stamp", PUBLISHER_NAME_KEY = "publisher_name", EXPIRES_ON_KEY = "expires_on",
+            AD_ID_KEY = "ad_id", FEEDBACK_KEY = "feedback";
 
     ImageView Publisher_pic, Ad_banner;
     TextView Publisher_name, Expires_on, Ad_description, Ad_url, couponCode;
     Dialog myDialog;
-    VideoView Ad_video;
+    YouTubePlayerView Ad_video;
     Button Redeem_button;
     String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode, adID;
     double userTotalPoints, pointsAfterDeduction;
@@ -82,8 +92,9 @@ public class DetailAdActivity extends AppCompatActivity {
         Ad_description =  findViewById(R.id.adDescription);
         Ad_url = findViewById(R.id.txtUrl);
         Ad_banner = findViewById(R.id.adBanner);
-        Ad_video = findViewById(R.id.adVideo);
         Redeem_button =  findViewById(R.id.redeemButton);
+        Ad_video = findViewById(R.id.adVideo);
+        getLifecycle().addObserver(Ad_video);
 
 
         Picasso.get().load(adPublisherPic).into(Publisher_pic);
@@ -91,9 +102,32 @@ public class DetailAdActivity extends AppCompatActivity {
         Expires_on.setText(adExpiresOn);
         Ad_description.setText(adDescription);
         Ad_url.setText(adUrl);
-        Picasso.get().load(adBanner).into(Ad_banner);
-        if(adType.equals("video")){
-            Ad_video.setVideoURI(Uri.parse(adVideoUrl));
+        Linkify.addLinks(Ad_url, Linkify.WEB_URLS);//To make links(URL) highlighted and clickable
+
+        if(adType.equals("standard") || adType.equals("basic")){
+            Picasso.get().load(adBanner).into(Ad_banner);
+        }
+
+        if(adType.equals("premium")){
+            Log.d("doc", "video file detected");
+            Ad_video.setVisibility(View.VISIBLE);
+            Ad_banner.setVisibility(View.INVISIBLE);
+
+            //initializing the youtube player and sending youtube video ID to stream.
+            Ad_video.initialize(new YouTubePlayerInitListener() {
+                @Override
+                public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {
+                    initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
+                        @Override
+                        public void onReady() {
+                            String videoId = getYoutubeID(adVideoUrl);
+
+                            initializedYouTubePlayer.cueVideo(videoId,0);
+                        }
+                    });
+                }
+            }, true);
+            //end of youtube player
         }
         Redeem_button.setText(getString(R.string.redeem)+adPoints);
 
@@ -125,6 +159,50 @@ public class DetailAdActivity extends AppCompatActivity {
             }
         });
 
+
+        openAppRater();
+
+    }
+
+    private void openAppRater() {
+
+        final RatingDialog ratingDialog = new RatingDialog.Builder(this)
+                .threshold(3)
+                .session(1)
+                .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
+                    @Override
+                    public void onFormSubmitted(String feedback) {
+
+                        sendFeedBackToDb(feedback);
+
+                    }
+                }).build();
+
+        ratingDialog.show();
+    }
+
+    private void sendFeedBackToDb(String feedback) {
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = sdf.format(c.getTime());
+
+        Map< String, Object > newUserFeedback = new HashMap< >();
+        newUserFeedback.put(USER_ID_KEY, user.getUid());
+        newUserFeedback.put(TIMESTAMP_KEY, timestamp);
+        newUserFeedback.put(FEEDBACK_KEY, feedback);
+
+        db.collection("Users Feedback").add(newUserFeedback).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(getApplicationContext(), getString(R.string.Feedback_success), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.Feedback_failure), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public  void sendEmailVerification() {

@@ -13,9 +13,13 @@ public class PrefManager {
     int PRIVATE_MODE = 0;
 
     // Shared preferences file name
-    private static final String PREF_NAME = "rewardz-welcome";
+    private static final String PREF_NAME = "adzapp-welcome";
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+
+    private static final String IS_FIRST_TIME_LAUNCH_IN_DAY = "IsFirstTimeLaunchInDay";
+
+    private static final String IS_FIRST_TIME_RINGING = "IsFirstTimeRinging";
 
     public PrefManager(Context context) {
         this._context = context;
@@ -28,8 +32,25 @@ public class PrefManager {
         editor.commit();
     }
 
+    public void setFirstTimeLaunchInDay(boolean isFirstTime) {
+        editor.putBoolean(IS_FIRST_TIME_LAUNCH_IN_DAY, isFirstTime);
+        editor.commit();
+    }
+
+    public void setIsFirstTimeRinging(boolean isFirstTime) {
+        editor.putBoolean(IS_FIRST_TIME_RINGING, isFirstTime);
+        editor.commit();
+    }
+
     public boolean isFirstTimeLaunch() {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
+    public boolean isFirstTimeLaunchInDay() {
+        return pref.getBoolean(IS_FIRST_TIME_LAUNCH_IN_DAY, true);
+    }
+
+    public boolean isFirstTimeRinging() {
+        return pref.getBoolean(IS_FIRST_TIME_RINGING, true);
+    }
 }

@@ -330,7 +330,7 @@ public class HomeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(getContext())){
-            Log.d("TAG", "CODE_WRITE_SETTINGS_PERMISSION success");
+            Log.d("doc1", requestCode+" "+resultCode+" "+"CODE_WRITE_SETTINGS_PERMISSION success");
 
         }
     }
