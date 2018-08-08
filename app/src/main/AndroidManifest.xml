@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/SplashTheme">
+        android:theme="@style/AppTheme">
         <activity android:name="com.letswecode.harsha.rewardz.BaseActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
@@ -70,8 +70,11 @@
             android:theme="@style/AppTheme" />
         <activity android:name="com.letswecode.harsha.rewardz.ui.AboutActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/title_AboutUS"
+            android:label="@string/title_more"
             android:theme="@style/AppTheme" />
+        <activity android:name=".ui.PublisherAgentActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme"/>
 
         <activity
             android:name="com.letswecode.harsha.rewardz.ui.AdPopUpActivity"
@@ -101,6 +104,10 @@
 
         <service
             android:name=".notification.MyFirebaseMessagingService">
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/ic_stat_notification" />
+
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

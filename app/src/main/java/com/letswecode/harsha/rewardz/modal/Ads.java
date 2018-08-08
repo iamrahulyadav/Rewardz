@@ -2,6 +2,7 @@ package com.letswecode.harsha.rewardz.modal;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 
 public class Ads {
@@ -12,7 +13,7 @@ public class Ads {
     String ad_url;
     String city;
     String created_on;
-    String expires_on;
+    String expires_on;//TODO: check this again change evry timestamp back to string if req.
     String points;
     String publisher_image;
     String publisher_name;

@@ -103,17 +103,22 @@ public class FashionFragment extends Fragment {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                // Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
-                if(queryDocumentSnapshots.size()!= 0){
-                    //alreadyReddemed[0] = true;
-                    // Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-                }else {
-                    //alreadyReddemed[0] = false;
-                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
-                    AdsList.add(ads);
-                    adsListAdapter.notifyDataSetChanged();
-                    Log.d("doc", doc.getDocument().getId().toString());
-                    //Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                try{
+                    if(queryDocumentSnapshots.size()!= 0){
+                        //alreadyReddemed[0] = true;
+                        // Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                    }else {
+                        //alreadyReddemed[0] = false;
+                        Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
+                        AdsList.add(ads);
+                        adsListAdapter.notifyDataSetChanged();
+                        Log.d("doc", doc.getDocument().getId().toString());
+                        //Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                    }
+                }catch (Exception errrrr){
+                    Log.d("doc",errrrr.getMessage());
                 }
+
             }
         });
 

@@ -30,6 +30,7 @@ public class AboutActivity extends AppCompatActivity {
                 .isRTL(false)
                 .setImage(R.drawable.ic_home_black_24dp)//TODO:chnage logo path here
                 .setDescription(getString(R.string.about_page_company_description))
+                .addItem(openAdPublisherAndAgent())
                 .addItem(new Element().setTitle("version code: "+String.valueOf(BuildConfig.VERSION_NAME)))
                 .addItem(getThirdPartyLicenses())
                 .addItem(getPrivacyPolicy())
@@ -45,6 +46,19 @@ public class AboutActivity extends AppCompatActivity {
 
         setContentView(aboutPage);
 
+    }
+
+    private Element openAdPublisherAndAgent() {
+        Element adPublisher_Agent = new Element();
+        adPublisher_Agent.setTitle("Publisher and Agent login");
+        adPublisher_Agent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AboutActivity.this, PublisherAgentActivity.class);
+                startActivity(intent);
+            }
+        });
+        return adPublisher_Agent;
     }
 
     private Element getTermsAndConditions() {

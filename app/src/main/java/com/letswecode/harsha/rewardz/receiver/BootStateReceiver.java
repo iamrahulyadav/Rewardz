@@ -1,11 +1,15 @@
 package com.letswecode.harsha.rewardz.receiver;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.letswecode.harsha.rewardz.service.DownloadRt;
+
+import java.util.Calendar;
 
 
 public class BootStateReceiver extends BroadcastReceiver {
@@ -14,6 +18,7 @@ public class BootStateReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         Intent serviceIntent = new Intent(context, DownloadRt.class);
         context.startService(serviceIntent);
+
     }
 
 }

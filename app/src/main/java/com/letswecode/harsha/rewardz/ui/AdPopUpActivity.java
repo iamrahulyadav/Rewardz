@@ -109,7 +109,7 @@ public class AdPopUpActivity extends Activity {
 
             //TODO: remove this block of code and repalce it with the code to read from the shared pefs
             // TODO: CONTINUE -- for ad_id and then call "callAD()" mehod with id as a string arg
-              callAd();
+             // callAd();//chnging this methid from oncreate to onResume for better staibilization TODO: un cmnt in goes wrng
 //              db.collection("Published Ads")
 //                    .get()
 //                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -129,6 +129,12 @@ public class AdPopUpActivity extends Activity {
 //                    });
         }
 
+    }
+
+    @Override
+    public void onResume() { //this was called coz of abnormal behaviour of ad pop up nly sound no activity. TODO: if goes wrng remove whole method unmcnt 112
+        super.onResume();
+        callAd();
     }
 
     private void initializeView() {

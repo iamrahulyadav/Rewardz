@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity {
 //            case R.id.menu_settings:
 //                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
 //              return true;
-            case R.id.menu_about:
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+            case R.id.menu_more:
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));//more and about r same(for harsha ref.)
                 return true;
             case R.id.signOut:
                 auth.signOut();
