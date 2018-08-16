@@ -108,7 +108,16 @@
                     android:layout_height="wrap_content"
                     android:textColorHint="@android:color/black"
                     android:hint="@string/ad_publisher"
-                    android:clickable="false"/>
+                    android:clickable="false"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/ringtoneSwitchText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Change ringtone ON/OFF"
+                    android:textColor="@android:color/black"
+                    android:paddingBottom="@dimen/padding_10"/>
 
 
 

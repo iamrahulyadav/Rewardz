@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import android.widget.VideoView;
 
 import com.codemybrainsout.ratingdialog.RatingDialog;
@@ -70,6 +72,16 @@ public class DetailAdActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_ad);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
+        mToolbar.setTitle(getString(R.string.title_DetailAd));
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         final  Bundle  extras = getIntent().getExtras();
 

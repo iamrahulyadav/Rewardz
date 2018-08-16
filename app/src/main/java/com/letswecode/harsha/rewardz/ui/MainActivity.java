@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +16,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.Duration;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.letswecode.harsha.rewardz.App;
 import com.letswecode.harsha.rewardz.BuildConfig;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.authentication.LoginActivity;
@@ -29,10 +37,11 @@ import com.letswecode.harsha.rewardz.fragments.HomeFragment;
 import com.letswecode.harsha.rewardz.fragments.MarketFragment;
 import com.letswecode.harsha.rewardz.fragments.ProfileFragment;
 import com.letswecode.harsha.rewardz.fragments.WalletFragment;
+import com.letswecode.harsha.rewardz.receiver.ConnectivityReceiver;
 import com.letswecode.harsha.rewardz.service.DownloadRt;
 //import com.letswecode.harsha.rewardz.fragments.SupportFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     private FirebaseAuth.AuthStateListener authListener;
@@ -72,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //TODO: first check internet connection then proceed
+        //checks for proper internet connection
+        checkConnection();
+
         //checking first run of app
         checkFirstRun();
 
@@ -88,6 +100,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
+
+        //for app updater dialog, notification, snack bar
+        AppUpdater appUpdater = new AppUpdater(getApplicationContext())
+                .setDisplay(Display.NOTIFICATION)
+                .setDisplay(Display.SNACKBAR)
+                .setDuration(Duration.INDEFINITE);
+        appUpdater.start();
 
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -125,6 +144,34 @@ public class MainActivity extends AppCompatActivity {
             Log.d("doc","first time in day "+String.valueOf(prefManager.isFirstTimeLaunchInDay()));
             //prefManager.setFirstTimeLaunchInDay(false);
         }
+
+    }
+
+    private void checkConnection() {
+
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+    }
+
+    private void showSnack(boolean isConnected) {
+
+        String message;
+        int color;
+        if (isConnected) {
+            message = getString(R.string.internet_connection_msg);
+            color = Color.WHITE;
+        } else {
+            message = getString(R.string.no_internet_connection_msg);
+            color = Color.RED;
+        }
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.navigation), message, Snackbar.LENGTH_LONG);
+
+        View sbView = snackbar.getView();
+        TextView textView =  sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(color);
+        snackbar.show();
+
 
     }
 
@@ -258,5 +305,19 @@ public class MainActivity extends AppCompatActivity {
         // Update the shared preferences with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        App.getInstance().setConnectivityListener(this);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
 
 }

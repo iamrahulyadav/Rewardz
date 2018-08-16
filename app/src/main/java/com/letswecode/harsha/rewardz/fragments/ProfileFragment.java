@@ -1,6 +1,9 @@
 package com.letswecode.harsha.rewardz.fragments;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -28,16 +32,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.authentication.LoginActivity;
+import com.letswecode.harsha.rewardz.ui.AboutActivity;
 import com.letswecode.harsha.rewardz.ui.ProfileUpdateActivity;
 import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
 
     Button updateProfile;
-    TextView displayName, mobileNumber, city, rewardPoints ,emailVerified;
-    Switch adPublisher;
+    TextView displayName, mobileNumber, city, rewardPoints ,emailVerified,ringtoneSwitchText;
+    Switch adPublisher, ringtoneSwitch;
     ImageView displayPic;
     ProgressBar progressBar;
+    Dialog myDialog;
+
 
     private String _displayName, _city, _mobileNumber, _adPublisher, _photoUri;
 
@@ -76,7 +83,14 @@ public class ProfileFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         rewardPoints = view.findViewById(R.id.points);
         emailVerified = view.findViewById(R.id.emailVerified);
-
+        ringtoneSwitch = view.findViewById(R.id.ringtone_switch);
+        ringtoneSwitchText = view.findViewById(R.id.ringtoneSwitchText);
+               ringtoneSwitchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             showRingtonePreferenceDialog();
+            }
+        });
         readUserProfile();
         user.reload();
         if(!user.isEmailVerified()){
@@ -103,6 +117,24 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             }
         });
+    }
+
+    private void showRingtonePreferenceDialog() {
+
+        myDialog = new Dialog(getContext());
+        myDialog.setContentView(R.layout.ringtone_switch);
+        myDialog.setTitle("Warning!");
+        ringtoneSwitch = myDialog.findViewById(R.id.ringtone_switch);
+        final SharedPreferences preferences = getActivity().getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
+        boolean active = preferences.getBoolean("active", true);
+        ringtoneSwitch.setChecked(active);
+        ringtoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                preferences.edit().putBoolean("active", isChecked).commit();
+            }
+        });
+        myDialog.show();
     }
 
     public  void sendEmailVerification() {

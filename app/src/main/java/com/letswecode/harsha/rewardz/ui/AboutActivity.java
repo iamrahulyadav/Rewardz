@@ -1,12 +1,21 @@
 package com.letswecode.harsha.rewardz.ui;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.letswecode.harsha.rewardz.BuildConfig;
@@ -22,30 +31,67 @@ import mehdi.sakout.aboutpage.Element;
 
 public class AboutActivity extends AppCompatActivity {
 
+    Dialog myDialog;
+    Switch ringtoneSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
-                .setImage(R.drawable.ic_home_black_24dp)//TODO:chnage logo path here
+                .setImage(R.mipmap.ic_launcher_round)//TODO:chnage logo path here --FINISHED
                 .setDescription(getString(R.string.about_page_company_description))
+                .addGroup(getString(R.string.about_page_app_preference_group_name))
+                //.addItem(openRingtonePreference())
                 .addItem(openAdPublisherAndAgent())
+                .addGroup(getString(R.string.about_page_app_group_name))
                 .addItem(new Element().setTitle("version code: "+String.valueOf(BuildConfig.VERSION_NAME)))
                 .addItem(getThirdPartyLicenses())
                 .addItem(getPrivacyPolicy())
                 .addItem(getTermsAndConditions())
-                .addGroup(getString(R.string.about_page_group_name))
-                .addEmail(getString(R.string.about_paage_developer_email_address))//TODO: chnage these values in strings.xml while release
-                .addWebsite(getString(R.string.about_paage_developer_website))
-                .addFacebook(getString(R.string.about_paage_developer_facebook_address))
-                .addTwitter(getString(R.string.about_paage_developer_twitter_address))
-                .addPlayStore(getString(R.string.about_paage_developer_playStore_address))
+                .addGroup(getString(R.string.about_page_contact_group_name))
+                .addEmail(getString(R.string.about_page_developer_email_address))//TODO: chnage these values in strings.xml while release
+                .addWebsite(getString(R.string.about_page_developer_website))
+                .addFacebook(getString(R.string.about_page_developer_facebook_address))
+                .addTwitter(getString(R.string.about_page_developer_twitter_address))
+                .addPlayStore(getString(R.string.about_page_developer_playStore_address))
                 .addItem(getCopyRightsElement())
                 .create();
 
         setContentView(aboutPage);
 
+    }
+
+    private Element openRingtonePreference() {
+        Element ringtonePreference = new Element();
+        ringtonePreference.setTitle("Change ringtone ON/OFF");
+        ringtonePreference.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRingtonePreferenceDialog();
+            }
+        });
+
+
+        return ringtonePreference;
+    }
+//unnecessary code and XML file
+    public void showRingtonePreferenceDialog() {
+        myDialog = new Dialog(this);
+        myDialog.setContentView(R.layout.ringtone_switch);
+        myDialog.setTitle("Warning!");
+        ringtoneSwitch = myDialog.findViewById(R.id.ringtone_switch);
+        final SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
+        boolean active = preferences.getBoolean("active", true);
+        ringtoneSwitch.setChecked(active);
+        ringtoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                preferences.edit().putBoolean("active", isChecked).commit();
+            }
+        });
+        myDialog.show();
     }
 
     private Element openAdPublisherAndAgent() {

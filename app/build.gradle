@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0.27-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -60,6 +60,8 @@ dependencies {
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
     implementation 'com.codemybrainsout.rating:ratingdialog:1.0.8'//for app rating dialog
+
+    implementation 'com.github.javiersantos:AppUpdater:2.7'//for automatic app update checker
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

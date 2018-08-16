@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:padding="@dimen/padding_10"
+        android:id="@+id/ringtone_switch_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ringtone_switch_alert_message"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_10"
+        android:layout_below="@+id/ringtone_switch_alert"
+        android:text="Switch ringtone ON/OFF"
+        android:paddingLeft="10dp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorAccent"/>
+
+    <Switch
+        android:id="@+id/ringtone_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_10"
+        android:layout_below="@+id/ringtone_switch_alert"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"/>
+</RelativeLayout>

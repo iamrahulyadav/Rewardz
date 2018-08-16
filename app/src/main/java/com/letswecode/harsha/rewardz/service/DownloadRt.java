@@ -59,7 +59,7 @@ public class DownloadRt extends Service {
        Notification notification = new NotificationCompat.Builder(this, CHANNELID)
                .setContentTitle(getString(R.string.app_name))
                .setContentText(getString(R.string.service_notification_text))
-               .setSmallIcon(R.drawable.ic_stat_notification)
+               .setSmallIcon(R.drawable.ic_stat_notification_icon)
                .setContentIntent(pendingIntent)
                .build();
        startForeground(1, notification);

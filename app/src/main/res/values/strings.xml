@@ -7,6 +7,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_DetailAd">Detail AD</string>
     <string name="title_more">More</string>
+    <string name="title_Ad_publisher_and_Agent">Ad publisher and agent login</string>
 
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -33,6 +34,9 @@
     <string name="update_failed">Updated Failed, please try again</string>
     <string name="btn_signOut">Sign out</string>
     <string name="service_notification_text">Looking for tunes</string>
+
+    <string name="internet_connection_msg">Good, connected to internet</string>
+    <string name="no_internet_connection_msg">Sorry! No internet connection</string>
 
     <string name="display_name">Display name</string>
     <string name="city">City</string>
@@ -112,13 +116,15 @@ If you have any questions or suggestions about our Terms and Conditions, do not 
     <string name="intro_slide4_finish_description">You are all set to use our app.</string>
 
     <!--about page -->
-    <string name="about_page_group_name">Contact us</string>
-    <string name="about_page_company_description">Company description goes here</string>
-    <string name="about_paage_developer_email_address">email@address.com</string>
-    <string name="about_paage_developer_website">https://www.website.com</string>
-    <string name="about_paage_developer_facebook_address">facebook username</string>
-    <string name="about_paage_developer_twitter_address">twitter username</string>
-    <string name="about_paage_developer_playStore_address">playstore address</string>
+    <string name="about_page_contact_group_name">Contact us</string>
+    <string name="about_page_app_group_name">About</string>
+    <string name="about_page_app_preference_group_name">More From app</string>
+    <string name="about_page_company_description">Let\'s make your ads fly</string>
+    <string name="about_page_developer_email_address">email@address.com</string>
+    <string name="about_page_developer_website">https://www.website.com</string>
+    <string name="about_page_developer_facebook_address">facebook username</string>
+    <string name="about_page_developer_twitter_address">twitter username</string>
+    <string name="about_page_developer_playStore_address">playstore address</string>
     <string name="about_page_company_name">D Thoughts innolabs</string>
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
 
@@ -132,6 +138,7 @@ If you have any questions or suggestions about our Terms and Conditions, do not 
     <!-- feedback -->
     <string name="Feedback_success">Feedback sent successfully</string>
     <string name="Feedback_failure">Unable to send feedback.</string>
+    <string name="ringtone_switch_alert_message">By switching off, our app cannot change ringtone of your device every time, because of that you will be rewarded with less reward points than usual. In order to get most reward points from us keep this switch to be on.</string>
 
     <!-- publisher and agent -->
     <style name="publisher_agent_login">Publisher and agent login</style>

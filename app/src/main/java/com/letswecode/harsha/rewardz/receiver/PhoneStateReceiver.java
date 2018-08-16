@@ -41,6 +41,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
        try{
            if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)){
+               SharedPreferences preferences = context.getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
 
                RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
                 Log.d("ringtone", "path is :"+RewardzRingtoneFolder.toString());
@@ -70,9 +71,19 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                        null);
                Uri newUri = context.getContentResolver().insert(uri, content);
                Log.i("ringtone","the ringtone uri is :"+newUri);
-               RingtoneManager.setActualDefaultRingtoneUri(
-                       context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
-                       newUri);
+
+               //checks user preference and changes ringtone by checking if switch ON/OFF status
+               if(preferences.getBoolean("active", true)){
+
+                   RingtoneManager.setActualDefaultRingtoneUri(
+                           context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
+                           newUri);
+
+
+               }
+//               RingtoneManager.setActualDefaultRingtoneUri(
+//                       context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
+//                       newUri);
 
                SharedPreferences sharedPreferences = context.getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
                String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");
