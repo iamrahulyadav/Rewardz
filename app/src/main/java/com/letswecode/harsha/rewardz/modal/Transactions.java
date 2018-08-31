@@ -2,12 +2,12 @@ package com.letswecode.harsha.rewardz.modal;
 
 public class Transactions {
 
-  private   String coupon_code,
-     expires_on,
-      points,
-   publisher_name,
-   time_stamp,
-      user_id;
+    private   String coupon_code,
+            expires_on,
+            points,
+            publisher_name,
+            time_stamp,
+            user_id;
 
     public Transactions(String coupon_code, String expires_on, String points, String publisher_name, String time_stamp, String user_id) {
         this.coupon_code = coupon_code;

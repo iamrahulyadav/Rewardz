@@ -59,7 +59,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        Log.d("doc 4",token);
         sendRegistrationToServer(token);
     }
 
@@ -98,7 +97,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_stat_notification_icon)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setContentTitle("FCM Message")
                         .setContentText(messageBody)
                         .setAutoCancel(true)

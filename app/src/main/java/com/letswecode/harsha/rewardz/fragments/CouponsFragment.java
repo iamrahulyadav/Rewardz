@@ -1,6 +1,7 @@
 package com.letswecode.harsha.rewardz.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +30,7 @@ public class CouponsFragment extends Fragment {
     public static final String PAGE_TITLE = "Redeemed Coupons";
 
     RecyclerView mainlist;
-
+    TextView emptyView;
     FirebaseFirestore db;
     FirebaseUser user;
 
@@ -96,7 +98,19 @@ public class CouponsFragment extends Fragment {
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(couponsListAdapter);
+        emptyView = view.findViewById(R.id.empty_view);
 
-
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(couponsListAdapter.getItemCount()== 0){
+                    mainlist.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mainlist.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
     }
 }

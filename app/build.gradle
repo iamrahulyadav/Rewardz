@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0.0.27-beta"
+        versionName "1.0.43-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -54,7 +54,10 @@ dependencies {
 
     implementation 'com.github.marcoscgdev:Licenser:1.0.2'    //for licensing dialog
 
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'//for yt video ad
+    implementation 'com.github.tcking:giraffeplayer2:0.1.19'//for video ad
+    implementation 'com.github.tcking:viewquery:1.6'
+    implementation 'com.github.tcking:ijkplayer-java:0.8.8'
+
 
     implementation 'com.google.firebase:firebase-messaging:17.1.0'//for notifications
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'

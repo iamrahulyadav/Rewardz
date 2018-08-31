@@ -34,6 +34,8 @@
     <string name="update_failed">Updated Failed, please try again</string>
     <string name="btn_signOut">Sign out</string>
     <string name="service_notification_text">Looking for tunes</string>
+    <string name="msg_subscribed">Subscribed to city successfully </string>
+    <string name="msg_subscribe_failed">Subscribed to city notifications failed</string>
 
     <string name="internet_connection_msg">Good, connected to internet</string>
     <string name="no_internet_connection_msg">Sorry! No internet connection</string>

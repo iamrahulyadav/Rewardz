@@ -9,4 +9,12 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Oops! seems like nothing here \n or \n Refresh the \'Wallet\' tab " />
+
 </android.support.constraint.ConstraintLayout>

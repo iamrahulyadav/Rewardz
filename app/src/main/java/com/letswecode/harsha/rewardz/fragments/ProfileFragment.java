@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,8 +30,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.letswecode.harsha.rewardz.R;
-import com.letswecode.harsha.rewardz.authentication.LoginActivity;
-import com.letswecode.harsha.rewardz.ui.AboutActivity;
 import com.letswecode.harsha.rewardz.ui.ProfileUpdateActivity;
 import com.squareup.picasso.Picasso;
 
@@ -44,7 +41,6 @@ public class ProfileFragment extends Fragment {
     ImageView displayPic;
     ProgressBar progressBar;
     Dialog myDialog;
-
 
     private String _displayName, _city, _mobileNumber, _adPublisher, _photoUri;
 
@@ -83,14 +79,15 @@ public class ProfileFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         rewardPoints = view.findViewById(R.id.points);
         emailVerified = view.findViewById(R.id.emailVerified);
-        ringtoneSwitch = view.findViewById(R.id.ringtone_switch);
         ringtoneSwitchText = view.findViewById(R.id.ringtoneSwitchText);
-               ringtoneSwitchText.setOnClickListener(new View.OnClickListener() {
+        ringtoneSwitchText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             showRingtonePreferenceDialog();
+                showRingtonePreferenceDialog();
             }
         });
+
+
         readUserProfile();
         user.reload();
         if(!user.isEmailVerified()){
@@ -182,7 +179,8 @@ public class ProfileFragment extends Fragment {
                     try{
                         Picasso.get()
                                 .load(documentSnapshot.get("PhotoUri").toString())
-                                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                                .placeholder(R.drawable.ic_sort_black_24dp)
+                                .error(R.drawable.ic_error_black_24dp)
                                 .into(displayPic);
                     }
                     catch (Exception error ){

@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.widget.VideoView;
 
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,10 +35,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.R;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -47,9 +42,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nullable;
+import tcking.github.com.giraffeplayer2.VideoInfo;
+import tcking.github.com.giraffeplayer2.VideoView;
 
-import static com.letswecode.harsha.rewardz.helper.GetYtId.getYoutubeID;
 
 public class DetailAdActivity extends AppCompatActivity {
 
@@ -60,7 +55,8 @@ public class DetailAdActivity extends AppCompatActivity {
     ImageView Publisher_pic, Ad_banner;
     TextView Publisher_name, Expires_on, Ad_description, Ad_url, couponCode;
     Dialog myDialog;
-    YouTubePlayerView Ad_video;
+    //YouTubePlayerView Ad_video;
+    VideoView videoView;
     Button Redeem_button;
     String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode, adID;
     double userTotalPoints, pointsAfterDeduction;
@@ -79,6 +75,7 @@ public class DetailAdActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 finish();
             }
         });
@@ -105,8 +102,9 @@ public class DetailAdActivity extends AppCompatActivity {
         Ad_url = findViewById(R.id.txtUrl);
         Ad_banner = findViewById(R.id.adBanner);
         Redeem_button =  findViewById(R.id.redeemButton);
-        Ad_video = findViewById(R.id.adVideo);
-        getLifecycle().addObserver(Ad_video);
+//        Ad_video = findViewById(R.id.adVideo);
+//        getLifecycle().addObserver(Ad_video);
+        videoView =  findViewById(R.id.video_view);
 
 
         Picasso.get().load(adPublisherPic).into(Publisher_pic);
@@ -122,26 +120,15 @@ public class DetailAdActivity extends AppCompatActivity {
 
         if(adType.equals("premium")){
             Log.d("doc", "video file detected");
-            Ad_video.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.VISIBLE);
             Ad_banner.setVisibility(View.INVISIBLE);
 
-            //initializing the youtube player and sending youtube video ID to stream.
-            Ad_video.initialize(new YouTubePlayerInitListener() {
-                @Override
-                public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {
-                    initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
-                        @Override
-                        public void onReady() {
-                            String videoId = getYoutubeID(adVideoUrl);
+            videoView.setVideoPath(adVideoUrl).getPlayer().start();
+            videoView.getPlayer().aspectRatio(VideoInfo.AR_ASPECT_FILL_PARENT);
 
-                            initializedYouTubePlayer.cueVideo(videoId,0);
-                        }
-                    });
-                }
-            }, true);
-            //end of youtube player
+
         }
-        Redeem_button.setText(getString(R.string.redeem)+adPoints);
+        Redeem_button.setText( getString(R.string.redeem)+" "+adPoints);
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();

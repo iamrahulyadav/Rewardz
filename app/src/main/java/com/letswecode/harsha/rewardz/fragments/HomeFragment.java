@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -51,10 +52,7 @@ import com.letswecode.harsha.rewardz.adapter.AdsListAdapter;
 import com.letswecode.harsha.rewardz.modal.Ads;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -65,6 +63,7 @@ public class HomeFragment extends Fragment {
     private FusedLocationProviderClient client;
 
     RecyclerView mainlist;
+    TextView emptyView;
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
     public String currentLocation;
@@ -182,18 +181,27 @@ public class HomeFragment extends Fragment {
 
         mShimmerViewContainer =  view.findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmerAnimation();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mShimmerViewContainer.stopShimmerAnimation();
-                mShimmerViewContainer.setVisibility(View.INVISIBLE);
-            }
-        }, 5000);
+
 
         mainlist = view.findViewById(R.id.recyclerView);
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(adsListAdapter);
+        emptyView = view.findViewById(R.id.empty_view);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mShimmerViewContainer.stopShimmerAnimation();
+                mShimmerViewContainer.setVisibility(View.INVISIBLE);
+                if(adsListAdapter.getItemCount()== 0){
+                    mainlist.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mainlist.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
+            }
+        }, 10000);
 
 
     }
@@ -251,7 +259,7 @@ public class HomeFragment extends Fragment {
                     String strAddress = str.toString();
                     Log.d("address", strAddress);
                     currentLocation = address.getLocality().trim().toLowerCase().toString();
-                    Toast.makeText(getActivity(), "one "+currentLocation,
+                    Toast.makeText(getActivity(), currentLocation,
                             Toast.LENGTH_LONG).show();
                     Log.d("city", currentLocation);
                 }catch (Exception e){
@@ -262,8 +270,6 @@ public class HomeFragment extends Fragment {
 
 
                 if(user!= null){
-
-
                     db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {

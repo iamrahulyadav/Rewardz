@@ -49,7 +49,7 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
 
         holder.parentLayout.setBackground(ColorChooser.ColorChooser());//settings a random color as background dynamically
 
-        Picasso.get().load(AdsList.get(position).getPublisher_image()).into(holder.profile_pic);
+        Picasso.get().load(AdsList.get(position).getPublisher_image()).placeholder(R.drawable.ic_sort_white_24dp).error(R.drawable.ic_error_black_24dp).into(holder.profile_pic);
         Log.d("doc",AdsList.get(position).getPublisher_image());
         holder.publisher_name.setText(AdsList.get(position).getPublisher_name());
         holder.expires_on.setText(AdsList.get(position).getExpires_on());

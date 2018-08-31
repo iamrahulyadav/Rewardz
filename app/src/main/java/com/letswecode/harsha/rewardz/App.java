@@ -4,26 +4,15 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
-
-import com.letswecode.harsha.rewardz.receiver.ConnectivityReceiver;
-
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 public class App extends Application {
-    public static final String CHANNELID = "AdzAppServiceChannel";
-    private static App mInstance;
+    public static final String CHANNELID = "RewardzServiceChannel";
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
         createNotificationChannel();
-    }
-
-    public static synchronized App getInstance() {
-        return mInstance;
-    }
-
-    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
-        ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 
     private void createNotificationChannel() {

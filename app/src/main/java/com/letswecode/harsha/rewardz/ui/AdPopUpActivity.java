@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -30,27 +32,19 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import com.letswecode.harsha.rewardz.R;
-import com.letswecode.harsha.rewardz.modal.Ads;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
+
+import com.letswecode.harsha.rewardz.helper.DeviceLocked;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
+import tcking.github.com.giraffeplayer2.VideoView;
 
 import static com.letswecode.harsha.rewardz.helper.GetYtId.getYoutubeID;
 import static com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver.OLD_REWARDZ_TONE;
 import static com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver.REWARDZ_PREFS_TONE;
-import static com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver.REWARDZ_TONE;
+
 
 public class AdPopUpActivity extends Activity {
 
@@ -64,7 +58,7 @@ public class AdPopUpActivity extends Activity {
      ImageButton ad_close;
      LinearLayout parentLayout;
      RelativeLayout rootLayout;
-    YouTubePlayerView Ad_video;
+    VideoView videoView;
 
     DocumentSnapshot doc;
 
@@ -76,6 +70,8 @@ public class AdPopUpActivity extends Activity {
         this.setFinishOnTouchOutside(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ad_pop_up);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         initializeView();
 
@@ -109,7 +105,7 @@ public class AdPopUpActivity extends Activity {
 
             //TODO: remove this block of code and repalce it with the code to read from the shared pefs
             // TODO: CONTINUE -- for ad_id and then call "callAD()" mehod with id as a string arg
-             // callAd();//chnging this methid from oncreate to onResume for better staibilization TODO: un cmnt in goes wrng
+              callAd();
 //              db.collection("Published Ads")
 //                    .get()
 //                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -131,12 +127,6 @@ public class AdPopUpActivity extends Activity {
 
     }
 
-    @Override
-    public void onResume() { //this was called coz of abnormal behaviour of ad pop up nly sound no activity. TODO: if goes wrng remove whole method unmcnt 112
-        super.onResume();
-        callAd();
-    }
-
     private void initializeView() {
 
         rootLayout = findViewById(R.id.rootLayout);
@@ -150,7 +140,7 @@ public class AdPopUpActivity extends Activity {
         ad_close =  findViewById(R.id.closeAd);
         mShimmerViewContainer =  findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmerAnimation();
-        Ad_video = findViewById(R.id.adVideo);
+        videoView =  findViewById(R.id.video_view);
 
 
         parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -200,22 +190,14 @@ public class AdPopUpActivity extends Activity {
                         }
                         if(doc.get("ad_type").toString().equals("premium")){
                             ad_banner.setVisibility(View.INVISIBLE);
-                            Ad_video.setVisibility(View.VISIBLE);
-                            //initializing the youtube player and sending youtube video ID to stream.
-                            Ad_video.initialize(new YouTubePlayerInitListener() {
-                                @Override
-                                public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {
-                                    initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
-                                        @Override
-                                        public void onReady() {
-                                            String videoId = getYoutubeID(doc.get("video_url").toString());
+                            videoView.setVisibility(View.VISIBLE);
+                            if(DeviceLocked.isDeviceLocked(getApplicationContext())){
+                                videoView.setVideoPath(doc.get("video_url").toString()).getPlayer();
+                            }
+                            else{
+                                videoView.setVideoPath(doc.get("video_url").toString()).getPlayer().start();
+                            }
 
-                                            initializedYouTubePlayer.loadVideo(videoId,0);
-                                        }
-                                    });
-                                }
-                            }, true);
-                            //end of youtube player
                         }
 
                         publisher_name.setText(doc.get("publisher_name").toString());

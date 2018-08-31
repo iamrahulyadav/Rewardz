@@ -37,7 +37,7 @@ public class IntroActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                         .backgroundColor(R.color.first_slide_background)
                         .buttonsColor(R.color.first_slide_buttons)
-                        .image(R.drawable.ic_redeem_black_24dp)
+                        .image(R.mipmap.ic_launcher)
                         .title(getString(R.string.intro_slide1_title))
                         .description(getString(R.string.intro_slide1_description))
                         .build(),
@@ -55,7 +55,7 @@ public class IntroActivity extends MaterialIntroActivity {
                         .buttonsColor(R.color.third_slide_buttons)
                         .neededPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE
                                 ,Manifest.permission.WRITE_EXTERNAL_STORAGE})
-                        .image(R.drawable.ic_notifications_black_24dp)
+                        .image(R.drawable.ic_lock_open_black_24dp)
                         .title(getString(R.string.permissions_title))
                         .description(getString(R.string.intro_slide3_permission_description))
                         .build(),
@@ -69,6 +69,7 @@ public class IntroActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.fourth_slide_background)
                 .buttonsColor(R.color.fourth_slide_buttons)
+                .image(R.drawable.ic_mood_black_24dp)
                 .title(getString(R.string.intro_slide4_finish_title))
                 .description(getString(R.string.intro_slide4_finish_description))
                 .build());

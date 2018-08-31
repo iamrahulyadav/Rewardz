@@ -128,10 +128,11 @@
             android:contentDescription="@string/profile_pic_description"
             app:srcCompat="@drawable/ic_dashboard_black_24dp" />
 
-        <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
-            android:id="@+id/adVideo"
+        <tcking.github.com.giraffeplayer2.VideoView
+            android:id="@+id/video_view"
+            android:transitionName="videoPlayer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="175sp"
             android:visibility="gone"/>
     </LinearLayout>
 

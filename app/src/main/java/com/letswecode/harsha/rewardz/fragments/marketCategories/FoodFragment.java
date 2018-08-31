@@ -98,25 +98,24 @@ public class FoodFragment extends Fragment {
 
         //alreadyReddemed = new boolean[1];
 
-        if(user!= null){
-            db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc.getDocument().getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                    if(queryDocumentSnapshots.size()!= 0){
-                        //alreadyReddemed[0] = true;
-                        // Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-                    }else {
-                        //alreadyReddemed[0] = false;
-                        Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
-                        AdsList.add(ads);
-                        adsListAdapter.notifyDataSetChanged();
-                        Log.d("doc", doc.getDocument().getId().toString());
-                        //Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-                    }
+        //Log.d("doc","user: "+user.getUid()+" ad_id "+adID);
+        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc.getDocument().getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+               // Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
+                if(queryDocumentSnapshots.size()!= 0){
+                    //alreadyReddemed[0] = true;
+                    // Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                }else {
+                    //alreadyReddemed[0] = false;
+                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
+                    AdsList.add(ads);
+                    adsListAdapter.notifyDataSetChanged();
+                    Log.d("doc", doc.getDocument().getId().toString());
+                    //Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
                 }
-            });
-        }
-
+            }
+        });
 
 
         //return alreadyReddemed[0];
