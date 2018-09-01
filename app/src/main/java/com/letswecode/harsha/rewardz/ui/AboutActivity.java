@@ -128,9 +128,15 @@ public class AboutActivity extends AppCompatActivity {
                 .setLibrary(new Library("TicketView Library",
                         "https://github.com/vipulasri/TicketView",
                         License.APACHE))
-                .setLibrary(new Library("Android-youtube-player",
-                        "https://github.com/PierfrancescoSoffritti/android-youtube-player",
-                        License.MIT))
+                .setLibrary(new Library("Giraffe player2",
+                        "https://github.com/tcking/GiraffePlayer2",
+                        License.APACHE))
+                .setLibrary(new Library("Smary-App-Rate",
+                        "https://github.com/codemybrainsout/smart-app-rate",
+                        License.APACHE))
+                .setLibrary(new Library("AppUpdater",
+                        "https://github.com/javiersantos/AppUpdater",
+                        License.APACHE))
                 .setLibrary(new Library("Material Intro screen",
                         "https://github.com/TangoAgency/material-intro-screen",
                         License.MIT))

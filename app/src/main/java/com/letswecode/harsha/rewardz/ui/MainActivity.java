@@ -33,6 +33,8 @@ import com.letswecode.harsha.rewardz.fragments.MarketFragment;
 import com.letswecode.harsha.rewardz.fragments.ProfileFragment;
 import com.letswecode.harsha.rewardz.fragments.WalletFragment;
 import com.letswecode.harsha.rewardz.service.DownloadRt;
+
+
 //import com.letswecode.harsha.rewardz.fragments.SupportFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,7 +76,9 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme); //for splash screen runs only app taking long time to initialize
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 //TODO: first check internet connection then proceed
+
         //checking first run of app
         checkFirstRun();
 
@@ -116,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
         if(user != null){
             user.reload();
             emailVerified = user.isEmailVerified();
-            Log.d("doc", String.valueOf(emailVerified));
-            if(!emailVerified){
+                 if(!emailVerified){
                 emailVerifyAlert();
             }
         }
@@ -133,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             //starting service
             Intent intent = new Intent(MainActivity.this, DownloadRt.class);
             ContextCompat.startForegroundService(this,intent);
-            Log.d("doc","first time in day "+String.valueOf(prefManager.isFirstTimeLaunchInDay()));
+
             //prefManager.setFirstTimeLaunchInDay(false);
         }
 
@@ -186,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
-                            Log.d("doc", "Verification email sent to " + user.getEmail());
+
                         } else {
                             Log.d("doc", "sendEmailVerification failed!", task.getException());
                         }
@@ -248,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
         // Get saved version code
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         int savedVersionCode = prefs.getInt(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
-            Log.d("savedVersionCode", String.valueOf(savedVersionCode));
+
         // Check for first run or upgrade
         if (currentVersionCode == savedVersionCode) {
 
@@ -269,5 +272,6 @@ public class MainActivity extends AppCompatActivity {
         // Update the shared preferences with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
     }
+
 
 }

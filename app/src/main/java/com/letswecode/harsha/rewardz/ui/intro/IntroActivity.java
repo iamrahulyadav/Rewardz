@@ -40,13 +40,8 @@ public class IntroActivity extends MaterialIntroActivity {
                         .image(R.mipmap.ic_launcher)
                         .title(getString(R.string.intro_slide1_title))
                         .description(getString(R.string.intro_slide1_description))
-                        .build(),
-                new MessageButtonBehaviour(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showMessage(getString(R.string.intro_slide1_button_text));
-                    }
-                }, getString(R.string.intro_slide1_message)));
+                        .build());
+
 
         addSlide(new CustomSlide());
 
@@ -66,13 +61,14 @@ public class IntroActivity extends MaterialIntroActivity {
                     }
                 }, getString(R.string.intro_slide3_button_text)));
 
-        addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.fourth_slide_background)
-                .buttonsColor(R.color.fourth_slide_buttons)
-                .image(R.drawable.ic_mood_black_24dp)
-                .title(getString(R.string.intro_slide4_finish_title))
-                .description(getString(R.string.intro_slide4_finish_description))
-                .build());
+        addSlide(new CustomFinishSlide());
+//        addSlide(new SlideFragmentBuilder()
+//                .backgroundColor(R.color.fourth_slide_background)
+//                .buttonsColor(R.color.fourth_slide_buttons)
+//                .image(R.drawable.ic_mood_black_24dp)
+//                .title(getString(R.string.intro_slide4_finish_title))
+//                .description(getString(R.string.intro_slide4_finish_description))
+//                .build());
 
     }
 

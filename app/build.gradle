@@ -18,6 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
@@ -40,15 +41,18 @@ dependencies {
 
     implementation 'com.vipulasri:ticketview:1.0.5'    // for coupon code layout
 
-    implementation 'agency.tango.android:material-intro-screen:0.0.5'    //for intro and permissions on Intro slide
+    implementation 'agency.tango.android:material-intro-screen:0.0.5'
+    //for intro and permissions on Intro slide
 
     implementation 'com.github.medyo:android-about-page:1.2.4'    //for about app and developer page
 
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'    //for obtaining user location
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    //for obtaining user location
 
-    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'    //for loading while retrieving data from firestore
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+    //for loading while retrieving data from firestore
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'    //for crash analytics
 
@@ -65,6 +69,8 @@ dependencies {
     implementation 'com.codemybrainsout.rating:ratingdialog:1.0.8'//for app rating dialog
 
     implementation 'com.github.javiersantos:AppUpdater:2.7'//for automatic app update checker
+
+    implementation 'com.airbnb.android:lottie:2.6.0-beta19'//for animations
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

@@ -5,21 +5,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.letswecode.harsha.rewardz.R;
 
 import agency.tango.materialintroscreen.SlideFragment;
 
-public class CustomSlide extends SlideFragment {
+public class CustomFinishSlide extends SlideFragment {
 
-    private CheckBox checkBox;
-
+    LottieAnimationView animation_view;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_intro_custom_slide, container, false);
-        checkBox = view.findViewById(R.id.checkBox);
+        final View view = inflater.inflate(R.layout.fragment_intro_custom_finish_slide, container, false);
+        animation_view = view.findViewById(R.id.animation_view);
         return view;
     }
 
@@ -35,7 +34,7 @@ public class CustomSlide extends SlideFragment {
 
     @Override
     public boolean canMoveFurther() {
-        return checkBox.isChecked();
+        return true;
     }
 
     @Override

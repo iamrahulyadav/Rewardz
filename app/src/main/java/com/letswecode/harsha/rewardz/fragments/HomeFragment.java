@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.facebook.shimmer.ShimmerFrameLayout;
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +55,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class HomeFragment extends Fragment {
 
     FirebaseFirestore db;
@@ -63,16 +65,16 @@ public class HomeFragment extends Fragment {
     private FusedLocationProviderClient client;
 
     RecyclerView mainlist;
-    TextView emptyView;
-    private AdsListAdapter adsListAdapter;
+    LottieAnimationView loading_animation_view, empty_animation_view;
+    public AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
     public String currentLocation;
     double Lat, Lon;
+    int delayInMillis = 8000;
     boolean[] alreadyReddemed;
 
     //public static List<String> AdsIDs;
 
-    private ShimmerFrameLayout mShimmerViewContainer;
     private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
     @Nullable
     @Override
@@ -105,7 +107,7 @@ public class HomeFragment extends Fragment {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
                               //  Toast.makeText(getContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
-                                Log.d("rewardz","all permissions granted");
+
                             }
                             if (report.isAnyPermissionPermanentlyDenied()) {
                                 // show alert dialog navigating to Settings
@@ -150,7 +152,7 @@ public class HomeFragment extends Fragment {
                     Lat = location.getLatitude();
                     Lon = location.getLongitude();
 
-                    Log.d("latlon",String.valueOf(Lat)+ " "+ String.valueOf(Lon));
+
                     getCurrentCity(Lat, Lon);
                 }
 
@@ -179,29 +181,33 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // initialise your views
 
-        mShimmerViewContainer =  view.findViewById(R.id.shimmer_view_container);
-        mShimmerViewContainer.startShimmerAnimation();
-
-
         mainlist = view.findViewById(R.id.recyclerView);
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(adsListAdapter);
-        emptyView = view.findViewById(R.id.empty_view);
+        loading_animation_view = view.findViewById(R.id.loading_animation_view);
+        empty_animation_view = view.findViewById(R.id.empty_animation_view);
+        empty_animation_view.cancelAnimation();
+        loading_animation_view.setVisibility(View.VISIBLE);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mShimmerViewContainer.stopShimmerAnimation();
-                mShimmerViewContainer.setVisibility(View.INVISIBLE);
                 if(adsListAdapter.getItemCount()== 0){
                     mainlist.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.playAnimation();
+                    empty_animation_view.setVisibility(View.VISIBLE);
+
                 } else {
                     mainlist.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.setVisibility(View.GONE);
                 }
             }
-        }, 10000);
+        }, delayInMillis);
 
 
     }
@@ -279,7 +285,7 @@ public class HomeFragment extends Fragment {
 
                                     if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.MODIFIED
                                         checkAlreadyRedeemed(doc);
-                                        Log.d("doc", "inside");
+
 //                                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
 //                                    AdsList.add(ads);
 //                                    Log.d("doc", doc.getDocument().getId().toString());
@@ -289,12 +295,16 @@ public class HomeFragment extends Fragment {
                                     }
 
                                 }
+
                             }catch (Exception err){
                                 Log.d("doc", "onErrr: "+err.getMessage());
                             }
 
                         }
+
+
                     });
+
                 }
             }
         }catch (Exception err){
@@ -314,7 +324,7 @@ public class HomeFragment extends Fragment {
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
                 try{
-                    Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
+
                     if(queryDocumentSnapshots.size()!= 0){
                         alreadyReddemed[0] = true;
                         Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
@@ -333,6 +343,7 @@ public class HomeFragment extends Fragment {
         });
 
 
+
         //return alreadyReddemed[0];
     }
 
@@ -345,6 +356,7 @@ public class HomeFragment extends Fragment {
 
         }
     }
+
 
 
 }

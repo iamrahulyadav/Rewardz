@@ -16,7 +16,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/t_and_c_message" />
+            android:text="@string/t_and_c_message"
+            android:textColor="@color/black"/>
     </ScrollView>
 
     <CheckBox
@@ -25,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:text="@string/check_to_pass"
+        android:textColor="@color/black"
+        android:buttonTint="@color/black"
         app:layout_parallaxFactor="0.4" />
 
 </agency.tango.materialintroscreen.parallax.ParallaxLinearLayout>

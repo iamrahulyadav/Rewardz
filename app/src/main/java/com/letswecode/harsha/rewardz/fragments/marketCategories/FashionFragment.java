@@ -1,6 +1,7 @@
 package com.letswecode.harsha.rewardz.fragments.marketCategories;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -27,7 +29,7 @@ public class FashionFragment extends Fragment {
     public static final String PAGE_TITLE = "Fashion"; //TODO:change this strings.xml
 
     RecyclerView mainlist;
-
+    LottieAnimationView  empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
 
@@ -91,6 +93,22 @@ public class FashionFragment extends Fragment {
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(adsListAdapter);
+        empty_animation_view = view.findViewById(R.id.empty_animation_view);
+        empty_animation_view.cancelAnimation();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(adsListAdapter.getItemCount()== 0){
+                    mainlist.setVisibility(View.GONE);
+                    empty_animation_view.playAnimation();
+                    empty_animation_view.setVisibility(View.VISIBLE);
+                } else {
+                    mainlist.setVisibility(View.VISIBLE);
+                    empty_animation_view.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
 
 
     }

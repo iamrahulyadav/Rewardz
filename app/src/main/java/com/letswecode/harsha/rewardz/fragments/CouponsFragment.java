@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -30,7 +31,7 @@ public class CouponsFragment extends Fragment {
     public static final String PAGE_TITLE = "Redeemed Coupons";
 
     RecyclerView mainlist;
-    TextView emptyView;
+    LottieAnimationView loading_animation_view, empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
 
@@ -76,6 +77,7 @@ public class CouponsFragment extends Fragment {
                        }
 
                    }
+
                }catch (Exception err){
                    Log.d("doc", "onErr: "+err.getMessage());
                }
@@ -98,17 +100,24 @@ public class CouponsFragment extends Fragment {
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(couponsListAdapter);
-        emptyView = view.findViewById(R.id.empty_view);
+        loading_animation_view = view.findViewById(R.id.loading_animation_view);
+        empty_animation_view = view.findViewById(R.id.empty_animation_view);
+
+        loading_animation_view.setVisibility(View.VISIBLE);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(couponsListAdapter.getItemCount()== 0){
                     mainlist.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.setVisibility(View.VISIBLE);
+
                 } else {
                     mainlist.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.setVisibility(View.GONE);
+
                 }
             }
         }, 3000);

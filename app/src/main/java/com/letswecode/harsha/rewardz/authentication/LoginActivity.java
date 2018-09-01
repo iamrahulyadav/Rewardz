@@ -23,6 +23,7 @@ import com.letswecode.harsha.rewardz.ui.MainActivity;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.ui.intro.IntroActivity;
 
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
