@@ -45,6 +45,7 @@
         <activity
             android:name="com.letswecode.harsha.rewardz.ui.MainActivity"
             android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
             android:label="@string/app_name" />
 
         <activity
@@ -81,6 +82,7 @@
         <activity
             android:name="com.letswecode.harsha.rewardz.ui.AdPopUpActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".ui.PublisherAgentActivity"

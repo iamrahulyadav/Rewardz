@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_wallet:
                   fragment = new WalletFragment();
-                    break;
+                  break;
             }
             return loadFragment(fragment);
         }
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    // Initiating Menu XML file (menu.xml)
+    // Initiating Menu XML file (mainmenu.xml)
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {

@@ -2,6 +2,7 @@ package com.letswecode.harsha.rewardz.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.adapter.CouponsListAdapter;
@@ -34,6 +38,7 @@ public class CouponsFragment extends Fragment {
     LottieAnimationView loading_animation_view, empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
+    int n =0;
 
     private CouponsListAdapter couponsListAdapter;
     private List<Transactions> TransactionsList;
@@ -57,32 +62,63 @@ public class CouponsFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+//        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+//
+//               try{
+//                   for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+//
+//                       if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
+//                           Transactions transactions = doc.getDocument().toObject(Transactions.class);
+//                           TransactionsList.add(transactions);
+//                           Log.d("doc", doc.getDocument().toString());
+//                           try{
+//                               couponsListAdapter.notifyDataSetChanged();
+//                           }catch (Exception error){
+//                               Log.d("rewardz", error.getMessage());
+//                           }
+//
+//                       }
+//
+//                   }
+//
+//               }catch (Exception err){
+//                   Log.d("doc", "onErr: "+err.getMessage());
+//               }
+//            }
+//        });
+        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot doc : task.getResult()){
+                        n = n+1;
+                        Log.d("docc","inside loop");
+                        Transactions transactions = doc.toObject(Transactions.class);
+                        TransactionsList.add(transactions);
+                    }
 
-               try{
-                   for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                }
+                else{
+                    Log.d("docc","error");
+                }
+                if(n==0){
+                    mainlist.setVisibility(View.GONE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.playAnimation();
+                    empty_animation_view.setVisibility(View.VISIBLE);
 
-                       if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.ADDED
-                           Transactions transactions = doc.getDocument().toObject(Transactions.class);
-                           TransactionsList.add(transactions);
-                           Log.d("doc", doc.getDocument().toString());
-                           try{
-                               couponsListAdapter.notifyDataSetChanged();
-                           }catch (Exception error){
-                               Log.d("rewardz", error.getMessage());
-                           }
-
-                       }
-
-                   }
-
-               }catch (Exception err){
-                   Log.d("doc", "onErr: "+err.getMessage());
-               }
+                } else {
+                    mainlist.setVisibility(View.VISIBLE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.setVisibility(View.GONE);
+                }
             }
         });
+
     }
 
     @Override
@@ -105,21 +141,21 @@ public class CouponsFragment extends Fragment {
 
         loading_animation_view.setVisibility(View.VISIBLE);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(couponsListAdapter.getItemCount()== 0){
-                    mainlist.setVisibility(View.GONE);
-                    loading_animation_view.setVisibility(View.GONE);
-                    empty_animation_view.setVisibility(View.VISIBLE);
-
-                } else {
-                    mainlist.setVisibility(View.VISIBLE);
-                    loading_animation_view.setVisibility(View.GONE);
-                    empty_animation_view.setVisibility(View.GONE);
-
-                }
-            }
-        }, 3000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(couponsListAdapter.getItemCount()== 0){
+//                    mainlist.setVisibility(View.GONE);
+//                    loading_animation_view.setVisibility(View.GONE);
+//                    empty_animation_view.setVisibility(View.VISIBLE);
+//
+//                } else {
+//                    mainlist.setVisibility(View.VISIBLE);
+//                    loading_animation_view.setVisibility(View.GONE);
+//                    empty_animation_view.setVisibility(View.GONE);
+//
+//                }
+//            }
+//        }, 3000);
     }
 }
