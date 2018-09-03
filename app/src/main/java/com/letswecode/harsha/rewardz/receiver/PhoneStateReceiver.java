@@ -7,9 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.preference.RingtonePreference;
 import android.provider.MediaStore;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -71,8 +75,12 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 Log.i("ringtone","the ringtone uri is :"+newUri);
 
                 //checks user preference and changes ringtone by checking if switch ON/OFF status
-                if(preferences.getBoolean("active", true)){
 
+                    if(preferences.getBoolean("active", true)){
+                        boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(context).getActiveSubscriptionInfoCount() >= 2;
+                        if(dualSim){
+                            Log.d("docc","dual sim detected");
+                        }
                     RingtoneManager.setActualDefaultRingtoneUri(
                             context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
                             newUri);

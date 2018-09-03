@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.AutoMobileFragment;
+import com.letswecode.harsha.rewardz.fragments.marketCategories.ElectronicsFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.EntertainmentFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.FashionFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.FoodFragment;
@@ -71,7 +72,7 @@ public class MarketFragment extends Fragment {
     }
 
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private static final int NUM_ITEMS = 4;
+        private static final int NUM_ITEMS = 5;
 
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -91,6 +92,9 @@ public class MarketFragment extends Fragment {
 
                 case 3 :
                     return AutoMobileFragment.newInstance();
+
+                case 4 :
+                    return ElectronicsFragment.newInstance();
 
                     default:
                      return FoodFragment.newInstance();
@@ -120,6 +124,9 @@ public class MarketFragment extends Fragment {
 
                 case 3 :
                     return AutoMobileFragment.PAGE_TITLE;
+
+                case 4 :
+                    return ElectronicsFragment.PAGE_TITLE;
 
                 default:
                     return FoodFragment.PAGE_TITLE;

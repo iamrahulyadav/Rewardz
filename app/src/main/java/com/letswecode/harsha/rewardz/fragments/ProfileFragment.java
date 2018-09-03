@@ -120,6 +120,7 @@ public class ProfileFragment extends Fragment {
 
         myDialog = new Dialog(getContext());
         myDialog.setContentView(R.layout.ringtone_switch);
+        myDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         myDialog.setTitle("Warning!");
         ringtoneSwitch = myDialog.findViewById(R.id.ringtone_switch);
         final SharedPreferences preferences = getActivity().getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);

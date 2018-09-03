@@ -59,20 +59,20 @@
                     />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/couponCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/coupon_code"
-                android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/padding_10"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                />
-        </LinearLayout>
 
+        </LinearLayout>
+        <TextView
+            android:id="@+id/couponCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coupon_code"
+            android:layout_gravity="center"
+            android:layout_marginVertical="@dimen/padding_10"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            />
     </LinearLayout>
 
 </LinearLayout>

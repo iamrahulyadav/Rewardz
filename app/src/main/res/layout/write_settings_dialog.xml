@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:lottie_fileName="phone.json"
+        android:background="@color/black"
+        app:lottie_loop="true"
+        android:visibility="visible"
+        app:lottie_autoPlay="true"
+        />
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:paddingTop="@dimen/padding_10"
+        android:layout_below="@+id/animation_view"
+        android:layout_alignLeft="@+id/animation_view"
+        android:layout_alignStart="@+id/animation_view"
+        android:text="In order to change ringtone on every call, we need a special WRITE SETTINGS permission. Please grant the permission in next screen."
+        android:textStyle="bold"/>
+
+
+
+    <Button
+        android:id="@+id/write_settings_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Okay"
+        android:background="@color/grey_500"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv"
+        android:layout_alignLeft="@+id/tv"
+        android:layout_alignStart="@+id/tv"
+        android:textSize="18sp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+
+</RelativeLayout>
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:paddingTop="@dimen/padding_10"
+        android:text="In order to chnage ringtone on every call, we need a special WRITE SETTINGS permission. Please grant the permission in next screen."
+        android:textStyle="bold"/>
+    <Button
+        android:id="@+id/write_settings_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:background="@android:color/black"
+        android:text="@string/btn_login"
+        android:textColor="@android:color/white" />
+
+
+
+</LinearLayout>-->

@@ -4,16 +4,26 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SubscriptionManager;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -23,6 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.protobuf.CodedOutputStream;
 import com.letswecode.harsha.rewardz.BuildConfig;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.authentication.LoginActivity;
@@ -45,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
     boolean emailVerified;
     private PrefManager prefManager;
-
+    ConstraintLayout container;
+    BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -77,10 +89,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        container = findViewById(R.id.container);
+        navigation = findViewById(R.id.navigation);//Dont delete this bruh!
 //TODO: first check internet connection then proceed
 
         //checking first run of app
         checkFirstRun();
+
+        boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(this).getActiveSubscriptionInfoCount() >= 2;
+        if(dualSim){
+            Log.d("docc","dual sim detected");
+        }else{
+            Log.d("docc","dual sim not detected");
+        }
 
         //get firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -120,15 +141,14 @@ public class MainActivity extends AppCompatActivity {
         if(user != null){
             user.reload();
             emailVerified = user.isEmailVerified();
-                 if(!emailVerified){
-                emailVerifyAlert();
+                 if(!emailVerified){//TODO: IT SHOUD EMAIL NOT VERIFED
+                emailVerifySnackBar(container, "Email not verified");
             }
         }
 
         //loading the default home fragment
         loadFragment(new HomeFragment());
 
-        BottomNavigationView navigation =  findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 //TODO:uncmnt this service inoreder  to run service -- FINISHED
         prefManager = new PrefManager(this);
@@ -143,42 +163,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void emailVerifyAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        // Setting Dialog Title
-        alertDialog.setTitle(getString(R.string.emailVerification_dailog_title));
-        // Setting Dialog Message
-        alertDialog.setMessage(getString(R.string.emailVerification_dailog_message));
-        // Setting Icon to Dialog
-        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
-        //make dailog stays on screen even clicks some where on screen
-        alertDialog.setCancelable(false);
-        // Setting Positive "Yes" Button
-        alertDialog.setPositiveButton(getString(R.string.resend_email), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // User pressed YES button. Write Logic Here
-                sendEmailVerification();
-                Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully), Toast.LENGTH_SHORT).show();
-            }
-        });
-        // Setting Negative "NO" Button
-        alertDialog.setNegativeButton(getString(R.string.dont_send_email), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // User pressed No button. Write Logic Here
-                Toast.makeText(getApplicationContext(), getString(R.string.dont_send_email_toast), Toast.LENGTH_SHORT).show();
-            }
-        });
-        // Setting Netural "Cancel" Button
-        alertDialog.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // User pressed Cancel button. Write Logic Here
-                Toast.makeText(getApplicationContext(), "You clicked on Cancel",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void emailVerifySnackBar(final View coordinatorLayout, String snackTitle) {
+        Log.d("docc","into email verify");
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, snackTitle, Snackbar.LENGTH_INDEFINITE)
+                .setAction("Resend", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendEmailVerification();
+                    }
+                });
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbar.getView().getLayoutParams();
+        params.setMargins(0, 0, 0, height);
+        snackbar.getView().setLayoutParams(params);
+        snackbar.show(); Log.d("docc","snackbar shown");
 
-        // Showing Alert Message
-        alertDialog.show();
+
     }
 
     public  void sendEmailVerification() {
@@ -188,10 +188,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+
                             Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
 
                         } else {
                             Log.d("doc", "sendEmailVerification failed!", task.getException());
+                            Toast.makeText(getApplicationContext(), "Unable to sent mail to "+ user.getEmail(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -4,12 +4,15 @@ package com.letswecode.harsha.rewardz.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,9 +71,10 @@ public class HomeFragment extends Fragment {
     FirebaseUser user;
 
     private FusedLocationProviderClient client;
-
+    private Button button;
     RecyclerView mainlist;
     LottieAnimationView loading_animation_view, empty_animation_view;
+    TextView no_location_Tv;
     public AdsListAdapter adsListAdapter;
     public List<Ads> AdsList;
     public String currentLocation;
@@ -136,16 +141,21 @@ public class HomeFragment extends Fragment {
         }
 //TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW --FINISHED
        //code block to get the write_settings permission
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            boolean settingsCanWrite = Settings.System.canWrite(getContext());
-            if(!settingsCanWrite){
-                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent,CODE_WRITE_SETTINGS_PERMISSION);
-                //startActivity(intent);
+        String deviceName = android.os.Build.MODEL;
+        String deviceMan = android.os.Build.MANUFACTURER;
+        if(deviceMan.contains("Xiaomi")){
+            Log.d("docc","Xiaomi detected");
+        }else{
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                boolean settingsCanWrite = Settings.System.canWrite(getContext());
+                if(!settingsCanWrite){
+                    Log.d("docc","came into this stuff");
+                    showWriteSettingsDialog();
+                    //startActivity(intent);
+                }
             }
-        }//end of obtaining permission to write settings. WE NEED THIS IN ORDER TO CHANGE RINGTONE.
+        }
+        //end of obtaining permission to write settings. WE NEED THIS IN ORDER TO CHANGE RINGTONE.
 
 
         client.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
@@ -181,6 +191,26 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void showWriteSettingsDialog(){
+        Log.d("docc","came into this dialog");
+        final Dialog dialog = new Dialog(getContext());
+        LottieAnimationView animation_view = dialog.findViewById(R.id.animation_view);
+        dialog.setContentView(R.layout.write_settings_dialog);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        button = dialog.findViewById(R.id.write_settings_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent,CODE_WRITE_SETTINGS_PERMISSION);
+            }
+        });
+        dialog.show();
+
+    }
+
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // initialise your views
@@ -193,28 +223,7 @@ public class HomeFragment extends Fragment {
         empty_animation_view = view.findViewById(R.id.empty_animation_view);
         empty_animation_view.cancelAnimation();
         loading_animation_view.setVisibility(View.VISIBLE);
-
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(adsListAdapter.getItemCount()== 0){
-//                    mainlist.setVisibility(View.GONE);
-//                    loading_animation_view.pauseAnimation();
-//                    loading_animation_view.setVisibility(View.GONE);
-//                    empty_animation_view.playAnimation();
-//                    empty_animation_view.setVisibility(View.VISIBLE);
-//
-//                } else {
-//                    mainlist.setVisibility(View.VISIBLE);
-//                    loading_animation_view.pauseAnimation();
-//                    loading_animation_view.setVisibility(View.GONE);
-//                    empty_animation_view.setVisibility(View.GONE);
-//                }
-//            }
-//        }, delayInMillis);
-
-
+        no_location_Tv = view.findViewById(R.id.no_location_Tv);
     }
 
     private void showSettingsDialog() {
@@ -281,28 +290,6 @@ public class HomeFragment extends Fragment {
 
 
                 if(user!= null){
-//                    db.collection("Published Ads").whereEqualTo("city", currentLocation).addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//
-//                            try{
-//                                for (final DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-//
-//                                    if (doc.getType() == DocumentChange.Type.ADDED) { //DocumentChange.Type.MODIFIED
-//                                        checkAlreadyRedeemed(doc);
-//
-//                                    }
-//
-//                                }
-//
-//                            }catch (Exception err){
-//                                Log.d("doc", "onErrr: "+err.getMessage());
-//                            }
-//
-//                        }
-//
-//
-//                    });
                     db.collection("Published Ads").whereEqualTo("city", currentLocation).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {

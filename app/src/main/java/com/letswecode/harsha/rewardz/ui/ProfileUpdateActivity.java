@@ -28,11 +28,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.letswecode.harsha.rewardz.R;
 import com.squareup.picasso.Picasso;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,7 +50,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             PHOTOURI_KEY = "PhotoUri",
             ADPUBLISHER_KEY = "AdPublisher",
             USERID_KEY = "UserID"
-    ;
+                    ;
 
     FirebaseFirestore db;
     FirebaseAuth mAuth;
@@ -66,7 +68,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     ProgressBar progressBar, progressBar2;
 
     private String displayName, city, mobileNumber, userId, photoUri, adPublisher, email, rewards, updatedprofilepic;
-    private Boolean updateProfile = false;
+    private Boolean updateProfile = false, profilePicChanged = false;
     private static final int PICK_IMAGE_REQUEST = 234;
     //a Uri object to store file path
     private Uri filePath, downloadUri;
@@ -80,7 +82,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
         final Bundle extras = getIntent().getExtras();
         if(extras != null){
-             updateProfile = extras.getBoolean("UPDATE__PROFILE", false);
+            updateProfile = extras.getBoolean("UPDATE__PROFILE", false);
         }
 
 
@@ -88,6 +90,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
+
 
 
         //get current user
@@ -180,16 +183,19 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     private void uploadImageFile() {
         progressBar.setVisibility(View.VISIBLE);
-      final   StorageReference storageRef = firebaseStorage.getReference();
+
+        final   StorageReference storageRef = firebaseStorage.getReference();
         final StorageReference uploadeRef = storageRef.child("profilePic/"+user.getUid()+".jpg");
 
-       UploadTask uploadTask = uploadeRef.putFile(filePath);
+        UploadTask uploadTask = uploadeRef.putFile(filePath);
 
-         urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
+
                     throw task.getException();
+
                 }
 
                 return uploadeRef.getDownloadUrl();
@@ -202,7 +208,9 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     updatedprofilepic = String.valueOf(task.getResult());
                     //uploadedImage = task.getResult().toString();
                     progressBar.setVisibility(View.INVISIBLE);
+
                     Log.i("url",downloadUri.toString());
+                    profilePicChanged = true;
 
                 } else {
                     // Handle failures
@@ -230,6 +238,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
         if(!cityTV.getText().toString().isEmpty()){
             city = cityTV.getText().toString().toLowerCase();
+            subscribeUserToCityNotif(city);
         }else { city = " ";}
 
         adPublisher = Boolean.toString(adpublisherSW.isChecked());
@@ -262,6 +271,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+
                         progressBar2.setVisibility(View.INVISIBLE);
                         Toast.makeText(ProfileUpdateActivity.this, getString(R.string.user_registred),
                                 Toast.LENGTH_SHORT).show();
@@ -271,6 +281,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+
                         progressBar2.setVisibility(View.INVISIBLE);
                         Toast.makeText(ProfileUpdateActivity.this, getString(R.string.error_occured) + e.toString(),
                                 Toast.LENGTH_SHORT).show();
@@ -280,21 +291,41 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
     }
 
+    private void subscribeUserToCityNotif(String cityName) {
+
+        FirebaseMessaging.getInstance().subscribeToTopic(cityName)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = getString(R.string.msg_subscribed);
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                        }
+                        Toast.makeText(ProfileUpdateActivity.this, msg, Toast.LENGTH_SHORT).show();//TODO: remove this toast in release build
+                    }
+                });
+    }
+
     //TODO: create a UpdateUser method if existing user came to this activity from profile page.-- FINISHED
     private void updateUser() {
 
         progressBar2.setVisibility(View.VISIBLE);
+
+        if(!cityTV.getText().toString().isEmpty()){
+            subscribeUserToCityNotif(cityTV.getText().toString().toLowerCase());
+        }
         DocumentReference updatingProfile = db.collection("usersProfile").document(user.getUid());
         updatingProfile.update(NAME_KEY, displaynameTV.getText().toString());
         updatingProfile.update(PHONE_KEY, mobilenumberTV.getText().toString());
-        updatingProfile.update(CITY_KEY, cityTV.getText().toString());
+        updatingProfile.update(CITY_KEY, cityTV.getText().toString().toLowerCase());
         updatingProfile.update(ADPUBLISHER_KEY, Boolean.toString(adpublisherSW.isChecked()));
-        updatingProfile.update(PHOTOURI_KEY, updatedprofilepic).addOnSuccessListener(new OnSuccessListener<Void>() {
+        updatingProfile.update(PHOTOURI_KEY, profilePicChanged ? updatedprofilepic: photoUri ).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 progressBar2.setVisibility(View.INVISIBLE);
                 Toast.makeText(ProfileUpdateActivity.this, getString(R.string.updated_successfully),
                         Toast.LENGTH_SHORT).show();
+
                 finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -303,6 +334,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                 progressBar2.setVisibility(View.INVISIBLE);
                 Toast.makeText(ProfileUpdateActivity.this, getString(R.string.update_failed)+e.getMessage(),
                         Toast.LENGTH_SHORT).show();
+
             }
         });
     }

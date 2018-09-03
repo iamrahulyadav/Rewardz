@@ -1,6 +1,7 @@
 package com.letswecode.harsha.rewardz;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,7 +18,11 @@ public class BaseActivity extends AppCompatActivity {
     private PrefManager prefManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.M){
+            setTheme(R.style.SplashTheme);
+        }else {
+            setTheme(R.style.AppTheme);
+        }
         super.onCreate(savedInstanceState);
 
         prefManager = new PrefManager(this);

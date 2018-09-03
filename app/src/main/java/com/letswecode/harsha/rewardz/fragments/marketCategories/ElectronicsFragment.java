@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -29,24 +28,25 @@ import com.letswecode.harsha.rewardz.modal.Ads;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodFragment extends Fragment {
-    public static final String PAGE_TITLE = "Food";
+public class ElectronicsFragment extends Fragment {
+    public static final String PAGE_TITLE = "Electronics";
 
     RecyclerView mainlist;
-    LottieAnimationView  empty_animation_view;
+    LottieAnimationView empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
     int n=0;
+    boolean[] alreadyReddemed;
 
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
 
-    public FoodFragment() {
+    public ElectronicsFragment() {
         // Required empty public constructor
     }
 
-    public static FoodFragment newInstance() {
-        FoodFragment fragment = new FoodFragment();
+    public static ElectronicsFragment newInstance() {
+        ElectronicsFragment fragment = new ElectronicsFragment();
         return fragment;
     }
 
@@ -59,28 +59,7 @@ public class FoodFragment extends Fragment {
         AdsList = new ArrayList<>();
         adsListAdapter = new AdsListAdapter(getContext(),AdsList);
 
-//        db.collection("Published Ads").whereEqualTo("category","food").addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//
-//                try{
-//                    for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges()){
-//
-//                        if(doc.getType() == DocumentChange.Type.ADDED){ //DocumentChange.Type.ADDED
-//                            checkAlreadyRedeemed(doc);
-////                        Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
-////                        AdsList.add(ads);
-////                        Log.d("doc", doc.getDocument().toString());
-////                        adsListAdapter.notifyDataSetChanged();
-//                        }
-//
-//                    }
-//                }catch (Exception err){
-//                    Log.d("doc","err "+err.getMessage());
-//                }
-//            }
-//        });
-        db.collection("Published Ads").whereEqualTo("category","food").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Published Ads").whereEqualTo("category","electronics").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -127,49 +106,9 @@ public class FoodFragment extends Fragment {
         mainlist.setAdapter(adsListAdapter);
         empty_animation_view = view.findViewById(R.id.empty_animation_view);
         empty_animation_view.cancelAnimation();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(adsListAdapter.getItemCount()== 0){
-//                    mainlist.setVisibility(View.GONE);
-//                    empty_animation_view.playAnimation();
-//                    empty_animation_view.setVisibility(View.VISIBLE);
-//                } else {
-//                    mainlist.setVisibility(View.VISIBLE);
-//                    empty_animation_view.setVisibility(View.GONE);
-//                }
-//            }
-//        }, 3000);
-
 
     }
 
-//    public void checkAlreadyRedeemed(final DocumentChange doc) {
-//
-//        //alreadyReddemed = new boolean[1];
-//
-//        //Log.d("doc","user: "+user.getUid()+" ad_id "+adID);
-//        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc.getDocument().getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//               // Log.d("doc",String.valueOf(queryDocumentSnapshots.size()));
-//                if(queryDocumentSnapshots.size()!= 0){
-//                    //alreadyReddemed[0] = true;
-//                    // Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-//                }else {
-//                    //alreadyReddemed[0] = false;
-//                    Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
-//                    AdsList.add(ads);
-//                    adsListAdapter.notifyDataSetChanged();
-//                    Log.d("doc", doc.getDocument().getId().toString());
-//                    //Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-//                }
-//            }
-//        });
-//
-//
-//        //return alreadyReddemed[0];
-//    }
     public void checkAlreadyRedeemed(final /*DocumentChange*/ QueryDocumentSnapshot doc) {
 
         //alreadyReddemed = new boolean[1];
@@ -182,16 +121,16 @@ public class FoodFragment extends Fragment {
                 try{
 
                     if(queryDocumentSnapshots.size()!= 0){
-    //                    alreadyReddemed[0] = true;
-    //                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                        //                    alreadyReddemed[0] = true;
+                        //                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
                     }else {
                         //alreadyReddemed[0] = false;
                         // Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
                         Ads ads = doc.toObject(Ads.class).withId(doc.getId());
                         AdsList.add(ads);
                         adsListAdapter.notifyDataSetChanged();
-    //                    Log.d("doc", doc/*.getDocument()*/.getId().toString());
-    //                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                        //                    Log.d("doc", doc/*.getDocument()*/.getId().toString());
+                        //                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
                     }
                 }catch (Exception err){
                     Log.d("doc",err.getMessage());
@@ -200,5 +139,4 @@ public class FoodFragment extends Fragment {
         });
 
     }
-
 }

@@ -30,7 +30,12 @@
         android:visibility="gone"
         app:lottie_autoPlay="true"
         />
-
+     <TextView
+         android:id="@+id/no_location_Tv"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="On location service"
+         android:visibility="gone"/>
 
 </RelativeLayout>
 

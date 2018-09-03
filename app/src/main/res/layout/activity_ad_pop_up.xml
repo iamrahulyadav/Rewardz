@@ -91,6 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|top"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/profile_pic_description"
                 android:src="@drawable/ic_close_black_24dp" />
