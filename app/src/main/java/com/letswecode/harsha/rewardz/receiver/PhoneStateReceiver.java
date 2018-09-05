@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.RingtonePreference;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -75,21 +76,36 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 Log.i("ringtone","the ringtone uri is :"+newUri);
 
                 //checks user preference and changes ringtone by checking if switch ON/OFF status
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if(Settings.System.canWrite(context)){
+                        if(preferences.getBoolean("active", true) ){
+                            boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(context).getActiveSubscriptionInfoCount() >= 2;
+                            if(dualSim){
+                                Log.d("docc","dual sim detected");
+                            }
+                            RingtoneManager.setActualDefaultRingtoneUri(
+                                    context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
+                                    newUri);
 
-                    if(preferences.getBoolean("active", true)){
+
+                        }
+                    }
+
+                }else{
+                    if(preferences.getBoolean("active", true) ){
                         boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(context).getActiveSubscriptionInfoCount() >= 2;
                         if(dualSim){
                             Log.d("docc","dual sim detected");
                         }
-                    RingtoneManager.setActualDefaultRingtoneUri(
-                            context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
-                            newUri);
+                        RingtoneManager.setActualDefaultRingtoneUri(
+                                context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
+                                newUri);
 
 
+                    }
                 }
-//               RingtoneManager.setActualDefaultRingtoneUri(
-//                       context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
-//                       newUri);
+
+
 
                 SharedPreferences sharedPreferences = context.getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
                 String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");//TODO: change this df. value to ADZAPP a in database (dont delete adzapp ad in db)
@@ -117,8 +133,10 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                     long total_time = end_time - start_time;
                     Log.d("doc",String.valueOf(total_time));
                     //Intent to call dialog activity to show ad and update reward points to user after call ends
-                    if(isIncoming && callReceived ) {  //  if(total_time >= 30000 && isIncoming ){
-                        //final Intent i = new Intent(context, AdPopUpActivity.class);TODO:testing different layout
+
+                    if(isIncoming && callReceived ){               //  if(total_time >= 30000 && isIncoming )
+
+
                         final Intent i = new Intent(context, AdPopUpActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -131,7 +149,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                             }
                         }, 500);
 
-                    } // }
+                    }
                     isIncoming = false;
                     callReceived = false;
                 }

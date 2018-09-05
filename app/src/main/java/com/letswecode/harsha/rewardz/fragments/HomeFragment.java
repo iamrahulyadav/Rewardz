@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,6 +58,7 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.adapter.AdsListAdapter;
+import com.letswecode.harsha.rewardz.helper.DetectDevice;
 import com.letswecode.harsha.rewardz.modal.Ads;
 
 import java.io.IOException;
@@ -71,7 +73,7 @@ public class HomeFragment extends Fragment {
     FirebaseUser user;
 
     private FusedLocationProviderClient client;
-    private Button button;
+    private Button button, write_settings_granted_button, xiaomi_permission_button,xiaomi_permissions_granted_button;
     RecyclerView mainlist;
     LottieAnimationView loading_animation_view, empty_animation_view;
     TextView no_location_Tv;
@@ -141,17 +143,16 @@ public class HomeFragment extends Fragment {
         }
 //TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW --FINISHED
        //code block to get the write_settings permission
-        String deviceName = android.os.Build.MODEL;
-        String deviceMan = android.os.Build.MANUFACTURER;
-        if(deviceMan.contains("Xiaomi")){
+
+        if(DetectDevice.isMiUi()){
             Log.d("docc","Xiaomi detected");
+                showXiaomiPermissionDialog();
         }else{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 boolean settingsCanWrite = Settings.System.canWrite(getContext());
                 if(!settingsCanWrite){
-                    Log.d("docc","came into this stuff");
                     showWriteSettingsDialog();
-                    //startActivity(intent);
+
                 }
             }
         }
@@ -191,6 +192,30 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void showXiaomiPermissionDialog() {
+        final Dialog xiaomiDialog =  new Dialog(getContext());
+        xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
+        xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
+        xiaomi_permissions_granted_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_granted_button);
+        xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                xiaomiDialog.dismiss();
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                startActivity(intent);
+            }
+        });
+        xiaomi_permissions_granted_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                xiaomiDialog.dismiss();
+            }
+        });
+        xiaomiDialog.show();
+    }
+
     private void showWriteSettingsDialog(){
         Log.d("docc","came into this dialog");
         final Dialog dialog = new Dialog(getContext());
@@ -198,13 +223,21 @@ public class HomeFragment extends Fragment {
         dialog.setContentView(R.layout.write_settings_dialog);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         button = dialog.findViewById(R.id.write_settings_button);
+        write_settings_granted_button = dialog.findViewById(R.id.write_settings_granted_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + getContext().getPackageName()));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent,CODE_WRITE_SETTINGS_PERMISSION);
+                startActivityForResult(intent,HomeFragment.CODE_WRITE_SETTINGS_PERMISSION);
+            }
+        });
+        write_settings_granted_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();//TODO: save in shared prerferencs and dont show user again
             }
         });
         dialog.show();
@@ -361,7 +394,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(getContext())){
+        if (requestCode == HomeFragment.CODE_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(getContext())){
             Log.d("doc1", requestCode+" "+resultCode+" "+"CODE_WRITE_SETTINGS_PERMISSION success");
 
         }

@@ -355,4 +355,14 @@ public class DetailAdActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    @Override
+    protected void onPause() {
+        videoView.getPlayer().pause();
+        super.onPause();
+    }
+    @Override
+    protected void onResume() {
+        videoView.getPlayer().start();
+        super.onResume();
+    }
 }
