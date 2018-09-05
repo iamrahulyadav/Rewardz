@@ -232,9 +232,11 @@ public class AdPopUpActivity extends Activity {
                     mShimmerViewContainer.setVisibility(View.INVISIBLE);//TODO: check how shimmer layout working IT has to overlap on Below layout, IF needed change root layout to relative -- FINISHED
 
                     try{
-                        Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
+                        Picasso.with(getApplicationContext()).load(doc.get("publisher_image").toString()).into(profile_pic);
+//                        Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
                         if(doc.get("ad_type").toString().equals("standard") || doc.get("ad_type").toString().equals("basic")){
-                            Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
+                            //Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
+                            Picasso.with(getApplicationContext()).load(doc.get("ad_banner").toString()).into(ad_banner);
                         }
                         if(doc.get("ad_type").toString().equals("premium")){
                             ad_banner.setVisibility(View.GONE);
@@ -355,12 +357,18 @@ public class AdPopUpActivity extends Activity {
     @Override
     protected void onPause(){
         super.onPause();
-        videoView.getPlayer().pause();
+        if(videoView.getPlayer().canPause()){
+            videoView.getPlayer().pause();
+        }
+
     }
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        videoView.getPlayer().stop();
+        if(videoView.getPlayer().canPause()){
+            videoView.getPlayer().stop();
+        }
+
     }
 }
 

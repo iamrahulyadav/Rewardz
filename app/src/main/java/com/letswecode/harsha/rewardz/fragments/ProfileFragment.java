@@ -178,7 +178,8 @@ public class ProfileFragment extends Fragment {
                     _adPublisher = documentSnapshot.get("AdPublisher").toString();
                     //_photoUri = documentSnapshot.get("PhotoUri").toString();
                     try{
-                        Picasso.get()
+                        //Picasso.get()
+                        Picasso.with(getContext())
                                 .load(documentSnapshot.get("PhotoUri").toString())
                                 .placeholder(R.drawable.ic_sort_black_24dp)
                                 .error(R.drawable.ic_error_black_24dp)
@@ -186,7 +187,8 @@ public class ProfileFragment extends Fragment {
                     }
                     catch (Exception error ){
                         Log.d("profile pic exception",error.getMessage());
-                        Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(displayPic);
+                        //Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(displayPic);
+                        Picasso.with(getContext()).load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(displayPic);
                     }
                     try{
                         _photoUri = documentSnapshot.getString("PhotoUri").toString();

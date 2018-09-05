@@ -107,7 +107,8 @@ public class DetailAdActivity extends AppCompatActivity {
         videoView =  findViewById(R.id.video_view);
 
 
-        Picasso.get().load(adPublisherPic).into(Publisher_pic);
+        //Picasso.get().load(adPublisherPic).into(Publisher_pic);
+        Picasso.with(getApplicationContext()).load(adPublisherPic).into(Publisher_pic);
         Publisher_name.setText(adPublisherName);
         Expires_on.setText(adExpiresOn);
         Ad_description.setText(adDescription);
@@ -115,7 +116,8 @@ public class DetailAdActivity extends AppCompatActivity {
         Linkify.addLinks(Ad_url, Linkify.WEB_URLS);//To make links(URL) highlighted and clickable
 
         if(adType.equals("standard") || adType.equals("basic")){
-            Picasso.get().load(adBanner).into(Ad_banner);
+            //Picasso.get().load(adBanner).into(Ad_banner);
+            Picasso.with(getApplicationContext()).load(adBanner).into(Ad_banner);
         }
 
         if(adType.equals("premium")){

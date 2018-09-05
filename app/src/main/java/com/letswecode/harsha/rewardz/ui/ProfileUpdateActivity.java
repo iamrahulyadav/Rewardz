@@ -127,14 +127,16 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
 
             try{
-                Picasso.get()
+                //Picasso.get()
+                Picasso.with(getApplicationContext())
                         .load(photoUri)
                         .placeholder(R.drawable.ic_account_circle_black_24dp)//"https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131")
                         .into(imageViewIV);
             }
             catch (Exception error){
                 Log.d("profile pic exception",error.getMessage());
-                Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(imageViewIV);
+                //Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(imageViewIV);
+                Picasso.with(getApplicationContext()).load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(imageViewIV);
             }
 
         }

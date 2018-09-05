@@ -49,11 +49,13 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
 
         holder.parentLayout.setBackground(ColorChooser.ColorChooser());//settings a random color as background dynamically
 
-        Picasso.get().load(AdsList.get(position).getPublisher_image()).placeholder(R.drawable.ic_sort_white_24dp).error(R.drawable.ic_error_black_24dp).into(holder.profile_pic);
+        //Picasso.get().load(AdsList.get(position).getPublisher_image()).placeholder(R.drawable.ic_sort_white_24dp).error(R.drawable.ic_error_black_24dp).into(holder.profile_pic);
+        Picasso.with(context).load(AdsList.get(position).getPublisher_image()).placeholder(R.drawable.ic_sort_white_24dp).error(R.drawable.ic_error_black_24dp).into(holder.profile_pic);
         Log.d("doc",AdsList.get(position).getPublisher_image());
         holder.publisher_name.setText(AdsList.get(position).getPublisher_name());
         holder.expires_on.setText(AdsList.get(position).getExpires_on());
-        Picasso.get().load(AdsList.get(position).getAd_banner()).into(holder.ad_banner);
+        //Picasso.get().load(AdsList.get(position).getAd_banner()).into(holder.ad_banner);
+        Picasso.with(context).load(AdsList.get(position).getAd_banner()).into(holder.ad_banner);
         Log.d("doc",AdsList.get(position).getAd_banner());
         holder.ad_description.setText(AdsList.get(position).getAd_description());
         holder.ad_url.setText(AdsList.get(position).getAd_url());
