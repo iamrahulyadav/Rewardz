@@ -1,5 +1,8 @@
 package com.letswecode.harsha.rewardz.ui;
 
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,8 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +37,7 @@ import mehdi.sakout.aboutpage.Element;
 
 public class AboutActivity extends AppCompatActivity {
 
+    Uri mInvitationUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +84,13 @@ public class AboutActivity extends AppCompatActivity {
 
     private void startReferAndEarn() {
         Log.d("docc1","enetred start refer and earn");
+        final Dialog shareDialog = new Dialog(AboutActivity.this);
+        shareDialog.setContentView(R.layout.share_app_dialog);
+        final Button mail_share = shareDialog.findViewById(R.id.mail_share);
+        final Button social_share = shareDialog.findViewById(R.id.social_share);
+        final LottieAnimationView loading_animation_view = shareDialog.findViewById(R.id.loading_animation_view);
+        final TextView tv3 = shareDialog.findViewById(R.id.tv3);
+        shareDialog.show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         String link = "http://adzapp.in/?invitedby="+uid;
@@ -92,9 +106,15 @@ public class AboutActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<ShortDynamicLink>()     {
                     @Override
                     public void onSuccess(ShortDynamicLink shortDynamicLink) {
-                       Uri mInvitationUrl = shortDynamicLink.getShortLink();
+                       mInvitationUrl = shortDynamicLink.getShortLink();
+                       loading_animation_view.setVisibility(View.GONE);
+                       tv3.setText((String.valueOf(mInvitationUrl)));
+                       tv3.setVisibility(View.VISIBLE);
+                       mail_share.setEnabled(true);
+                       social_share.setEnabled(true);
                         Log.d("docc1", "short url is"+String.valueOf(mInvitationUrl));
-                       sendInvitationCode(mInvitationUrl);
+
+
                     }
                 }
                 )
@@ -104,6 +124,29 @@ public class AboutActivity extends AppCompatActivity {
                         Log.d("docc1","failed in line 104 "+e.getMessage());
                     }
                 });
+        tv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final android.content.ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("AdzApp referral invitation link", String.valueOf(mInvitationUrl));
+                clipboardManager.setPrimaryClip(clipData);
+            }
+        });
+        mail_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendInvitationCode(mInvitationUrl);
+            }
+        });
+        social_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Download AdzApp with my referral link "+String.valueOf(mInvitationUrl));
+                startActivity(Intent.createChooser(shareIntent, "Share link using"));
+            }
+        });
 
 
 
@@ -237,6 +280,12 @@ public class AboutActivity extends AppCompatActivity {
                         License.CREATIVE_COMMONS))
                 .setLibrary(new Library("LottieFile-Phone",
                         "https://www.lottiefiles.com/1286-phone",
+                        License.CREATIVE_COMMONS))
+                .setLibrary(new Library("Happy Birthday!",
+                        "https://www.lottiefiles.com/427-happy-birthday",
+                        License.CREATIVE_COMMONS))
+                .setLibrary(new Library("you're in!",
+                        "https://www.lottiefiles.com/2628-youre-in",
                         License.CREATIVE_COMMONS))
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
