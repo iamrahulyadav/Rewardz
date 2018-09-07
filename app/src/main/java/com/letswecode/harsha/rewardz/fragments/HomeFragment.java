@@ -221,7 +221,7 @@ public class HomeFragment extends Fragment implements StackableFragment{
         xiaomi_permissions_granted_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                prefManager.setPermissionDialog(true);
                 xiaomiDialog.dismiss();
             }
         });

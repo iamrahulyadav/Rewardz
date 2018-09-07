@@ -29,6 +29,8 @@ public class PrefManager {
 
     private static final String IS_INTRO_FINISHED = "appIntroFinished";
 
+
+
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -70,6 +72,8 @@ public class PrefManager {
         editor.commit();
     }
 
+
+
     public boolean isFirstTimeLaunch() {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
@@ -87,4 +91,7 @@ public class PrefManager {
     public boolean isPermissionGranted() { return  pref.getBoolean(IS_PERMISSIONS_GRANTED, false);}
 
     public boolean isIntroFinished(){ return pref.getBoolean(IS_INTRO_FINISHED, false); }
+
+
+
 }

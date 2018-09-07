@@ -4,11 +4,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.letswecode.harsha.rewardz.BuildConfig;
 import com.letswecode.harsha.rewardz.R;
 import com.marcoscg.licenser.Library;
@@ -34,6 +43,8 @@ public class AboutActivity extends AppCompatActivity {
                 .addGroup(getString(R.string.about_page_app_preference_group_name))
                 //.addItem(openRingtonePreference())
                 .addItem(openAdPublisherAndAgent())
+                .addGroup("Refer and Earn")
+                .addItem(referAndEarn())
                 .addGroup(getString(R.string.about_page_app_group_name))
                 .addItem(new Element().setTitle("version code: "+String.valueOf(BuildConfig.VERSION_NAME)))
                 .addItem(getThirdPartyLicenses())
@@ -48,6 +59,75 @@ public class AboutActivity extends AppCompatActivity {
                 .addItem(getCopyRightsElement())
                 .create();
         setContentView(aboutPage);
+
+    }
+
+    private Element referAndEarn() {
+        Element referAndEarn = new Element();
+        referAndEarn.setTitle("Refer and earn");
+        referAndEarn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("docc1","clicked on refer and earn");
+                startReferAndEarn();
+            }
+        });
+        return referAndEarn;
+    }
+
+    private void startReferAndEarn() {
+        Log.d("docc1","enetred start refer and earn");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        String link = "http://adzapp.in/?invitedby="+uid;
+        Log.d("docc1","link:"+link);
+        FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse(link))
+                .setDynamicLinkDomain("adzapp.page.link")
+                .setAndroidParameters(
+                        new DynamicLink.AndroidParameters.Builder("in.dthoughtsinnolabs.adzapp")
+                                .setMinimumVersion(1)
+                                .build())
+                .buildShortDynamicLink()
+                .addOnSuccessListener(new OnSuccessListener<ShortDynamicLink>()     {
+                    @Override
+                    public void onSuccess(ShortDynamicLink shortDynamicLink) {
+                       Uri mInvitationUrl = shortDynamicLink.getShortLink();
+                        Log.d("docc1", "short url is"+String.valueOf(mInvitationUrl));
+                       sendInvitationCode(mInvitationUrl);
+                    }
+                }
+                )
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("docc1","failed in line 104 "+e.getMessage());
+                    }
+                });
+
+
+
+    }
+
+    private void sendInvitationCode(Uri mInvitationUrl) {
+        Log.d("docc1","came into send inivation");
+        //String referrerName = FirebaseAuth.getInstance().getCurrentUser();
+        String subject = "Download AdzApp and get reward points";//String.format("%s wants you to download ADZAPP and earn", referrerName);
+        String invitationLink = mInvitationUrl.toString();
+        String msg = "Let's install ADZAPP together! Use my referrer link: "
+                + invitationLink;
+        String msgHtml = String.format("<p>Let's install ADZAPP. Use my "
+                + "<a href=\"%s\">referrer link</a>!</p>", invitationLink);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, msg);
+        intent.putExtra(Intent.EXTRA_HTML_TEXT, msgHtml);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            Log.d("docc1","came into last if");
+            startActivity(intent);
+        }
+
 
     }
 

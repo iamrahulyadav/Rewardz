@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,9 +38,12 @@ import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.Duration;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.protobuf.CodedOutputStream;
 import com.letswecode.harsha.rewardz.BuildConfig;
 import com.letswecode.harsha.rewardz.R;
@@ -106,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         mFragmentController = new FragmentController(getSupportFragmentManager(), R.id.fragment_container, savedInstanceState, null);
         //checking first run of app
         checkFirstRun();
+
 
         boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(this).getActiveSubscriptionInfoCount() >= 2;
         if(dualSim){

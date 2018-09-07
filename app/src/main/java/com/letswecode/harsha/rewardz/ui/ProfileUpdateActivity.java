@@ -239,7 +239,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         }else { mobileNumber = " ";}
 
         if(!cityTV.getText().toString().isEmpty()){
-            city = cityTV.getText().toString().toLowerCase();
+            city = cityTV.getText().toString().toLowerCase().trim();
             subscribeUserToCityNotif(city);
         }else { city = " ";}
 
