@@ -35,6 +35,9 @@ import android.widget.Toast;
 
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.fragstack.contracts.StackableFragment;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,6 +62,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.adapter.AdsListAdapter;
 import com.letswecode.harsha.rewardz.helper.DetectDevice;
+import com.letswecode.harsha.rewardz.helper.PrefManager;
 import com.letswecode.harsha.rewardz.modal.Ads;
 
 import java.io.IOException;
@@ -67,7 +71,7 @@ import java.util.List;
 
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements StackableFragment{
 
     FirebaseFirestore db;
     FirebaseUser user;
@@ -84,10 +88,13 @@ public class HomeFragment extends Fragment {
     int n=0;
     int delayInMillis = 7000;
     boolean[] alreadyReddemed;
+    PrefManager prefManager;
 
     //public static List<String> AdsIDs;
 
     private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
+
+    public HomeFragment(){}
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,6 +106,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // do your variables initialisations here except Views!!!
 
+        prefManager = new PrefManager(getContext());
         client = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -146,7 +154,10 @@ public class HomeFragment extends Fragment {
 
         if(DetectDevice.isMiUi()){
             Log.d("docc","Xiaomi detected");
+            if(prefManager.isPermissionGranted() == false){
                 showXiaomiPermissionDialog();
+            }
+
         }else{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 boolean settingsCanWrite = Settings.System.canWrite(getContext());
@@ -210,10 +221,16 @@ public class HomeFragment extends Fragment {
         xiaomi_permissions_granted_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 xiaomiDialog.dismiss();
             }
         });
         xiaomiDialog.show();
+
+        //for tap target view TODO:HAve a look
+//          TapTargetView.showFor(xiaomiDialog,
+//                  TapTarget.forView(xiaomiDialog.findViewById(R.id.xiaomi_permissions_button),"Please grant permissions","In order to get most points grant permission"));
+
     }
 
     private void showWriteSettingsDialog(){
@@ -237,6 +254,7 @@ public class HomeFragment extends Fragment {
         write_settings_granted_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                prefManager.setPermissionDialog(true);
                 dialog.dismiss();//TODO: save in shared prerferencs and dont show user again
             }
         });
@@ -401,5 +419,13 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public String getFragmentStackName() {
+        return "HomeFragment";
+    }
 
+    @Override
+    public void onFragmentScroll() {
+
+    }
 }

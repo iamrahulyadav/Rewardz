@@ -356,18 +356,20 @@ public class AdPopUpActivity extends Activity {
 
     @Override
     protected void onPause(){
-        super.onPause();
-        if(videoView.getPlayer().canPause()){
+        if(videoView.getVisibility() == View.VISIBLE){
             videoView.getPlayer().pause();
         }
+        super.onPause();
+
 
     }
     @Override
     protected void onDestroy(){
-        super.onDestroy();
-        if(videoView.getPlayer().canPause()){
-            videoView.getPlayer().stop();
+        if(videoView.getVisibility() == View.VISIBLE){
+            videoView.getPlayer().pause();
         }
+        super.onDestroy();
+
 
     }
 }

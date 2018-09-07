@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -26,6 +27,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fragstack.contracts.StackableFragment;
+import com.fragstack.controller.FragmentController;
+import com.fragstack.controller.FragmentTransactionOptions;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.Duration;
@@ -46,6 +53,7 @@ import com.letswecode.harsha.rewardz.fragments.WalletFragment;
 import com.letswecode.harsha.rewardz.service.DownloadRt;
 
 
+
 //import com.letswecode.harsha.rewardz.fragments.SupportFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
     FirebaseUser user;
-    boolean emailVerified;
+    boolean emailVerified, activityFocused;
     private PrefManager prefManager;
     ConstraintLayout container;
+    FragmentController mFragmentController;
     BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -79,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                   fragment = new WalletFragment();
                   break;
             }
-            return loadFragment(fragment);
+            return displayFragment(fragment);//return loadFragment(fragment);
         }
     };
 
@@ -90,9 +99,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         container = findViewById(R.id.container);
-        navigation = findViewById(R.id.navigation);//Dont delete this bruh!
-//TODO: first check internet connection then proceed
+        navigation = findViewById(R.id.navigation);//Don't delete this bruh!
 
+//TODO: first check internet connection then proceed
+        //fragment controller stuff
+        mFragmentController = new FragmentController(getSupportFragmentManager(), R.id.fragment_container, savedInstanceState, null);
         //checking first run of app
         checkFirstRun();
 
@@ -147,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //loading the default home fragment
-        loadFragment(new HomeFragment());
+       displayFragment(new HomeFragment());//fragstaack stuff// loadFragment(new HomeFragment());
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 //TODO:uncmnt this service inoreder  to run service -- FINISHED
@@ -217,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
     {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.mainmenu, menu);
+
         return true;
     }
 
@@ -273,6 +285,87 @@ public class MainActivity extends AppCompatActivity {
 
         // Update the shared preferences with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
+    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            Log.d("docc","activity focused");
+            //TODO:check wether tap target view is finished or not from shared preferences
+            prefManager = new PrefManager(this);
+            Log.d("docc","pref manager tut"+ prefManager.isBottomNavTutFinished());
+            if(prefManager.isBottomNavTutFinished() == false){
+                new TapTargetSequence(this)
+                        .targets(TapTarget.forView(navigation.findViewById(R.id.navigation_home),"For you", "Tailored ads based on your location"),
+                                TapTarget.forView(navigation.findViewById(R.id.navigation_market),"Ads Market","Here you can find all ads"),
+                                TapTarget.forView(navigation.findViewById(R.id.navigation_wallet),"Wallet","Here you can see your rewards and redeemed codes"),
+                                TapTarget.forView(navigation.findViewById(R.id.navigation_profile),"Profile","You can update your profile from here")
+
+                        .cancelable(false)
+                        ).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        Log.d("docc","sequence finished");
+                        prefManager.setIsBottomNavTutFinished(true);
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        Log.d("docc","sequence dequnce step"+ lastTarget.id()+ " "+targetClicked);
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                        Log.d("docc","sequence canclled");
+                    }
+                }).start();
+
+            }
+
+
+        }
+        else {Log.d("docc","activity not focused");
+
+        }
+    }
+//fragstack stuff
+    public boolean displayFragment(Fragment fragment) {
+        FragmentTransactionOptions fragmentTransactionOptions = new FragmentTransactionOptions.Builder()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).build();
+        mFragmentController.displayFragment(fragment, fragmentTransactionOptions);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mFragmentController.popBackStackImmediate()){
+           Log.d("docc", "inside if:"+String.valueOf(mFragmentController.getCurrentFragment().getId()));
+            super.onBackPressed();
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("docc1", "inside run"+String.valueOf(mFragmentController.getCurrentFragment()));
+                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("HomeFragment")){
+                    navigation.setSelectedItemId(R.id.navigation_home);
+
+                }
+                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("MarketFragment")){
+                    navigation.setSelectedItemId(R.id.navigation_market);
+                }
+                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("ProfileFragment")){
+                    navigation.setSelectedItemId(R.id.navigation_profile);
+                }
+                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("WalletFragment")){
+                    navigation.setSelectedItemId(R.id.navigation_wallet);
+                }
+
+            }
+        }, 100);
+        Log.d("docc1", String.valueOf(mFragmentController.getCurrentFragment()));
+        Log.d("docc1", "ID IS"+String.valueOf(navigation.getMenu().findItem(navigation.getSelectedItemId())));
+
+            //super.onBackPressed();
     }
 
 

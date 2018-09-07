@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         prefManager = new PrefManager(this);
-        if (prefManager.isFirstTimeLaunch()) {
+        if (prefManager.isFirstTimeLaunch() || prefManager.isIntroFinished() == false) {
             Log.d("doc",String.valueOf(prefManager.isFirstTimeLaunch()));
             prefManager.setFirstTimeLaunch(false);
             startActivity(new Intent(BaseActivity.this, IntroActivity.class));

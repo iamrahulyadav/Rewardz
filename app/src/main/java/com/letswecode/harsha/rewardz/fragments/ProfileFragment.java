@@ -20,6 +20,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fragstack.contracts.StackableFragment;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +36,7 @@ import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.ui.ProfileUpdateActivity;
 import com.squareup.picasso.Picasso;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements StackableFragment {
 
     Button updateProfile;
     TextView displayName, mobileNumber, city, rewardPoints ,emailVerified,ringtoneSwitchText;
@@ -47,6 +50,7 @@ public class ProfileFragment extends Fragment {
     FirebaseFirestore db;
     FirebaseUser user;
 
+    public ProfileFragment(){}
 
     @Nullable
     @Override
@@ -115,6 +119,8 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+
 
     private void showRingtonePreferenceDialog() {
 
@@ -261,6 +267,16 @@ public class ProfileFragment extends Fragment {
                     Log.d("error", e.getMessage());
                 }
             }); */
+
+    }
+
+    @Override
+    public String getFragmentStackName() {
+        return "ProfileFragment";
+    }
+
+    @Override
+    public void onFragmentScroll() {
 
     }
 }

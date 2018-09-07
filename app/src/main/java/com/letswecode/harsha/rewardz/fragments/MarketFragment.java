@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fragstack.contracts.StackableFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,7 +24,7 @@ import com.letswecode.harsha.rewardz.fragments.marketCategories.FashionFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.FoodFragment;
 import com.letswecode.harsha.rewardz.ui.AddNewAd;
 
-public class MarketFragment extends Fragment {
+public class MarketFragment extends Fragment implements StackableFragment {
 
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
@@ -31,6 +32,7 @@ public class MarketFragment extends Fragment {
     FirebaseFirestore db;
     FirebaseUser user;
 
+    public MarketFragment(){}
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,6 +71,16 @@ public class MarketFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public String getFragmentStackName() {
+        return "MarketFragment";
+    }
+
+    @Override
+    public void onFragmentScroll() {
+
     }
 
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {

@@ -137,6 +137,9 @@ public class AboutActivity extends AppCompatActivity {
                 .setLibrary(new Library("AppUpdater",
                         "https://github.com/javiersantos/AppUpdater",
                         License.APACHE))
+                .setLibrary(new Library("FragStack",
+                        "https://github.com/abhishesh-srivastava/fragstack",
+                        License.APACHE))
                 .setLibrary(new Library("Material Intro screen",
                         "https://github.com/TangoAgency/material-intro-screen",
                         License.MIT))
@@ -146,6 +149,15 @@ public class AboutActivity extends AppCompatActivity {
                 .setLibrary(new Library("Licenser",
                         "https://github.com/marcoscgdev/Licenser",
                         License.MIT))
+                .setLibrary(new Library("LottieFile-checked_done",
+                        "https://www.lottiefiles.com/433-checked-done",
+                        License.CREATIVE_COMMONS))
+                .setLibrary(new Library("LottieFile-Empty_box",
+                        "https://www.lottiefiles.com/629-empty-box",
+                        License.CREATIVE_COMMONS))
+                .setLibrary(new Library("LottieFile-Phone",
+                        "https://www.lottiefiles.com/1286-phone",
+                        License.CREATIVE_COMMONS))
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

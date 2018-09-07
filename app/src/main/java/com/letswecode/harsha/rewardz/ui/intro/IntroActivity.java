@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
+import com.letswecode.harsha.rewardz.helper.PrefManager;
 import com.letswecode.harsha.rewardz.service.DownloadRt;
 import com.letswecode.harsha.rewardz.ui.MainActivity;
 import com.letswecode.harsha.rewardz.R;
@@ -20,6 +21,7 @@ import agency.tango.materialintroscreen.animations.IViewTranslation;
 
 public class IntroActivity extends MaterialIntroActivity {
 
+    PrefManager prefManager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,8 @@ public class IntroActivity extends MaterialIntroActivity {
     @Override
     public void onFinish() {
         super.onFinish();
+        prefManager = new PrefManager(this);
+        prefManager.setIntroFinished(true);
         startActivity(new Intent(IntroActivity.this, MainActivity.class));
         finish();
     }

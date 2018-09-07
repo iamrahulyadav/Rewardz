@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 
 
 import com.codemybrainsout.ratingdialog.RatingDialog;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.letswecode.harsha.rewardz.R;
+import com.letswecode.harsha.rewardz.helper.PrefManager;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -60,7 +64,7 @@ public class DetailAdActivity extends AppCompatActivity {
     Button Redeem_button;
     String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode, adID;
     double userTotalPoints, pointsAfterDeduction;
-
+    PrefManager prefManager;
     FirebaseFirestore db;
     FirebaseUser user;
     boolean redeemed;
@@ -79,6 +83,33 @@ public class DetailAdActivity extends AppCompatActivity {
                 finish();
             }
         });
+        prefManager = new PrefManager(this);
+        if(prefManager.isDetailAdTutFinished() == false){
+           new TapTargetSequence(this)
+                   .targets(TapTarget.forView(findViewById(R.id.name),"Publisher name", "you can see same of publisher"),
+                            TapTarget.forView(findViewById(R.id.expireson),"Expires on", "This is the expiration ddate of ad"),
+                            TapTarget.forView(findViewById(R.id.adDescription),"Description","AD's description"),
+                           TapTarget.forView(findViewById(R.id.redeemButton),"Redeem buton", "Button to redeem")
+                   .cancelable(false))
+                   .listener(new TapTargetSequence.Listener() {
+                       @Override
+                       public void onSequenceFinish() {
+                           prefManager.setIsDetailAdTutFinished(true);
+                       }
+
+                       @Override
+                       public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                       }
+
+                       @Override
+                       public void onSequenceCanceled(TapTarget lastTarget) {
+
+                       }
+                   }).start();
+
+
+        }
 
         final  Bundle  extras = getIntent().getExtras();
 
@@ -164,6 +195,8 @@ public class DetailAdActivity extends AppCompatActivity {
         openAppRater();
 
     }
+
+
 
     private void openAppRater() {
 
@@ -359,12 +392,10 @@ public class DetailAdActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        videoView.getPlayer().pause();
+        if(videoView.getVisibility() == View.VISIBLE){
+            videoView.getPlayer().pause();
+        }
         super.onPause();
     }
-    @Override
-    protected void onResume() {
-        videoView.getPlayer().start();
-        super.onResume();
-    }
+
 }
