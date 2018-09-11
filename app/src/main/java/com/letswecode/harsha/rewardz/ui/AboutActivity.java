@@ -263,6 +263,9 @@ public class AboutActivity extends AppCompatActivity {
                 .setLibrary(new Library("FragStack",
                         "https://github.com/abhishesh-srivastava/fragstack",
                         License.APACHE))
+                .setLibrary(new Library("QRCodeReaderView",
+                        "https://github.com/dlazaro66/QRCodeReaderView",
+                        License.APACHE))
                 .setLibrary(new Library("Material Intro screen",
                         "https://github.com/TangoAgency/material-intro-screen",
                         License.MIT))

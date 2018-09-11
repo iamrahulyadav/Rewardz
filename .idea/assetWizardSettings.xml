@@ -134,8 +134,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_sort_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Harsha\Downloads\nodata_logo.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_qrcode_scan" />
+                            <entry key="sourceFile" value="C:\Users\Harsha\Downloads\qrcode-scan.svg" />
                           </map>
                         </option>
                       </PersistentState>

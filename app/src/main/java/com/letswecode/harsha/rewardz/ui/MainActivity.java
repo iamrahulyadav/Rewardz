@@ -244,6 +244,9 @@ public class MainActivity extends AppCompatActivity {
 //            case R.id.menu_settings:
 //                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
 //              return true;
+            case R.id.scan_qr:
+                startActivity(new Intent(MainActivity.this, ScanQrActivity.class));
+                return true;
             case R.id.menu_about:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 return true;

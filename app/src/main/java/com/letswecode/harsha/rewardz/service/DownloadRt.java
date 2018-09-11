@@ -150,7 +150,7 @@ public class DownloadRt extends Service {
                                             Log.d("ringtone","not-downloaded");
                                         }
                                     });
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -178,7 +178,7 @@ public class DownloadRt extends Service {
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarm.set(
                 alarm.RTC_WAKEUP, //TODO: CHANGE IT TO 1000*60*60*24
-                System.currentTimeMillis() + (1000 * 60 * 5 ),//runs for every 24hrs from time of app install(from time at which first time service run)
+                System.currentTimeMillis() + (1000 * 60 * 60 * 24 ),//runs for every 24hrs from time of app install(from time at which first time service run)
                 PendingIntent.getService(this, 0, new Intent(this, DownloadRt.class), 0)
         );
     }

@@ -51,7 +51,7 @@ public class IntroActivity extends MaterialIntroActivity {
                         .backgroundColor(R.color.third_slide_background)
                         .buttonsColor(R.color.third_slide_buttons)
                         .neededPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE
-                                ,Manifest.permission.WRITE_EXTERNAL_STORAGE})
+                                ,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
                         .image(R.drawable.ic_lock_open_black_24dp)
                         .title(getString(R.string.permissions_title))
                         .description(getString(R.string.intro_slide3_permission_description))

@@ -112,19 +112,26 @@ public class DetailAdActivity extends AppCompatActivity {
         }
 
         final  Bundle  extras = getIntent().getExtras();
+        if(extras != null){
 
-        adPublisherPic =  extras.get("adPublisherPic").toString();
-        adPublisherName = extras.get("adPublisherName").toString();
-        adExpiresOn = extras.get("adExpiresOn").toString();
-        adBanner = extras.get("adBanner").toString();
-        adDescription = extras.get("adDescription").toString();
-        adUrl = extras.get("adUrl").toString();
-        adType = extras.get("adType").toString();
-        adVideoUrl = extras.get("adVideoUrl").toString();
-        adPoints = extras.get("adPoints").toString();
-        adCouponCode = extras.get("adCouponCode").toString();
-        adID = extras.get("adID").toString();
-        Log.d("doc", adID);//TODO:remove this in release build
+            adPublisherPic =  extras.get("adPublisherPic").toString();
+            adPublisherName = extras.get("adPublisherName").toString();
+            adExpiresOn = extras.get("adExpiresOn").toString();
+            adBanner = extras.get("adBanner").toString();
+            adDescription = extras.get("adDescription").toString();
+            adUrl = extras.get("adUrl").toString();
+            adType = extras.get("adType").toString();
+            adVideoUrl = extras.get("adVideoUrl").toString();
+            adPoints = extras.get("adPoints").toString();
+            adCouponCode = extras.get("adCouponCode").toString();
+            adID = extras.get("adID").toString();
+            Log.d("doc", adID);//TODO:remove this in release build
+
+        }else{
+            Log.d("e", "exception");
+        }
+
+
 
         Publisher_pic =  findViewById(R.id.profilePic);
         Publisher_name = findViewById(R.id.name);

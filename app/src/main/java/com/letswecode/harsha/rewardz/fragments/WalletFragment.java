@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +61,8 @@ public class WalletFragment extends Fragment implements StackableFragment{
     FirebaseUser user;
     double INVITATION_POINTS = 10.0, rewardpoints, frndRewardpoints;
     private static final String USER_ID_KEY = "UserID", REF_USER_ID_KEY = "ReferredBy";
+    private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
+
     public WalletFragment(){}
 
     @Nullable
@@ -156,18 +159,10 @@ public class WalletFragment extends Fragment implements StackableFragment{
             if(!settingsCanWrite){
                 if(DetectDevice.isMiUi()){
 
-                     snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Permission not granted", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Show me how", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showWriteSettingsWay();
-                                }
-                            });
-                    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbar.getView().getLayoutParams();
-                    params.setMargins(0, 0, 0, height);
-                    snackbar.getView().setLayoutParams(params);
-                    snackbar.show();
+                    showSnack(true);
+
+                }else{
+                    showSnack(false);
                 }
 
 
@@ -190,6 +185,30 @@ public class WalletFragment extends Fragment implements StackableFragment{
                 }
             }
         });
+
+    }
+
+    private void showSnack(final boolean isMIUI) {
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.container), "Permission not granted", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Show me how", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(isMIUI){
+                                showWriteSettingsWay();
+                            }else{
+                                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivityForResult(intent, CODE_WRITE_SETTINGS_PERMISSION);
+                            }
+
+                        }
+                    });
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbar.getView().getLayoutParams();
+            params.setMargins(0, 0, 0, height);
+            snackbar.getView().setLayoutParams(params);
+            snackbar.show();
 
     }
 
