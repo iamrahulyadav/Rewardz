@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.letswecode.harsha.rewardz.R;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.AutoMobileFragment;
+import com.letswecode.harsha.rewardz.fragments.marketCategories.ElectionsFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.ElectronicsFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.EntertainmentFragment;
 import com.letswecode.harsha.rewardz.fragments.marketCategories.FashionFragment;
@@ -84,14 +85,14 @@ public class MarketFragment extends Fragment implements StackableFragment {
     }
 
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private static final int NUM_ITEMS = 5;
+        private static final int NUM_ITEMS = 6;
 
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position) {//TODO: use switch case for categories
+        public Fragment getItem(int position) {//TODO: use switch case for categories --FINISHED
             switch (position){
                 case 0 :
                     return FoodFragment.newInstance();
@@ -107,6 +108,9 @@ public class MarketFragment extends Fragment implements StackableFragment {
 
                 case 4 :
                     return ElectronicsFragment.newInstance();
+
+                case 5 :
+                    return ElectionsFragment.newInstance();
 
                     default:
                      return FoodFragment.newInstance();
@@ -139,6 +143,9 @@ public class MarketFragment extends Fragment implements StackableFragment {
 
                 case 4 :
                     return ElectronicsFragment.PAGE_TITLE;
+
+                case 5 :
+                    return ElectionsFragment.PAGE_TITLE;
 
                 default:
                     return FoodFragment.PAGE_TITLE;

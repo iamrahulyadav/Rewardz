@@ -87,7 +87,7 @@ public class DetailAdActivity extends AppCompatActivity {
         if(prefManager.isDetailAdTutFinished() == false){
            new TapTargetSequence(this)
                    .targets(TapTarget.forView(findViewById(R.id.name),"Publisher name", "you can see same of publisher"),
-                            TapTarget.forView(findViewById(R.id.expireson),"Expires on", "This is the expiration ddate of ad"),
+                            TapTarget.forView(findViewById(R.id.expireson),"Expires on", "This is the expiration date of ad"),
                             TapTarget.forView(findViewById(R.id.adDescription),"Description","AD's description"),
                            TapTarget.forView(findViewById(R.id.redeemButton),"Redeem buton", "Button to redeem")
                    .cancelable(false))
@@ -112,7 +112,7 @@ public class DetailAdActivity extends AppCompatActivity {
         }
 
         final  Bundle  extras = getIntent().getExtras();
-        if(extras != null){
+        //if(extras != null){
 
             adPublisherPic =  extras.get("adPublisherPic").toString();
             adPublisherName = extras.get("adPublisherName").toString();
@@ -127,9 +127,9 @@ public class DetailAdActivity extends AppCompatActivity {
             adID = extras.get("adID").toString();
             Log.d("doc", adID);//TODO:remove this in release build
 
-        }else{
-            Log.d("e", "exception");
-        }
+        //}else{
+          //  Log.d("e", "exception");
+        //}
 
 
 
@@ -168,7 +168,8 @@ public class DetailAdActivity extends AppCompatActivity {
 
 
         }
-        Redeem_button.setText( getString(R.string.redeem)+" "+adPoints);
+            Redeem_button.setText(getString(R.string.redeem) + " " + adPoints);
+
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();

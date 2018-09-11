@@ -93,6 +93,13 @@
         <activity android:name=".ui.ScanQrActivity"
             android:label="Scan QR"/>
 
+        <activity android:name=".ui.SearchActivity"
+            android:theme="@style/AppThemeNoActionBar"/>
+
+        <activity android:name=".ui.PublisherDetailActivity"
+            android:theme="@style/AppThemeNoActionBar"
+            android:label="Publisher"/>
+
 
         <receiver
             android:name="com.letswecode.harsha.rewardz.receiver.PhoneStateReceiver"

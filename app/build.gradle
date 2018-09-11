@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'io.fabric'
 
 
@@ -38,7 +37,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.1'//for in-app messaging
     implementation 'com.google.firebase:firebase-dynamic-links:16.0.1'//for dynamic links
     implementation 'com.google.firebase:firebase-messaging:17.1.0'//for notifications
-    implementation 'com.google.firebase:firebase-perf:16.1.0'//for perf mon
+
 
     implementation 'com.karumi:dexter:5.0.0'    //for permissions in main activity
 
@@ -82,6 +81,8 @@ dependencies {
     implementation 'com.github.abhishesh-srivastava:fragstack:+'//for fragment back stack
 
     implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'//for QR code scanning
+
+    implementation 'com.github.armcha:DebugBanner:1.0.4'//for debug banner on activity
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

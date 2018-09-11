@@ -24,6 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.letswecode.harsha.rewardz.R;
 
+import io.armcha.debugBanner.Banner;
+import io.armcha.debugBanner.DebugBanner;
+
 public class ScanQrActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
     private QRCodeReaderView qrCodeReaderView;
@@ -38,6 +41,7 @@ public class ScanQrActivity extends AppCompatActivity implements QRCodeReaderVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_rq_code);
         mainLayout =  findViewById(R.id.mainLayout);
+        DebugBanner.Companion.init(getApplication(), new Banner());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             Log.d("docc2","came into if");
