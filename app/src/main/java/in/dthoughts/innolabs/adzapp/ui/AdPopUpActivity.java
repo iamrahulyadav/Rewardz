@@ -223,7 +223,7 @@ public class AdPopUpActivity extends Activity {
     private void callAd() {
 
         SharedPreferences sharedPreferences = getSharedPreferences(PhoneStateReceiver.REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-        String adID = sharedPreferences.getString(PhoneStateReceiver.OLD_REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");
+        String adID = sharedPreferences.getString(PhoneStateReceiver.OLD_REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");//TODO:Add adzapp ad in DB and use DB ID here use NOTEPAD++ and find this Id && replace with new adzapp ID
         Log.d("ringtone","adID from pref "+adID);
         DocumentReference randomAd = db.collection("Published Ads").document(adID);
         randomAd.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

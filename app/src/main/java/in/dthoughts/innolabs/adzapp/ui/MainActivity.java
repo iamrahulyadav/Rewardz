@@ -1,6 +1,9 @@
 package in.dthoughts.innolabs.adzapp.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -24,10 +28,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.fragstack.contracts.StackableFragment;
 import com.fragstack.controller.FragmentController;
 import com.fragstack.controller.FragmentTransactionOptions;
@@ -48,6 +55,7 @@ import com.google.protobuf.CodedOutputStream;
 import in.dthoughts.innolabs.adzapp.BuildConfig;
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.authentication.LoginActivity;
+import in.dthoughts.innolabs.adzapp.helper.DetectDevice;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.authentication.SignupActivity;
 import in.dthoughts.innolabs.adzapp.fragments.HomeFragment;
@@ -87,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout container;
     FragmentController mFragmentController;
     BottomNavigationView navigation;
+    //for write settings dailogss
+    private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
+    private Button button, write_settings_granted_button, xiaomi_permission_button,xiaomi_permissions_granted_button;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -120,20 +131,29 @@ public class MainActivity extends AppCompatActivity {
 
         container = findViewById(R.id.container);
         navigation = findViewById(R.id.navigation);//Don't delete this bruh!
-
+        prefManager = new PrefManager(this);
 //TODO: first check internet connection then proceed
         //fragment controller stuff
         mFragmentController = new FragmentController(getSupportFragmentManager(), R.id.fragment_container, savedInstanceState, null);
         //checking first run of app
         checkFirstRun();
+        if(DetectDevice.isMiUi()){
+            Log.d("docc","Xiaomi detected");
+            if(prefManager.isPermissionGranted() == false){
+                showXiaomiPermissionDialog();
+            }
 
-
-        boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(this).getActiveSubscriptionInfoCount() >= 2;
-        if(dualSim){
-            Log.d("docc","dual sim detected");
         }else{
-            Log.d("docc","dual sim not detected");
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                boolean settingsCanWrite = Settings.System.canWrite(getApplicationContext());
+                if(!settingsCanWrite){
+                    showWriteSettingsDialog();
+
+                }
+            }
         }
+        //end of obtaining permission to write settings. WE NEED THIS IN ORDER TO CHANGE RINGTONE.
+
 
         //get firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -313,48 +333,7 @@ public class MainActivity extends AppCompatActivity {
         // Update the shared preferences with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
     }
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            Log.d("docc","activity focused");
-            //TODO:check wether tap target view is finished or not from shared preferences
-            prefManager = new PrefManager(this);
-            Log.d("docc","pref manager tut"+ prefManager.isBottomNavTutFinished());
-            if(prefManager.isBottomNavTutFinished() == false){
-                new TapTargetSequence(this)
-                        .targets(TapTarget.forView(navigation.findViewById(R.id.navigation_home),"For you", "Tailored ads based on your location"),
-                                TapTarget.forView(navigation.findViewById(R.id.navigation_market),"Ads Market","Here you can find all ads"),
-                                TapTarget.forView(navigation.findViewById(R.id.navigation_wallet),"Wallet","Here you can see your rewards and redeemed codes"),
-                                TapTarget.forView(navigation.findViewById(R.id.navigation_profile),"Profile","You can update your profile from here")
 
-                        .cancelable(false)
-                        ).listener(new TapTargetSequence.Listener() {
-                    @Override
-                    public void onSequenceFinish() {
-                        Log.d("docc","sequence finished");
-                        prefManager.setIsBottomNavTutFinished(true);
-                    }
-
-                    @Override
-                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                        Log.d("docc","sequence dequnce step"+ lastTarget.id()+ " "+targetClicked);
-                    }
-
-                    @Override
-                    public void onSequenceCanceled(TapTarget lastTarget) {
-                        Log.d("docc","sequence canclled");
-                    }
-                }).start();
-
-            }
-
-
-        }
-        else {Log.d("docc","activity not focused");
-
-        }
-    }
 //fragstack stuff
     public boolean displayFragment(Fragment fragment) {
         FragmentTransactionOptions fragmentTransactionOptions = new FragmentTransactionOptions.Builder()
@@ -393,6 +372,99 @@ public class MainActivity extends AppCompatActivity {
         Log.d("docc1", "ID IS"+String.valueOf(navigation.getMenu().findItem(navigation.getSelectedItemId())));
 
             //super.onBackPressed();
+    }
+
+    private void showXiaomiPermissionDialog() {
+        final Dialog xiaomiDialog =  new Dialog(this);
+        xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
+        xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
+        xiaomi_permissions_granted_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_granted_button);
+        xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                xiaomiDialog.dismiss();
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                startActivity(intent);
+                showIntro();
+            }
+        });
+        xiaomi_permissions_granted_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prefManager.setPermissionDialog(true);
+                xiaomiDialog.dismiss();
+                showIntro();
+            }
+        });
+        xiaomiDialog.show();
+
+
+    }
+
+    private void showIntro() {
+
+        prefManager = new PrefManager(this);
+        if(prefManager.isBottomNavTutFinished() == false){
+            new TapTargetSequence(this)
+                    .targets(TapTarget.forView(navigation.findViewById(R.id.navigation_home),"For you", "Tailored ads based on your location"),
+                            TapTarget.forView(navigation.findViewById(R.id.navigation_market),"Ads Market","Here you can find all ads"),
+                            TapTarget.forView(navigation.findViewById(R.id.navigation_wallet),"Wallet","Here you can see your rewards and redeemed codes"),
+                            TapTarget.forView(navigation.findViewById(R.id.navigation_profile),"Profile","You can update your profile from here")
+
+                                    .cancelable(false)
+                    ).listener(new TapTargetSequence.Listener() {
+                @Override
+                public void onSequenceFinish() {
+                    Log.d("docc","sequence finished");
+                    prefManager.setIsBottomNavTutFinished(true);
+                }
+
+                @Override
+                public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                    Log.d("docc","sequence dequnce step"+ lastTarget.id()+ " "+targetClicked);
+                }
+
+                @Override
+                public void onSequenceCanceled(TapTarget lastTarget) {
+                    Log.d("docc","sequence canclled");
+                }
+            }).start();
+
+        }
+
+    }
+
+    private void showWriteSettingsDialog(){
+        Log.d("docc","came into this dialog");
+        final Dialog dialog = new Dialog(this);
+        LottieAnimationView animation_view = dialog.findViewById(R.id.animation_view);
+        dialog.setContentView(R.layout.write_settings_dialog);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        button = dialog.findViewById(R.id.write_settings_button);
+        write_settings_granted_button = dialog.findViewById(R.id.write_settings_granted_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + MainActivity.this.getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent,CODE_WRITE_SETTINGS_PERMISSION);
+                showIntro();
+            }
+        });
+        write_settings_granted_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prefManager.setPermissionDialog(true);
+                dialog.dismiss();//TODO: save in shared prerferencs and dont show user again -- FINISHED
+                showIntro();
+            }
+        });
+        dialog.show();
+
     }
 
 

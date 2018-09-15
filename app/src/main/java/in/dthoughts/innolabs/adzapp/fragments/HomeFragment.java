@@ -152,21 +152,21 @@ public class HomeFragment extends Fragment implements StackableFragment{
 //TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW --FINISHED
        //code block to get the write_settings permission
 
-        if(DetectDevice.isMiUi()){
-            Log.d("docc","Xiaomi detected");
-            if(prefManager.isPermissionGranted() == false){
-                showXiaomiPermissionDialog();
-            }
-
-        }else{
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                boolean settingsCanWrite = Settings.System.canWrite(getContext());
-                if(!settingsCanWrite){
-                    showWriteSettingsDialog();
-
-                }
-            }
-        }
+//        if(DetectDevice.isMiUi()){
+//            Log.d("docc","Xiaomi detected");
+//            if(prefManager.isPermissionGranted() == false){
+//                showXiaomiPermissionDialog();
+//            }
+//
+//        }else{
+//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//                boolean settingsCanWrite = Settings.System.canWrite(getContext());
+//                if(!settingsCanWrite){
+//                    showWriteSettingsDialog();
+//
+//                }
+//            }
+//        }
         //end of obtaining permission to write settings. WE NEED THIS IN ORDER TO CHANGE RINGTONE.
 
 
@@ -203,64 +203,64 @@ public class HomeFragment extends Fragment implements StackableFragment{
 
     }
 
-    private void showXiaomiPermissionDialog() {
-        final Dialog xiaomiDialog =  new Dialog(getContext());
-        xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
-        xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
-        xiaomi_permissions_granted_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_granted_button);
-        xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                xiaomiDialog.dismiss();
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-                startActivity(intent);
-            }
-        });
-        xiaomi_permissions_granted_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prefManager.setPermissionDialog(true);
-                xiaomiDialog.dismiss();
-            }
-        });
-        xiaomiDialog.show();
+//    private void showXiaomiPermissionDialog() {
+//        final Dialog xiaomiDialog =  new Dialog(getContext());
+//        xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
+//        xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
+//        xiaomi_permissions_granted_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_granted_button);
+//        xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                xiaomiDialog.dismiss();
+//                Intent intent = new Intent();
+//                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+//                startActivity(intent);
+//            }
+//        });
+//        xiaomi_permissions_granted_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                prefManager.setPermissionDialog(true);
+//                xiaomiDialog.dismiss();
+//            }
+//        });
+//        xiaomiDialog.show();
+//
+//        //for tap target view TODO:HAve a look
+////          TapTargetView.showFor(xiaomiDialog,
+////                  TapTarget.forView(xiaomiDialog.findViewById(R.id.xiaomi_permissions_button),"Please grant permissions","In order to get most points grant permission"));
+//
+//    }
 
-        //for tap target view TODO:HAve a look
-//          TapTargetView.showFor(xiaomiDialog,
-//                  TapTarget.forView(xiaomiDialog.findViewById(R.id.xiaomi_permissions_button),"Please grant permissions","In order to get most points grant permission"));
-
-    }
-
-    private void showWriteSettingsDialog(){
-        Log.d("docc","came into this dialog");
-        final Dialog dialog = new Dialog(getContext());
-        LottieAnimationView animation_view = dialog.findViewById(R.id.animation_view);
-        dialog.setContentView(R.layout.write_settings_dialog);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        button = dialog.findViewById(R.id.write_settings_button);
-        write_settings_granted_button = dialog.findViewById(R.id.write_settings_granted_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent,HomeFragment.CODE_WRITE_SETTINGS_PERMISSION);
-            }
-        });
-        write_settings_granted_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prefManager.setPermissionDialog(true);
-                dialog.dismiss();//TODO: save in shared prerferencs and dont show user again
-            }
-        });
-        dialog.show();
-
-    }
+//    private void showWriteSettingsDialog(){
+//        Log.d("docc","came into this dialog");
+//        final Dialog dialog = new Dialog(getContext());
+//        LottieAnimationView animation_view = dialog.findViewById(R.id.animation_view);
+//        dialog.setContentView(R.layout.write_settings_dialog);
+//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        button = dialog.findViewById(R.id.write_settings_button);
+//        write_settings_granted_button = dialog.findViewById(R.id.write_settings_granted_button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+//                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivityForResult(intent,HomeFragment.CODE_WRITE_SETTINGS_PERMISSION);
+//            }
+//        });
+//        write_settings_granted_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                prefManager.setPermissionDialog(true);
+//                dialog.dismiss();//TODO: save in shared prerferencs and dont show user again
+//            }
+//        });
+//        dialog.show();
+//
+//    }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

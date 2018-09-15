@@ -79,10 +79,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if(Settings.System.canWrite(context)){
                         if(preferences.getBoolean("active", true) ){
-                            boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(context).getActiveSubscriptionInfoCount() >= 2;
-                            if(dualSim){
-                                Log.d("docc","dual sim detected");
-                            }
                             RingtoneManager.setActualDefaultRingtoneUri(
                                     context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
                                     newUri);

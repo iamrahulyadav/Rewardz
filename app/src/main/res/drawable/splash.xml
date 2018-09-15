@@ -3,14 +3,19 @@
     android:opacity="opaque">
     <item android:drawable="@color/colorPrimary"/>
 
-    <item android:bottom="50dp">
+    <item android:gravity="center">
         <bitmap android:src="@drawable/app_name"
-                android:gravity="center"/>
+            />
     </item>
+
 </layer-list>
 <!--
 <item>
         <bitmap
             android:gravity="center"
             android:src="@drawable/logo_two"/>
-    </item> -->
+    </item>
+    <item android:bottom="50dp">
+        <bitmap android:src="@drawable/app_name"
+                android:gravity="center"/>
+    </item>-->
