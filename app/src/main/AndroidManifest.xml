@@ -91,7 +91,7 @@
             android:theme="@style/AppThemeNoActionBar"/>
 
         <activity android:name=".ui.ScanQrActivity"
-            android:label="Scan QR"/>
+            android:theme="@style/AppThemeNoActionBar"/>
 
         <activity android:name=".ui.SearchActivity"
             android:theme="@style/AppThemeNoActionBar"/>

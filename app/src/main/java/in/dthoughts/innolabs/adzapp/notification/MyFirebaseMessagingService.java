@@ -94,7 +94,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = CHANNELID;
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.adzapp_notification);//RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_stat_notification_icon)//TODO:check image working R.drawable.ic_stat_notification_icon  in manifest aslo
@@ -110,7 +110,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
+                    "AdzApp service channel",
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }

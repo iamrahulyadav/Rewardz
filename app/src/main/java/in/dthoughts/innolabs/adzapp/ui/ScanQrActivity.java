@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import in.dthoughts.innolabs.adzapp.R;
 
-import io.armcha.debugBanner.Banner;
-import io.armcha.debugBanner.DebugBanner;
+
 
 public class ScanQrActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
@@ -40,8 +40,19 @@ public class ScanQrActivity extends AppCompatActivity implements QRCodeReaderVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_rq_code);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
+        mToolbar.setTitle(getString(R.string.title_ScanQR));
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
         mainLayout =  findViewById(R.id.mainLayout);
-        DebugBanner.Companion.init(getApplication(), new Banner());
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             Log.d("docc2","came into if");

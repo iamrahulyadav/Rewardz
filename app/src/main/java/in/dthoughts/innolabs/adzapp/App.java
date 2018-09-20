@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 public class App extends Application {
-    public static final String CHANNELID = "RewardzServiceChannel";
+    public static final String CHANNELID = "AdzAppServiceChannel";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -19,7 +19,7 @@ public class App extends Application {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNELID,
-                    "Rewardz service channel",
+                    "AdzApp service channel",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
             NotificationManager manager = getSystemService(NotificationManager.class);
