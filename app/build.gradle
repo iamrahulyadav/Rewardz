@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0.58.2-beta"
+        versionName "1.0.59-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -80,6 +80,10 @@ dependencies {
     implementation 'com.github.abhishesh-srivastava:fragstack:+'//for fragment back stack
 
     implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'//for QR code scanning
+
+    implementation 'com.github.florent37:diagonallayout:1.0.9'//for diagonal layout
+
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'//for moving image
 
 
     testImplementation 'junit:junit:4.12'

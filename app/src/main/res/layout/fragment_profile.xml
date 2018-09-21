@@ -1,5 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:diagonal="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Grey_300"
+
+    >
+
+    <com.github.florent37.diagonallayout.DiagonalLayout
+        android:id="@+id/diagonalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        diagonal:diagonal_angle="10"
+        android:elevation="0dp"
+        android:paddingBottom="16dp"
+        diagonal:diagonal_direction="left"
+        diagonal:diagonal_position="bottom"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/displaypic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_account_circle_black_24dp"
+            />
+
+        <TextView
+            android:id="@+id/displayname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User name"
+            android:textColor="@android:color/white"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="70dp"
+            android:textSize="25sp"
+            />
+
+
+    </com.github.florent37.diagonallayout.DiagonalLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_edit"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="180dp"
+        android:elevation="15dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_edit_black_24dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:layout_marginTop="200dp"
+        >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/diagonalLayout"
+            android:layout_weight="3"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Points"
+                android:textColor="#3E3E3E"
+
+                android:layout_marginLeft="30dp"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3.5K"
+                android:textStyle="bold"
+                android:textColor="#3E3E3E"
+                android:layout_marginLeft="30dp"
+                android:textSize="24sp"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/diagonalLayout"
+        android:paddingTop="40dp"
+        android:paddingLeft="20dp"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:id="@+id/emailVerifiedId"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/emailVerified"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:hint="@string/emailVerification_profile_text"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/mobilenumberTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobile number: "/>
+
+            <TextView
+                android:id="@+id/mobilenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:hint="@string/mobile_number"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+
+            >
+
+            <TextView
+                android:id="@+id/cityTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="City: "/>
+            <TextView
+                android:id="@+id/city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textSize="25dp"
+                android:hint="@string/city"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black" />
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/adpublisher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@android:color/black"
+            android:hint="@string/ad_publisher"
+            android:clickable="false"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/ringtoneSwitchText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+
+            android:text="Change ringtone ON/OFF"
+            android:textColor="@android:color/black"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+
+
+<!--<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -193,4 +412,4 @@
 
 
 
-</ScrollView>
+</ScrollView> -->

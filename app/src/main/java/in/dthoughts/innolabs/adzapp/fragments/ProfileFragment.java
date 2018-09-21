@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.fragstack.contracts.StackableFragment;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -38,11 +41,14 @@ import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment implements StackableFragment {
 
-    Button updateProfile;
+    //Button updateProfile;
+    FloatingActionButton updateProfile;
     TextView displayName, mobileNumber, city, rewardPoints ,emailVerified,ringtoneSwitchText;
     Switch adPublisher, ringtoneSwitch;
-    ImageView displayPic;
+    //ImageView displayPic;
+    KenBurnsView displayPic;
     ProgressBar progressBar;
+    LinearLayout emailVerifiedId;
     Dialog myDialog;
 
     private String _displayName, _city, _mobileNumber, _adPublisher, _photoUri;
@@ -83,6 +89,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
         progressBar = view.findViewById(R.id.progressBar);
         rewardPoints = view.findViewById(R.id.points);
         emailVerified = view.findViewById(R.id.emailVerified);
+        emailVerifiedId = view.findViewById(R.id.emailVerifiedId);
         ringtoneSwitchText = view.findViewById(R.id.ringtoneSwitchText);
         ringtoneSwitchText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +103,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
         user.reload();
         if(!user.isEmailVerified()){
             emailVerified.setVisibility(View.VISIBLE);
+            emailVerifiedId.setVisibility(View.VISIBLE);
         }
         emailVerified.setOnClickListener(new View.OnClickListener() {
             @Override
