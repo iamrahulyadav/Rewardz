@@ -100,6 +100,10 @@
             android:theme="@style/AppThemeNoActionBar"
             android:label="Publisher"/>
 
+        <activity
+            android:name="cat.ereza.customactivityoncrash.activity.DefaultErrorActivity"
+            android:theme="@style/AppThemeNoActionBar"
+            android:process=":error_activity" />
 
         <receiver
             android:name=".receiver.PhoneStateReceiver"

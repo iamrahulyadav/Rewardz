@@ -86,6 +86,7 @@ public class DetailAdActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         prefManager = new PrefManager(this);
         if(prefManager.isDetailAdTutFinished() == false){
            new TapTargetSequence(this)

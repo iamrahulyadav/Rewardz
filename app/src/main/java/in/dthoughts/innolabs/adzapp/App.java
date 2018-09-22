@@ -7,12 +7,25 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import cat.ereza.customactivityoncrash.config.CaocConfig;
+
 public class App extends Application {
     public static final String CHANNELID = "AdzAppServiceChannel";
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
+
+        //for custom app crashing
+        CaocConfig.Builder.create()
+                .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT)
+                .enabled(true) //default: true
+                .showErrorDetails(true) //default: true
+                .showRestartButton(true) //default: true
+                .logErrorOnRestart(false) //default: true
+                .trackActivities(true) //default: false
+                .minTimeBetweenCrashesMs(2000) //default: 3000
+                .apply();
     }
 
     private void createNotificationChannel() {

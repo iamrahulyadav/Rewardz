@@ -38,4 +38,13 @@
 
     <style name="SplashTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="DividerLine">
+        <item name="android:background">@color/grey_500</item>
+    </style>
+
+    <style name="DividerLine.Horizontal" parent="DividerLine">
+        <item name="android:layout_height">@dimen/divider_width</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
 </resources>

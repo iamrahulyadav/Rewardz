@@ -267,6 +267,18 @@ public class AboutActivity extends AppCompatActivity {
                 .setLibrary(new Library("QRCodeReaderView",
                         "https://github.com/dlazaro66/QRCodeReaderView",
                         License.APACHE))
+                .setLibrary(new Library("Diagonal Layout",
+                        "https://github.com/florent37/DiagonalLayout",
+                        License.APACHE))
+                .setLibrary(new Library("Ken Burns View",
+                        "https://github.com/flavioarfaria/KenBurnsView",
+                        License.APACHE))
+                .setLibrary(new Library("Submit Button",
+                        "https://github.com/Someonewow/SubmitButton",
+                        License.APACHE))
+                .setLibrary(new Library("Custom Activity on crash",
+                        "https://github.com/Ereza/CustomActivityOnCrash",
+                        License.APACHE))
                 .setLibrary(new Library("Material Intro screen",
                         "https://github.com/TangoAgency/material-intro-screen",
                         License.MIT))

@@ -1,5 +1,6 @@
 package in.dthoughts.innolabs.adzapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -23,6 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jsoup.Connection;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import in.dthoughts.innolabs.adzapp.authentication.LoginActivity;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.DetailAdActivity;
@@ -38,12 +43,15 @@ import in.dthoughts.innolabs.adzapp.ui.intro.IntroActivity;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 import in.dthoughts.innolabs.adzapp.ui.intro.IntroActivity;
+import io.fabric.sdk.android.services.common.CommonUtils;
 
 public class BaseActivity extends AppCompatActivity {
 
     private PrefManager prefManager;
     DocumentSnapshot doc;
     FirebaseFirestore db;
+    boolean downloadedFromPlayStore, isRooted;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.M){
@@ -52,6 +60,16 @@ public class BaseActivity extends AppCompatActivity {
             setTheme(R.style.AppTheme);
         }
         super.onCreate(savedInstanceState);
+
+
+         //checking whether app downloaded from playstore or not TODO: check this after installing from playstore
+//        downloadedFromPlayStore = verifyInstallerId(context);
+//        isRooted = CommonUtils.isRooted(context);
+//        Log.d("docc6", String.valueOf(isRooted));
+//        if(!downloadedFromPlayStore || isRooted){
+//            Log.d("docc6","app is in danger");
+//
+//        }
 
         FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
                 .addOnSuccessListener(new OnSuccessListener<PendingDynamicLinkData>() {
@@ -152,4 +170,15 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
     }
+
+//    boolean verifyInstallerId(Context context) {
+//        // A list with valid installers package name
+//        List<String> validInstallers = new ArrayList<>(Arrays.asList("com.android.vending", "com.google.android.feedback"));
+//
+//        // The package name of the app that has installed your app
+//        final String installer = context.getPackageManager().getInstallerPackageName(context.getPackageName());
+//
+//        // true if your app has been downloaded from Play Store
+//        return installer != null && validInstallers.contains(installer);
+//    }
 }
