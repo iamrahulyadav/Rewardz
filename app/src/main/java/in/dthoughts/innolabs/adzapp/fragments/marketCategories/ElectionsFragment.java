@@ -24,7 +24,10 @@ import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
 import in.dthoughts.innolabs.adzapp.modal.Ads;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
@@ -40,6 +43,7 @@ public class ElectionsFragment extends Fragment {
     LottieAnimationView empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
+    Date todayDate,expiryDate,createdDate;
     int n=0;
     boolean[] alreadyReddemed;
 
@@ -59,6 +63,8 @@ public class ElectionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //getting date for querying
+        todayDate=java.util.Calendar.getInstance().getTime();
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         AdsList = new ArrayList<>();
@@ -71,7 +77,20 @@ public class ElectionsFragment extends Fragment {
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         n = n+1;
                         Log.d("docc","inside loop");
-                        checkAlreadyRedeemed(doc);
+                        SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+                        try {
+                            expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
+                            createdDate = sdf.parse(String.valueOf(doc.get("created_on")));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))){
+                            Log.d("docc6","ads havent expired");
+                            checkAlreadyRedeemed(doc);
+                        }
+                        else{
+                            Log.d("docc6","ads expired");
+                        }
                     }
                 }
                 else{

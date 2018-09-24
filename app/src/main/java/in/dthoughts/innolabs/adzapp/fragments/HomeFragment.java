@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment implements StackableFragment{
     int delayInMillis = 7000;
     boolean[] alreadyReddemed;
     PrefManager prefManager;
-    Date todayDate,expiryDate;
+    Date todayDate,expiryDate,createdDate;
 
     //public static List<String> AdsIDs;
 
@@ -362,10 +362,11 @@ public class HomeFragment extends Fragment implements StackableFragment{
                                     SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
                                     try {
                                         expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
+                                        createdDate = sdf.parse(String.valueOf(doc.get("created_on")));
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                    if(todayDate.before(expiryDate) || todayDate.equals(expiryDate)){
+                                    if((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))){
                                         Log.d("docc6","ads havent expired");
                                         checkAlreadyRedeemed(doc);
                                     }
