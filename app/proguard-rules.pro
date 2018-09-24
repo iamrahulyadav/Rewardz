@@ -33,3 +33,14 @@
 -dontwarn tv.danmaku.ijk.media.player.**
 -keep class tv.danmaku.ijk.media.player.** { *; }
 -keep interface tv.danmaku.ijk.media.player.* { *; }
+
+#for firebase
+# Add this global rule
+-keepattributes Signature
+
+# This rule will properly ProGuard all the model classes in
+# the package com.yourcompany.models. Modify to fit the structure
+# of your app.
+-keepclassmembers class in.dthoughts.innolabs.adzapp.modal.** {
+  *;
+}

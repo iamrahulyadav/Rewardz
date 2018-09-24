@@ -25,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -66,9 +68,13 @@ import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.modal.Ads;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
 
 
 public class HomeFragment extends Fragment implements StackableFragment{
@@ -89,6 +95,7 @@ public class HomeFragment extends Fragment implements StackableFragment{
     int delayInMillis = 7000;
     boolean[] alreadyReddemed;
     PrefManager prefManager;
+    Date todayDate,expiryDate;
 
     //public static List<String> AdsIDs;
 
@@ -185,7 +192,10 @@ public class HomeFragment extends Fragment implements StackableFragment{
             }
         });
 
+        //getting date for querying
+        todayDate=java.util.Calendar.getInstance().getTime();
 
+        Log.d("docc6", String.valueOf(todayDate));
         db = FirebaseFirestore.getInstance();
 
         AdsList = new ArrayList<>();
@@ -341,14 +351,28 @@ public class HomeFragment extends Fragment implements StackableFragment{
 
 
                 if(user!= null){
+                    Log.d("docc6","statrting quierying");
                     db.collection("Published Ads").whereEqualTo("city", currentLocation).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()){
                                 for(QueryDocumentSnapshot doc : task.getResult()){
                                     n = n+1;
-                                    Log.d("docc","inside loop");
-                                    checkAlreadyRedeemed(doc);
+                                    Log.d("docc6","inside loop: "+ String.valueOf(doc.get("expires_on")));
+                                    SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+                                    try {
+                                        expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if(todayDate.before(expiryDate) || todayDate.equals(expiryDate)){
+                                        Log.d("docc6","ads havent expired");
+                                        checkAlreadyRedeemed(doc);
+                                    }
+                                    else{
+                                        Log.d("docc6","ads expired");
+                                    }
+
                                 }
                             }else{
 

@@ -1,14 +1,21 @@
 package in.dthoughts.innolabs.adzapp.ui.intro;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import in.dthoughts.innolabs.adzapp.BaseActivity;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.service.DownloadRt;
 import in.dthoughts.innolabs.adzapp.ui.MainActivity;
@@ -25,6 +32,8 @@ import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 public class IntroActivity extends MaterialIntroActivity {
 
     PrefManager prefManager;
+    boolean downloadedFromPlayStore, isRooted;
+    Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +46,49 @@ public class IntroActivity extends MaterialIntroActivity {
                         view.setAlpha(percentage);
                     }
                 });
+
+        //checking whether app downloaded from playstore or not
+
+        downloadedFromPlayStore = isStoreVersion(context);
+//        //isRooted = CommonUtils.isRooted(context);
+        //TODO:UNCMNT WHOLE BLOCK
+//        if(!downloadedFromPlayStore /*|| isRooted*/){
+//            //As app is side loaded we will cause a crash such that user cant use the app until they downloaded from store.
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(IntroActivity.this);
+//            builder.setTitle("App is side loaded");
+//            builder.setMessage("Seems Like AdzApp is not downloaded from play store. TO enjoy our services please download app from play store");
+//
+//            builder.setPositiveButton("Go to Play store", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    //perform any action
+//                    final String appPackageName = getPackageName();
+//                    try {
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+//                        finish();
+//                        System.exit(0);
+//                    } catch (android.content.ActivityNotFoundException anfe) {
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+//                        finish();
+//                        System.exit(0);
+//                    }
+//                }
+//            });
+//
+//            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    finish();
+//                    System.exit(0);
+//                }
+//            });
+//
+//            //creating alert dialog
+//            AlertDialog alertDialog = builder.create();
+//            alertDialog.show();
+//
+//        }
+
 
 
         addSlide(new SlideFragmentBuilder()
@@ -78,6 +130,18 @@ public class IntroActivity extends MaterialIntroActivity {
     }
 
 
+    public  static boolean isStoreVersion(Context context) {
+        boolean result = false;
+
+        try {
+            String installer = context.getPackageManager()
+                    .getInstallerPackageName(context.getPackageName());
+            result = !TextUtils.isEmpty(installer);
+        } catch (Throwable e) {
+        }
+
+        return result;
+    }
 
     @Override
     public void onFinish() {
@@ -87,4 +151,6 @@ public class IntroActivity extends MaterialIntroActivity {
         startActivity(new Intent(IntroActivity.this, MainActivity.class));
         finish();
     }
+
+
 }

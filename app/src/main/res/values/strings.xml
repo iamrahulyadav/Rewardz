@@ -128,7 +128,7 @@ If you have any questions or suggestions about our Terms and Conditions, do not 
     <string name="about_page_developer_facebook_address">facebook username</string>
     <string name="about_page_developer_twitter_address">twitter username</string>
     <string name="about_page_developer_playStore_address">playstore address</string>
-    <string name="about_page_company_name">D Thoughts innolabs</string>
+    <string name="about_page_company_name">D Thoughts Innolabs</string>
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
 
     <!-- third party license, privacy policy, terms and conditions -->

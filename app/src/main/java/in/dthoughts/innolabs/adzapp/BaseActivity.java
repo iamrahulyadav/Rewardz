@@ -1,13 +1,16 @@
 package in.dthoughts.innolabs.adzapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -50,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
     private PrefManager prefManager;
     DocumentSnapshot doc;
     FirebaseFirestore db;
-    boolean downloadedFromPlayStore, isRooted;
+
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +65,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-         //checking whether app downloaded from playstore or not TODO: check this after installing from playstore
-//        downloadedFromPlayStore = verifyInstallerId(context);
-//        isRooted = CommonUtils.isRooted(context);
-//        Log.d("docc6", String.valueOf(isRooted));
-//        if(!downloadedFromPlayStore || isRooted){
-//            Log.d("docc6","app is in danger");
-//
-//        }
+
 
         FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
                 .addOnSuccessListener(new OnSuccessListener<PendingDynamicLinkData>() {
@@ -121,6 +117,10 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         onNewIntent(getIntent());
     }
+
+
+
+
     protected void onNewIntent(Intent intent) {
         String action = intent.getAction();
         String data = intent.getDataString();
@@ -171,14 +171,6 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-//    boolean verifyInstallerId(Context context) {
-//        // A list with valid installers package name
-//        List<String> validInstallers = new ArrayList<>(Arrays.asList("com.android.vending", "com.google.android.feedback"));
-//
-//        // The package name of the app that has installed your app
-//        final String installer = context.getPackageManager().getInstallerPackageName(context.getPackageName());
-//
-//        // true if your app has been downloaded from Play Store
-//        return installer != null && validInstallers.contains(installer);
-//    }
+
+
 }

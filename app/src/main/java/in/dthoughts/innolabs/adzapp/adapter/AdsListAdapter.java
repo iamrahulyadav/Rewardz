@@ -53,7 +53,7 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
         Picasso.with(context).load(AdsList.get(position).getPublisher_image()).placeholder(R.drawable.ic_sort_white_24dp).error(R.drawable.ic_error_black_24dp).into(holder.profile_pic);
         Log.d("doc",AdsList.get(position).getPublisher_image());
         holder.publisher_name.setText(AdsList.get(position).getPublisher_name());
-        holder.expires_on.setText(AdsList.get(position).getExpires_on());
+        holder.expires_on.setText(AdsList.get(position).getExpires_on().toString());
         //Picasso.get().load(AdsList.get(position).getAd_banner()).into(holder.ad_banner);
         Picasso.with(context).load(AdsList.get(position).getAd_banner()).into(holder.ad_banner);
         Log.d("doc",AdsList.get(position).getAd_banner());
@@ -67,7 +67,7 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
                 Intent intent = new Intent(context, DetailAdActivity.class);
                     intent.putExtra("adPublisherPic", AdsList.get(position).getPublisher_image());
                     intent.putExtra("adPublisherName", AdsList.get(position).getPublisher_name());
-                    intent.putExtra("adExpiresOn", AdsList.get(position).getExpires_on());
+                    intent.putExtra("adExpiresOn", AdsList.get(position).getExpires_on().toString());
                     intent.putExtra("adBanner", AdsList.get(position).getAd_banner());
                     intent.putExtra("adDescription", AdsList.get(position).getAd_description());
                     intent.putExtra("adUrl", AdsList.get(position).getAd_url());
