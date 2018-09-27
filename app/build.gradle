@@ -8,8 +8,8 @@ android {
         applicationId "in.dthoughtsinnolabs.adzapp"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0.2-internal_test"
+        versionCode 4
+        versionName "1.0.4-internal_test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

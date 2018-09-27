@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
+
 import in.dthoughts.innolabs.adzapp.R;
 
 import agency.tango.materialintroscreen.SlideFragment;
@@ -14,6 +15,7 @@ import agency.tango.materialintroscreen.SlideFragment;
 public class CustomFinishSlide extends SlideFragment {
 
     LottieAnimationView animation_view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

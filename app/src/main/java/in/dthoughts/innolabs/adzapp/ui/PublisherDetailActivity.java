@@ -1,6 +1,5 @@
 package in.dthoughts.innolabs.adzapp.ui;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,18 +21,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
-import in.dthoughts.innolabs.adzapp.modal.Ads;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
-import in.dthoughts.innolabs.adzapp.modal.Ads;
-
+import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
 import in.dthoughts.innolabs.adzapp.modal.Ads;
 
@@ -47,7 +40,7 @@ public class PublisherDetailActivity extends AppCompatActivity {
     String Name_Publisher, Pic_Publisher;
     public AdsListAdapter adsListAdapter;
     public List<Ads> AdsList;
-    int n=0;
+    int n = 0;
     FirebaseFirestore db;
     FirebaseUser user;
 
@@ -65,11 +58,11 @@ public class PublisherDetailActivity extends AppCompatActivity {
             }
         });
 
-        final  Bundle  extras = getIntent().getExtras();
-        try{
-             Name_Publisher  = extras.getString("Publisher_Name");
+        final Bundle extras = getIntent().getExtras();
+        try {
+            Name_Publisher = extras.getString("Publisher_Name");
             Pic_Publisher = extras.getString("Publisher_Image");
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("exception", e.getMessage());
         }
 
@@ -103,26 +96,25 @@ public class PublisherDetailActivity extends AppCompatActivity {
         mainlist = findViewById(R.id.mainlist);
 
         AdsList = new ArrayList<>();
-        adsListAdapter = new AdsListAdapter(getApplicationContext() ,AdsList);
+        adsListAdapter = new AdsListAdapter(getApplicationContext(), AdsList);
 
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(this));
         mainlist.setAdapter(adsListAdapter);
 
 
-
         db = FirebaseFirestore.getInstance();
         db.collection("Published Ads").whereEqualTo("publisher_name", Name_Publisher).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot doc : task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
 
                         Ads ads = doc.toObject(Ads.class).withId(doc.getId());
                         AdsList.add(ads);
                         adsListAdapter.notifyDataSetChanged();
                     }
-                }else{
+                } else {
 
                 }
 

@@ -2,7 +2,6 @@ package in.dthoughts.innolabs.adzapp.modal;
 
 import android.support.annotation.NonNull;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -15,7 +14,7 @@ public class Ads {
     String ad_description;
     String ad_url;
     String city;
-//    String created_on;
+    //    String created_on;
 //    String expires_on;
     @ServerTimestamp
     Date created_on;
@@ -29,7 +28,7 @@ public class Ads {
     @Exclude
     private String key;
 
-    public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city,Date created_on, /*String created_on, String expires_on*/Date expires_on, String points, String publisher_image, String publisher_name, String video_url, String coupon_code) {
+    public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city, Date created_on, /*String created_on, String expires_on*/Date expires_on, String points, String publisher_image, String publisher_name, String video_url, String coupon_code) {
         this.ad_banner = ad_banner;
         this.ad_type = ad_type;
         this.ad_description = ad_description;
@@ -45,7 +44,6 @@ public class Ads {
     }
 
 
-
     public Ads() {
     }
 
@@ -55,8 +53,7 @@ public class Ads {
     }
 
 
-
-    public String getKey(){
+    public String getKey() {
         return key;
     }
 
@@ -84,33 +81,33 @@ public class Ads {
         this.city = city;
     }
 
-//    public String getCreated_on() {
+    //    public String getCreated_on() {
 //        return created_on;
 //    }
     public Date getCreated_on() {
         return created_on;
     }
 
-//    public void setCreated_on(String created_on) {
+    //    public void setCreated_on(String created_on) {
 //        this.created_on = created_on;
 //    }
-public void setCreated_on(Date created_on) {
-    this.created_on = created_on;
-}
+    public void setCreated_on(Date created_on) {
+        this.created_on = created_on;
+    }
 
-//    public String getExpires_on() {
+    //    public String getExpires_on() {
 //        return expires_on;
 //    }
-public Date getExpires_on() {
-    return expires_on;
-}
+    public Date getExpires_on() {
+        return expires_on;
+    }
 
-//    public void setExpires_on(String expires_on) {
+    //    public void setExpires_on(String expires_on) {
 //        this.expires_on = expires_on;
 //    }
-public void setExpires_on(Date expires_on) {
-    this.expires_on = expires_on;
-}
+    public void setExpires_on(Date expires_on) {
+        this.expires_on = expires_on;
+    }
 
     public String getPoints() {
         return points;
@@ -160,10 +157,11 @@ public void setExpires_on(Date expires_on) {
         this.ad_url = ad_url;
     }
 
-    public String getCoupon_code(){
+    public String getCoupon_code() {
         return coupon_code;
     }
-    public void setCoupon_code(String coupon_code){
+
+    public void setCoupon_code(String coupon_code) {
         this.coupon_code = coupon_code;
     }
 

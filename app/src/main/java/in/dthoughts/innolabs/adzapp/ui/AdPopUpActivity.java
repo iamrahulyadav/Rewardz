@@ -6,17 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,46 +27,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.helper.DeviceLocked;
-import in.dthoughts.innolabs.adzapp.modal.Ads;
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import in.dthoughts.innolabs.adzapp.helper.DeviceLocked;
-import in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver;
-
+import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.DeviceLocked;
 import in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver;
 import tcking.github.com.giraffeplayer2.VideoView;
 
 
-import static in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver.OLD_REWARDZ_TONE;
-import static in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver.REWARDZ_PREFS_TONE;
-import static in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver.REWARDZ_TONE;
-
 public class AdPopUpActivity extends Activity {
 
     FirebaseFirestore db;
     FirebaseUser user;
-    Double rewardpoints, pointsToAdd= Double.valueOf(5);
+    Double rewardpoints, pointsToAdd = Double.valueOf(5);
     //ArrayList<String> adsID;
 
     TextView publisher_name, city, expires_on, ad_description, ad_url;
@@ -103,36 +75,34 @@ public class AdPopUpActivity extends Activity {
         // adsID = new ArrayList<>();
 
 
-
-        if(user!=null){
+        if (user != null) {
             DocumentReference userReawrdPoints = db.collection("userRewards").document(user.getUid());
             userReawrdPoints.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         DocumentSnapshot doc = task.getResult();
                         rewardpoints = Double.valueOf(doc.get("Rewards").toString());
                         Log.d("reward", String.valueOf(rewardpoints));
 
                         //checking ringtone toogle on/off
                         SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             boolean settingsCanWrite = Settings.System.canWrite(getApplicationContext());
-                            if(!settingsCanWrite){
-                                    pointsToAdd = 2.5;
-                            }else{
-                                if( preferences.getBoolean("active", true)){
+                            if (!settingsCanWrite) {
+                                pointsToAdd = 2.5;
+                            } else {
+                                if (preferences.getBoolean("active", true)) {
                                     pointsToAdd = 5.0;
-                                }else{
-                                    pointsToAdd= 2.5;
+                                } else {
+                                    pointsToAdd = 2.5;
                                 }
 
                             }
-                        }
-                        else{
-                            if(preferences.getBoolean("active", true) ){
+                        } else {
+                            if (preferences.getBoolean("active", true)) {
                                 pointsToAdd = 5.0;
-                            }else{
+                            } else {
                                 pointsToAdd = 2.5;
                             }
                         }
@@ -188,17 +158,17 @@ public class AdPopUpActivity extends Activity {
         ad_description = findViewById(R.id.adDescription);
         ad_url = findViewById(R.id.txtUrl);
         ad_banner = findViewById(R.id.adBanner);
-        ad_close =  findViewById(R.id.closeAd);
-        mShimmerViewContainer =  findViewById(R.id.shimmer_view_container);
+        ad_close = findViewById(R.id.closeAd);
+        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmerAnimation();
         //Ad_video = findViewById(R.id.adVideo);
-        videoView =  findViewById(R.id.video_view);
+        videoView = findViewById(R.id.video_view);
 
 
         parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("docc","got here: onClick of parentLayout");
+                Log.d("docc", "got here: onClick of parentLayout");
                 callDetailAdActivity();
             }
         });
@@ -213,7 +183,6 @@ public class AdPopUpActivity extends Activity {
     }
 
 
-
     private void closeAdActivity() {
 
         AdPopUpActivity.this.finish();
@@ -223,33 +192,32 @@ public class AdPopUpActivity extends Activity {
     private void callAd() {
 
         SharedPreferences sharedPreferences = getSharedPreferences(PhoneStateReceiver.REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-        String adID = sharedPreferences.getString(PhoneStateReceiver.OLD_REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");//TODO:Add adzapp ad in DB and use DB ID here use NOTEPAD++ and find this Id && replace with new adzapp ID
-        Log.d("ringtone","adID from pref "+adID);
+        String adID = sharedPreferences.getString(PhoneStateReceiver.OLD_REWARDZ_TONE, "1rPyNckD3E3Vn4eWcX6t");//TODO:Add adzapp ad in DB and use DB ID here use NOTEPAD++ and find this Id && replace with new adzapp ID
+        Log.d("ringtone", "adID from pref " + adID);
         DocumentReference randomAd = db.collection("Published Ads").document(adID);
         randomAd.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     //DocumentSnapshot doc = task.getResult();
                     doc = task.getResult();
                     mShimmerViewContainer.stopShimmerAnimation();
                     parentLayout.setVisibility(View.VISIBLE);
                     mShimmerViewContainer.setVisibility(View.INVISIBLE);//TODO: check how shimmer layout working IT has to overlap on Below layout, IF needed change root layout to relative -- FINISHED
 
-                    try{
+                    try {
                         Picasso.with(getApplicationContext()).load(doc.get("publisher_image").toString()).into(profile_pic);
 //                        Picasso.get().load(doc.get("publisher_image").toString()).into(profile_pic);
-                        if(doc.get("ad_type").toString().equals("standard") || doc.get("ad_type").toString().equals("basic")){
+                        if (doc.get("ad_type").toString().equals("standard") || doc.get("ad_type").toString().equals("basic")) {
                             //Picasso.get().load(doc.get("ad_banner").toString()).into(ad_banner);
                             Picasso.with(getApplicationContext()).load(doc.get("ad_banner").toString()).into(ad_banner);
                         }
-                        if(doc.get("ad_type").toString().equals("premium")){
+                        if (doc.get("ad_type").toString().equals("premium")) {
                             ad_banner.setVisibility(View.GONE);
                             videoView.setVisibility(View.VISIBLE);
-                            if(DeviceLocked.isDeviceLocked(getApplicationContext())){
+                            if (DeviceLocked.isDeviceLocked(getApplicationContext())) {
                                 videoView.setVideoPath(doc.get("video_url").toString()).getPlayer();
-                            }
-                            else{
+                            } else {
                                 videoView.setVideoPath(doc.get("video_url").toString()).getPlayer().start();
                             }
 
@@ -275,7 +243,7 @@ public class AdPopUpActivity extends Activity {
                         expires_on.setText(doc.get("expires_on").toString());
                         ad_description.setText(doc.get("ad_description").toString());
                         ad_url.setText(doc.get("ad_url").toString());
-                    }catch (Exception errr){
+                    } catch (Exception errr) {
                         Log.d("doc", errr.getMessage());
                     }
 
@@ -316,7 +284,7 @@ public class AdPopUpActivity extends Activity {
         updatingRewards.update("Rewards", update_points).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext(),  getString(R.string.rewards_updated)+ update_points + ".", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.rewards_updated) + update_points + ".", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -329,8 +297,8 @@ public class AdPopUpActivity extends Activity {
     private void callDetailAdActivity() {
 
         Intent intent = new Intent(AdPopUpActivity.this, DetailAdActivity.class);
-        try{
-            intent.putExtra("adPublisherPic",doc.get("publisher_image").toString() );
+        try {
+            intent.putExtra("adPublisherPic", doc.get("publisher_image").toString());
             intent.putExtra("adPublisherName", doc.get("publisher_name").toString());
             intent.putExtra("adExpiresOn", doc.get("expires_on").toString());
             intent.putExtra("adBanner", doc.get("ad_banner").toString());
@@ -338,10 +306,10 @@ public class AdPopUpActivity extends Activity {
             intent.putExtra("adUrl", doc.get("ad_url").toString());
             intent.putExtra("adType", doc.get("ad_type").toString());
             intent.putExtra("adVideoUrl", doc.get("video_url").toString());
-            intent.putExtra("adPoints",doc.get("points").toString());
+            intent.putExtra("adPoints", doc.get("points").toString());
             intent.putExtra("adCouponCode", doc.get("coupon_code").toString());
             intent.putExtra("adID", doc.getId());
-        }catch (Exception err){
+        } catch (Exception err) {
             Log.d("errr", err.getMessage());
         }
 
@@ -360,17 +328,18 @@ public class AdPopUpActivity extends Activity {
     }
 
     @Override
-    protected void onPause(){
-        if(videoView.getVisibility() == View.VISIBLE){
+    protected void onPause() {
+        if (videoView.getVisibility() == View.VISIBLE) {
             videoView.getPlayer().pause();
         }
         super.onPause();
 
 
     }
+
     @Override
-    protected void onDestroy(){
-        if(videoView.getVisibility() == View.VISIBLE){
+    protected void onDestroy() {
+        if (videoView.getVisibility() == View.VISIBLE) {
             videoView.getPlayer().pause();
         }
         super.onDestroy();

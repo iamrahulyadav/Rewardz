@@ -12,26 +12,16 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.adapter.SearchAdapter;
 
 import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
-import in.dthoughts.innolabs.adzapp.adapter.SearchAdapter;
 
 import in.dthoughts.innolabs.adzapp.adapter.SearchAdapter;
 
@@ -45,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<String> profilePicList;
     SearchAdapter searchAdapter;
     public String SearchedString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +77,10 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!s.toString().isEmpty()){
+                if (!s.toString().isEmpty()) {
                     SearchedString = s.toString().toLowerCase();
-                        setAdapter(s.toString());
-                }
-                else{
+                    setAdapter(s.toString());
+                } else {
                     publisherNameList.clear();
                     profilePicList.clear();
                     recyclerView.removeAllViews();
@@ -100,7 +90,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setAdapter(final String searchedString) {
-Log.d("docc3","came into set adapter");
+        Log.d("docc3", "came into set adapter");
 
         db.collection("Published Ads").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -109,26 +99,26 @@ Log.d("docc3","came into set adapter");
                 profilePicList.clear();
                 recyclerView.removeAllViews();
 
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     int counter = 0;
-                    for(QueryDocumentSnapshot doc : task.getResult()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         String Publisher_Name = doc.get("publisher_name").toString();
                         String Publisher_Image = doc.get("publisher_image").toString();
 
-                        if(Publisher_Name.toLowerCase().contains(searchedString.toLowerCase())){
+                        if (Publisher_Name.toLowerCase().contains(searchedString.toLowerCase())) {
                             publisherNameList.add(Publisher_Name);
                             profilePicList.add(Publisher_Image);
                             counter++;
                         }
-                        if(counter == 10){
+                        if (counter == 10) {
                             break;
                         }
 
                     }
                     searchAdapter = new SearchAdapter(SearchActivity.this, publisherNameList, profilePicList, SearchedString);
                     recyclerView.setAdapter(searchAdapter);
-                }else{
-                        Log.d("docc3","rror");
+                } else {
+                    Log.d("docc3", "rror");
                 }
 
             }

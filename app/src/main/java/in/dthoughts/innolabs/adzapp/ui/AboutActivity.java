@@ -24,8 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
-import in.dthoughts.innolabs.adzapp.BuildConfig;
-import in.dthoughts.innolabs.adzapp.R;
 import com.marcoscg.licenser.Library;
 import com.marcoscg.licenser.License;
 import com.marcoscg.licenser.LicenserDialog;
@@ -33,12 +31,14 @@ import com.marcoscg.licenser.LicenserDialog;
 import java.util.Calendar;
 
 import in.dthoughts.innolabs.adzapp.BuildConfig;
+import in.dthoughts.innolabs.adzapp.R;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
 public class AboutActivity extends AppCompatActivity {
 
     Uri mInvitationUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,7 @@ public class AboutActivity extends AppCompatActivity {
                 .addGroup("Refer and Earn")
                 .addItem(referAndEarn())
                 .addGroup(getString(R.string.about_page_app_group_name))
-                .addItem(new Element().setTitle("version code: "+String.valueOf(BuildConfig.VERSION_NAME)))
+                .addItem(new Element().setTitle("version code: " + String.valueOf(BuildConfig.VERSION_NAME)))
                 .addItem(getThirdPartyLicenses())
                 .addItem(getPrivacyPolicy())
                 .addItem(getTermsAndConditions())
@@ -76,7 +76,7 @@ public class AboutActivity extends AppCompatActivity {
         referAndEarn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("docc1","clicked on refer and earn");
+                Log.d("docc1", "clicked on refer and earn");
                 startReferAndEarn();
             }
         });
@@ -84,7 +84,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void startReferAndEarn() {
-        Log.d("docc1","enetred start refer and earn");
+        Log.d("docc1", "enetred start refer and earn");
         final Dialog shareDialog = new Dialog(AboutActivity.this);
         shareDialog.setContentView(R.layout.share_app_dialog);
         final Button mail_share = shareDialog.findViewById(R.id.mail_share);
@@ -94,8 +94,8 @@ public class AboutActivity extends AppCompatActivity {
         shareDialog.show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
-        String link = "http://adzapp.in/?invitedby="+uid;
-        Log.d("docc1","link:"+link);
+        String link = "http://adzapp.in/?invitedby=" + uid;
+        Log.d("docc1", "link:" + link);
         FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse(link))
                 .setDynamicLinkDomain("adzapp.page.link")
@@ -104,31 +104,31 @@ public class AboutActivity extends AppCompatActivity {
                                 .setMinimumVersion(1)
                                 .build())
                 .buildShortDynamicLink()
-                .addOnSuccessListener(new OnSuccessListener<ShortDynamicLink>()     {
-                    @Override
-                    public void onSuccess(ShortDynamicLink shortDynamicLink) {
-                       mInvitationUrl = shortDynamicLink.getShortLink();
-                       loading_animation_view.setVisibility(View.GONE);
-                       tv3.setText((String.valueOf(mInvitationUrl)));
-                       tv3.setVisibility(View.VISIBLE);
-                       mail_share.setEnabled(true);
-                       social_share.setEnabled(true);
-                        Log.d("docc1", "short url is"+String.valueOf(mInvitationUrl));
+                .addOnSuccessListener(new OnSuccessListener<ShortDynamicLink>() {
+                                          @Override
+                                          public void onSuccess(ShortDynamicLink shortDynamicLink) {
+                                              mInvitationUrl = shortDynamicLink.getShortLink();
+                                              loading_animation_view.setVisibility(View.GONE);
+                                              tv3.setText((String.valueOf(mInvitationUrl)));
+                                              tv3.setVisibility(View.VISIBLE);
+                                              mail_share.setEnabled(true);
+                                              social_share.setEnabled(true);
+                                              Log.d("docc1", "short url is" + String.valueOf(mInvitationUrl));
 
 
-                    }
-                }
+                                          }
+                                      }
                 )
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("docc1","failed in line 104 "+e.getMessage());
+                        Log.d("docc1", "failed in line 104 " + e.getMessage());
                     }
                 });
         tv3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final android.content.ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                final android.content.ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("AdzApp referral invitation link", String.valueOf(mInvitationUrl));
                 clipboardManager.setPrimaryClip(clipData);
             }
@@ -144,17 +144,16 @@ public class AboutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Download AdzApp with my referral link "+String.valueOf(mInvitationUrl));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Download AdzApp with my referral link " + String.valueOf(mInvitationUrl));
                 startActivity(Intent.createChooser(shareIntent, "Share link using"));
             }
         });
 
 
-
     }
 
     private void sendInvitationCode(Uri mInvitationUrl) {
-        Log.d("docc1","came into send inivation");
+        Log.d("docc1", "came into send inivation");
         //String referrerName = FirebaseAuth.getInstance().getCurrentUser();
         String subject = "Download AdzApp and get reward points";//String.format("%s wants you to download ADZAPP and earn", referrerName);
         String invitationLink = mInvitationUrl.toString();
@@ -168,7 +167,7 @@ public class AboutActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_TEXT, msg);
         intent.putExtra(Intent.EXTRA_HTML_TEXT, msgHtml);
         if (intent.resolveActivity(getPackageManager()) != null) {
-            Log.d("docc1","came into last if");
+            Log.d("docc1", "came into last if");
             startActivity(intent);
         }
 
@@ -215,7 +214,7 @@ public class AboutActivity extends AppCompatActivity {
         return privacyPolicy;
     }
 
-    Element getThirdPartyLicenses(){
+    Element getThirdPartyLicenses() {
         Element ThirdPartyLicenses = new Element();
         ThirdPartyLicenses.setTitle(getString(R.string.Third_party_licenses));
         ThirdPartyLicenses.setOnClickListener(new View.OnClickListener() {
@@ -315,7 +314,7 @@ public class AboutActivity extends AppCompatActivity {
     Element getCopyRightsElement() {
         Element copyRightsElement = new Element();
         final String copyrights = String.format(getString(R.string.copy_right), Calendar.getInstance().get(Calendar.YEAR));
-        copyRightsElement.setTitle(getString(R.string.about_page_company_name)+" "+copyrights);
+        copyRightsElement.setTitle(getString(R.string.about_page_company_name) + " " + copyrights);
         copyRightsElement.setIconDrawable(R.drawable.ic_copyright_black_24dp);
         copyRightsElement.setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color);
         copyRightsElement.setIconNightTint(android.R.color.white);

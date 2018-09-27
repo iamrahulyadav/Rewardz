@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -21,10 +18,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.unstoppable.submitbuttonview.SubmitButton;
 
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.ui.intro.IntroActivity;
+import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -32,7 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
     //private ProgressBar progressBar;
-    private Button btnSignup, /*btnLogin,*/ btnReset;
+    private Button btnSignup, /*btnLogin,*/
+            btnReset;
     private SubmitButton btnLogin;
     private AnimationDrawable animationDrawable;
     //private ConstraintLayout constraintLayout;
@@ -47,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //background gradient animation
         //constraintLayout = findViewById(R.id.constrainLayout);
-        relativeLayout =  findViewById(R.id.relativeLayout);
+        relativeLayout = findViewById(R.id.relativeLayout);
         animationDrawable = (AnimationDrawable) relativeLayout.getBackground();//constraintLayout.getBackground();
         animationDrawable.setEnterFadeDuration(5000);
         animationDrawable.setExitFadeDuration(2000);
@@ -59,12 +55,12 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        inputEmail =  findViewById(R.id.email);
-        inputPassword =  findViewById(R.id.password);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
         //progressBar =  findViewById(R.id.progressBar);
-        btnSignup =  findViewById(R.id.btn_signup);
-        btnLogin =  findViewById(R.id.btn_login);
-        btnReset =  findViewById(R.id.btn_reset_password);
+        btnSignup = findViewById(R.id.btn_signup);
+        btnLogin = findViewById(R.id.btn_login);
+        btnReset = findViewById(R.id.btn_reset_password);
 
 
         btnSignup.setOnClickListener(new View.OnClickListener() {

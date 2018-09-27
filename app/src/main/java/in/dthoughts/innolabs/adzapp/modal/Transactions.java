@@ -2,7 +2,7 @@ package in.dthoughts.innolabs.adzapp.modal;
 
 public class Transactions {
 
-    private   String coupon_code,
+    private String coupon_code,
             expires_on,
             points,
             publisher_name,
@@ -69,7 +69,6 @@ public class Transactions {
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
-
 
 
 }

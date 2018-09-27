@@ -5,12 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -19,17 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.ui.DetailAdActivity;
-import in.dthoughts.innolabs.adzapp.ui.PublisherDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.prefs.BackingStoreException;
+
+import in.dthoughts.innolabs.adzapp.R;
+import in.dthoughts.innolabs.adzapp.ui.PublisherDetailActivity;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
@@ -38,7 +32,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     ArrayList<String> profilePicList;
     String SearchedString;
 
-    class SearchViewHolder extends RecyclerView.ViewHolder{
+    class SearchViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ProfilePic;
         TextView PublisherName;
@@ -53,24 +47,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
     }
 
-    public SearchAdapter (Context context, ArrayList<String> publisherNameList, ArrayList<String> profilePicList, String SearchedString){
+    public SearchAdapter(Context context, ArrayList<String> publisherNameList, ArrayList<String> profilePicList, String SearchedString) {
         this.context = context;
         this.publisherNameList = publisherNameList;
         this.profilePicList = profilePicList;
         this.SearchedString = SearchedString;
-        Log.d("docc5",SearchedString);
+        Log.d("docc5", SearchedString);
 
     }
 
     @NonNull
     @Override
     public SearchAdapter.SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.listview_search, parent, false);;
+        View view = LayoutInflater.from(context).inflate(R.layout.listview_search, parent, false);
+        ;
         return new SearchAdapter.SearchViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SearchViewHolder holder,final int position) {
+    public void onBindViewHolder(@NonNull SearchViewHolder holder, final int position) {
         String text = publisherNameList.get(position).toString();
         Spannable spanText = Spannable.Factory.getInstance().newSpannable(text);
         int i = text.toLowerCase(Locale.getDefault()).indexOf(SearchedString);
@@ -97,7 +92,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             }
         });
     }
-
 
 
     @Override

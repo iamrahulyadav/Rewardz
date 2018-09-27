@@ -16,23 +16,10 @@ import com.fragstack.contracts.StackableFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.fragments.marketCategories.AutoMobileFragment;
 import in.dthoughts.innolabs.adzapp.fragments.marketCategories.ElectionsFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.ElectronicsFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.EntertainmentFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.FashionFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.FoodFragment;
-import in.dthoughts.innolabs.adzapp.ui.AddNewAd;
-
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.AutoMobileFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.ElectronicsFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.EntertainmentFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.FashionFragment;
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.FoodFragment;
-import in.dthoughts.innolabs.adzapp.ui.AddNewAd;
-
-import in.dthoughts.innolabs.adzapp.fragments.marketCategories.AutoMobileFragment;
 import in.dthoughts.innolabs.adzapp.fragments.marketCategories.ElectronicsFragment;
 import in.dthoughts.innolabs.adzapp.fragments.marketCategories.EntertainmentFragment;
 import in.dthoughts.innolabs.adzapp.fragments.marketCategories.FashionFragment;
@@ -47,7 +34,9 @@ public class MarketFragment extends Fragment implements StackableFragment {
     FirebaseFirestore db;
     FirebaseUser user;
 
-    public MarketFragment(){}
+    public MarketFragment() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,7 +44,7 @@ public class MarketFragment extends Fragment implements StackableFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_market, container, false);
 
-        viewPager =  view.findViewById(R.id.viewpager);
+        viewPager = view.findViewById(R.id.viewpager);
         viewPagerAdapter = new MarketFragment.ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         return view;
@@ -107,27 +96,27 @@ public class MarketFragment extends Fragment implements StackableFragment {
 
         @Override
         public Fragment getItem(int position) {//TODO: use switch case for categories --FINISHED
-            switch (position){
-                case 0 :
+            switch (position) {
+                case 0:
                     return FoodFragment.newInstance();
 
-                case 1 :
+                case 1:
                     return EntertainmentFragment.newInstance();
 
-                case 2 :
+                case 2:
                     return FashionFragment.newInstance();
 
-                case 3 :
+                case 3:
                     return AutoMobileFragment.newInstance();
 
-                case 4 :
+                case 4:
                     return ElectronicsFragment.newInstance();
 
-                case 5 :
+                case 5:
                     return ElectionsFragment.newInstance();
 
-                    default:
-                     return FoodFragment.newInstance();
+                default:
+                    return FoodFragment.newInstance();
             }
 
 
@@ -141,24 +130,24 @@ public class MarketFragment extends Fragment implements StackableFragment {
         @Override
         public CharSequence getPageTitle(int position) {
 
-           //TODO: use switch case to get page titles for categories name.
-            switch (position){
-                case 0 :
+            //TODO: use switch case to get page titles for categories name.
+            switch (position) {
+                case 0:
                     return FoodFragment.PAGE_TITLE;
 
-                case 1 :
+                case 1:
                     return EntertainmentFragment.PAGE_TITLE;
 
-                case 2 :
+                case 2:
                     return FashionFragment.PAGE_TITLE;
 
-                case 3 :
+                case 3:
                     return AutoMobileFragment.PAGE_TITLE;
 
-                case 4 :
+                case 4:
                     return ElectronicsFragment.PAGE_TITLE;
 
-                case 5 :
+                case 5:
                     return ElectionsFragment.PAGE_TITLE;
 
                 default:

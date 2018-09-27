@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,7 +17,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,13 +30,13 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import in.dthoughts.innolabs.adzapp.R;
 import com.squareup.picasso.Picasso;
-
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import in.dthoughts.innolabs.adzapp.R;
 
 public class ProfileUpdateActivity extends AppCompatActivity {
 
@@ -49,8 +47,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             REWARDS_KEY = "Rewards",
             PHOTOURI_KEY = "PhotoUri",
             ADPUBLISHER_KEY = "AdPublisher",
-            USERID_KEY = "UserID"
-                    ;
+            USERID_KEY = "UserID";
 
     FirebaseFirestore db;
     FirebaseAuth mAuth;
@@ -81,7 +78,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_update);
 
         final Bundle extras = getIntent().getExtras();
-        if(extras != null){
+        if (extras != null) {
             updateProfile = extras.getBoolean("UPDATE__PROFILE", false);
         }
 
@@ -92,7 +89,6 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
 
 
-
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -100,22 +96,21 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         cityTV = findViewById(R.id.city);
         mobilenumberTV = findViewById(R.id.mobilenumber);
         adpublisherSW = findViewById(R.id.adpublisher);
-        imageViewIV =  findViewById(R.id.displaypic);
+        imageViewIV = findViewById(R.id.displaypic);
         imageButtonIB = findViewById(R.id.changePic);
         savedetialsBT = findViewById(R.id.btn_save);
         progressBar = findViewById(R.id.progressBar);
-        progressBar2 =  findViewById(R.id.progressBar2);
+        progressBar2 = findViewById(R.id.progressBar2);
 
 
         //filling the details into resp. fields when user came from profile page to update GET ALL DATA THROUGH INTENT EXTRAS
         //TODO:DOnt forget to get intent extras from profile page while updating a user data. -- FINISHED
-        if(updateProfile){
+        if (updateProfile) {
             displayName = extras.getString("DISPLAY__NAME");
             mobileNumber = extras.getString("MOBILE__NUMBER");
             city = extras.getString("CITY__NAME");
             adPublisher = extras.getString("AD__PUBLISHER");
             photoUri = extras.getString("PHOTO__URI");
-
 
 
             displaynameTV.setText(displayName);
@@ -126,15 +121,14 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             //TODO:apply glide properly and check it out later -- FINISHED(instead of glide used PICASSO)
 
 
-            try{
+            try {
                 //Picasso.get()
                 Picasso.with(getApplicationContext())
                         .load(photoUri)
                         .placeholder(R.drawable.ic_account_circle_black_24dp)//"https://firebasestorage.googleapis.com/v0/b/startup-demos.appspot.com/o/profilePic%2Fi6zk0sOlrvPuSufDLndHTgdZdYq2.jpg?alt=media&token=918471f6-2c1b-4200-95a7-38aedd8a7131")
                         .into(imageViewIV);
-            }
-            catch (Exception error){
-                Log.d("profile pic exception",error.getMessage());
+            } catch (Exception error) {
+                Log.d("profile pic exception", error.getMessage());
                 //Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(imageViewIV);
                 Picasso.with(getApplicationContext()).load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(imageViewIV);
             }
@@ -145,10 +139,9 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         savedetialsBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!updateProfile){
+                if (!updateProfile) {
                     addNewUser();
-                }
-                else {
+                } else {
                     updateUser();
                 }
 
@@ -186,8 +179,8 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     private void uploadImageFile() {
         progressBar.setVisibility(View.VISIBLE);
 
-        final   StorageReference storageRef = firebaseStorage.getReference();
-        final StorageReference uploadeRef = storageRef.child("profilePic/"+user.getUid()+".jpg");
+        final StorageReference storageRef = firebaseStorage.getReference();
+        final StorageReference uploadeRef = storageRef.child("profilePic/" + user.getUid() + ".jpg");
 
         UploadTask uploadTask = uploadeRef.putFile(filePath);
 
@@ -211,7 +204,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
                     //uploadedImage = task.getResult().toString();
                     progressBar.setVisibility(View.INVISIBLE);
 
-                    Log.i("url",downloadUri.toString());
+                    Log.i("url", downloadUri.toString());
                     profilePicChanged = true;
 
                 } else {
@@ -227,39 +220,44 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         //TODO: if user wont upload a photo app crashes while retriving make it empty if not uploaded (code written test it once)
         progressBar2.setVisibility(View.VISIBLE);
 
-        if(!displaynameTV.getText().toString().isEmpty()){
+        if (!displaynameTV.getText().toString().isEmpty()) {
             displayName = displaynameTV.getText().toString();
-        }else {displayName = " ";}
+        } else {
+            displayName = " ";
+        }
 
         email = user.getEmail();
         userId = user.getUid();
 
-        if(!mobilenumberTV.getText().toString().isEmpty()){
+        if (!mobilenumberTV.getText().toString().isEmpty()) {
             mobileNumber = mobilenumberTV.getText().toString();
-        }else { mobileNumber = " ";}
+        } else {
+            mobileNumber = " ";
+        }
 
-        if(!cityTV.getText().toString().isEmpty()){
+        if (!cityTV.getText().toString().isEmpty()) {
             city = cityTV.getText().toString().toLowerCase().trim();
             subscribeUserToCityNotif(city);
-        }else { city = " ";}
+        } else {
+            city = " ";
+        }
 
         adPublisher = Boolean.toString(adpublisherSW.isChecked());
         rewards = "0";
-        try{
-            if(downloadUri.toString()!=null){
+        try {
+            if (downloadUri.toString() != null) {
                 photoUri = downloadUri.toString();
-            }
-            else {
+            } else {
                 photoUri = " ";
             }
-        }catch (Exception errr){
-            Log.d("doc",errr.getMessage());
+        } catch (Exception errr) {
+            Log.d("doc", errr.getMessage());
             photoUri = " ";
         }
 
         Log.i("photouri", photoUri);//TODO: change with uploaded image URL - FINISHED
 
-        Map< String, Object > newUser = new HashMap< >();
+        Map<String, Object> newUser = new HashMap<>();
         newUser.put(NAME_KEY, displayName);
         newUser.put(EMAIL_KEY, email);
         newUser.put(USERID_KEY, userId);
@@ -313,7 +311,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
 
         progressBar2.setVisibility(View.VISIBLE);
 
-        if(!cityTV.getText().toString().isEmpty()){
+        if (!cityTV.getText().toString().isEmpty()) {
             subscribeUserToCityNotif(cityTV.getText().toString().toLowerCase());
         }
         DocumentReference updatingProfile = db.collection("usersProfile").document(user.getUid());
@@ -321,7 +319,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
         updatingProfile.update(PHONE_KEY, mobilenumberTV.getText().toString());
         updatingProfile.update(CITY_KEY, cityTV.getText().toString().toLowerCase());
         updatingProfile.update(ADPUBLISHER_KEY, Boolean.toString(adpublisherSW.isChecked()));
-        updatingProfile.update(PHOTOURI_KEY, profilePicChanged ? updatedprofilepic: photoUri ).addOnSuccessListener(new OnSuccessListener<Void>() {
+        updatingProfile.update(PHOTOURI_KEY, profilePicChanged ? updatedprofilepic : photoUri).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 progressBar2.setVisibility(View.INVISIBLE);
@@ -334,13 +332,12 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressBar2.setVisibility(View.INVISIBLE);
-                Toast.makeText(ProfileUpdateActivity.this, getString(R.string.update_failed)+e.getMessage(),
+                Toast.makeText(ProfileUpdateActivity.this, getString(R.string.update_failed) + e.getMessage(),
                         Toast.LENGTH_SHORT).show();
 
             }
         });
     }
-
 
 
 }

@@ -1,10 +1,8 @@
 package in.dthoughts.innolabs.adzapp.ui;
 
-import android.app.AlertDialog;
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -15,15 +13,12 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.SubscriptionManager;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,58 +26,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.fragstack.contracts.StackableFragment;
 import com.fragstack.controller.FragmentController;
 import com.fragstack.controller.FragmentTransactionOptions;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.Duration;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
-import com.google.protobuf.CodedOutputStream;
+
 import in.dthoughts.innolabs.adzapp.BuildConfig;
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.authentication.LoginActivity;
-import in.dthoughts.innolabs.adzapp.helper.DetectDevice;
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.authentication.SignupActivity;
 import in.dthoughts.innolabs.adzapp.fragments.HomeFragment;
 import in.dthoughts.innolabs.adzapp.fragments.MarketFragment;
 import in.dthoughts.innolabs.adzapp.fragments.ProfileFragment;
 import in.dthoughts.innolabs.adzapp.fragments.WalletFragment;
-import in.dthoughts.innolabs.adzapp.service.DownloadRt;
-
-import in.dthoughts.innolabs.adzapp.BuildConfig;
-import in.dthoughts.innolabs.adzapp.authentication.LoginActivity;
-import in.dthoughts.innolabs.adzapp.authentication.SignupActivity;
-import in.dthoughts.innolabs.adzapp.fragments.HomeFragment;
-import in.dthoughts.innolabs.adzapp.fragments.ProfileFragment;
-import in.dthoughts.innolabs.adzapp.fragments.WalletFragment;
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-import in.dthoughts.innolabs.adzapp.service.DownloadRt;
-
-import in.dthoughts.innolabs.adzapp.authentication.LoginActivity;
-import in.dthoughts.innolabs.adzapp.authentication.SignupActivity;
-import in.dthoughts.innolabs.adzapp.fragments.HomeFragment;
-import in.dthoughts.innolabs.adzapp.fragments.ProfileFragment;
-import in.dthoughts.innolabs.adzapp.fragments.WalletFragment;
+import in.dthoughts.innolabs.adzapp.helper.DetectDevice;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.service.DownloadRt;
 
 
-//import com.dthoughts.harsha.adzapp.fragments.SupportFragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     //for write settings dailogss
     private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
-    private Button button, write_settings_granted_button, xiaomi_permission_button,xiaomi_permissions_granted_button;
+    private Button button, write_settings_granted_button, xiaomi_permission_button, xiaomi_permissions_granted_button;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -116,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new ProfileFragment();
                     break;
                 case R.id.navigation_wallet:
-                  fragment = new WalletFragment();
-                  break;
+                    fragment = new WalletFragment();
+                    break;
             }
             return displayFragment(fragment);//return loadFragment(fragment);
         }
@@ -128,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme); //for splash screen runs only app taking long time to initialize
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Action bar related stuff
+       getSupportActionBar().setSubtitle("Let's make your ads fly!");
+      
         container = findViewById(R.id.container);
         navigation = findViewById(R.id.navigation);//Don't delete this bruh!
         prefManager = new PrefManager(this);
@@ -137,16 +111,16 @@ public class MainActivity extends AppCompatActivity {
         mFragmentController = new FragmentController(getSupportFragmentManager(), R.id.fragment_container, savedInstanceState, null);
         //checking first run of app
         checkFirstRun();
-        if(DetectDevice.isMiUi()){
-            Log.d("docc","Xiaomi detected");
-            if(prefManager.isPermissionGranted() == false){
+        if (DetectDevice.isMiUi()) {
+            Log.d("docc", "Xiaomi detected");
+            if (prefManager.isPermissionGranted() == false) {
                 showXiaomiPermissionDialog();
             }
 
-        }else{
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 boolean settingsCanWrite = Settings.System.canWrite(getApplicationContext());
-                if(!settingsCanWrite){
+                if (!settingsCanWrite) {
                     showWriteSettingsDialog();
 
                 }
@@ -190,16 +164,16 @@ public class MainActivity extends AppCompatActivity {
         appUpdater.start();
 
         //reloading user to check whether his/her email is verified or not(As firebase cache user data we have to reload)
-        if(user != null){
+        if (user != null) {
             user.reload();
             emailVerified = user.isEmailVerified();
-                 if(!emailVerified){//TODO: IT SHOUD EMAIL NOT VERIFED
+            if (!emailVerified) {//TODO: IT SHOUD EMAIL NOT VERIFED
                 emailVerifySnackBar(container, "Email not verified");
             }
         }
 
         //loading the default home fragment
-       displayFragment(new HomeFragment());//fragstaack stuff// loadFragment(new HomeFragment());
+        displayFragment(new HomeFragment());//fragstaack stuff// loadFragment(new HomeFragment());
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 //TODO:uncmnt this service inoreder  to run service -- FINISHED
@@ -207,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         if (prefManager.isFirstTimeLaunchInDay()) {
             //starting service
             Intent intent = new Intent(MainActivity.this, DownloadRt.class);
-            ContextCompat.startForegroundService(this,intent);
+            ContextCompat.startForegroundService(this, intent);
 
             //prefManager.setFirstTimeLaunchInDay(false);
         }
@@ -216,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void emailVerifySnackBar(final View coordinatorLayout, String snackTitle) {
-        Log.d("docc","into email verify");
+        Log.d("docc", "into email verify");
         Snackbar snackbar = Snackbar.make(coordinatorLayout, snackTitle, Snackbar.LENGTH_INDEFINITE)
                 .setAction("Resend", new View.OnClickListener() {
                     @Override
@@ -228,12 +202,13 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbar.getView().getLayoutParams();
         params.setMargins(0, 0, 0, height);
         snackbar.getView().setLayoutParams(params);
-        snackbar.show(); Log.d("docc","snackbar shown");
+        snackbar.show();
+        Log.d("docc", "snackbar shown");
 
 
     }
 
-    public  void sendEmailVerification() {
+    public void sendEmailVerification() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         user.sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -241,11 +216,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
 
-                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully) + user.getEmail(), Toast.LENGTH_SHORT).show();
 
                         } else {
                             Log.d("doc", "sendEmailVerification failed!", task.getException());
-                            Toast.makeText(getApplicationContext(), "Unable to sent mail to "+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Unable to sent mail to " + user.getEmail(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -265,8 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Initiating Menu XML file (mainmenu.xml)
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.mainmenu, menu);
 
@@ -276,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 //            case R.id.menu_settings:
 //                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
 //              return true;
@@ -321,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (savedVersionCode == DOESNT_EXIST) {
 
-            Toast.makeText(MainActivity.this, "First RUN",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "First RUN", Toast.LENGTH_SHORT).show();
 
 
             // TODO This is a new install (or the user cleared the shared preferences)
@@ -334,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
     }
 
-//fragstack stuff
+    //fragstack stuff
     public boolean displayFragment(Fragment fragment) {
         FragmentTransactionOptions fragmentTransactionOptions = new FragmentTransactionOptions.Builder()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).build();
@@ -344,38 +318,38 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mFragmentController.popBackStackImmediate()){
-           Log.d("docc", "inside if:"+String.valueOf(mFragmentController.getCurrentFragment().getId()));
+        if (!mFragmentController.popBackStackImmediate()) {
+            Log.d("docc", "inside if:" + String.valueOf(mFragmentController.getCurrentFragment().getId()));
             super.onBackPressed();
         }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d("docc1", "inside run"+String.valueOf(mFragmentController.getCurrentFragment()));
-                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("HomeFragment")){
+                Log.d("docc1", "inside run" + String.valueOf(mFragmentController.getCurrentFragment()));
+                if (String.valueOf(mFragmentController.getCurrentFragment()).contains("HomeFragment")) {
                     navigation.setSelectedItemId(R.id.navigation_home);
 
                 }
-                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("MarketFragment")){
+                if (String.valueOf(mFragmentController.getCurrentFragment()).contains("MarketFragment")) {
                     navigation.setSelectedItemId(R.id.navigation_market);
                 }
-                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("ProfileFragment")){
+                if (String.valueOf(mFragmentController.getCurrentFragment()).contains("ProfileFragment")) {
                     navigation.setSelectedItemId(R.id.navigation_profile);
                 }
-                if(String.valueOf(mFragmentController.getCurrentFragment()).contains("WalletFragment")){
+                if (String.valueOf(mFragmentController.getCurrentFragment()).contains("WalletFragment")) {
                     navigation.setSelectedItemId(R.id.navigation_wallet);
                 }
 
             }
         }, 100);
         Log.d("docc1", String.valueOf(mFragmentController.getCurrentFragment()));
-        Log.d("docc1", "ID IS"+String.valueOf(navigation.getMenu().findItem(navigation.getSelectedItemId())));
+        Log.d("docc1", "ID IS" + String.valueOf(navigation.getMenu().findItem(navigation.getSelectedItemId())));
 
-            //super.onBackPressed();
+        //super.onBackPressed();
     }
 
     private void showXiaomiPermissionDialog() {
-        final Dialog xiaomiDialog =  new Dialog(this);
+        final Dialog xiaomiDialog = new Dialog(this);
         xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
         xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
@@ -406,29 +380,29 @@ public class MainActivity extends AppCompatActivity {
     private void showIntro() {
 
         prefManager = new PrefManager(this);
-        if(prefManager.isBottomNavTutFinished() == false){
+        if (prefManager.isBottomNavTutFinished() == false) {
             new TapTargetSequence(this)
-                    .targets(TapTarget.forView(navigation.findViewById(R.id.navigation_home),"For you", "Tailored ads based on your location"),
-                            TapTarget.forView(navigation.findViewById(R.id.navigation_market),"Ads Market","Here you can find all ads"),
-                            TapTarget.forView(navigation.findViewById(R.id.navigation_wallet),"Wallet","Here you can see your rewards and redeemed codes"),
-                            TapTarget.forView(navigation.findViewById(R.id.navigation_profile),"Profile","You can update your profile from here")
+                    .targets(TapTarget.forView(navigation.findViewById(R.id.navigation_home), "For you", "Tailored ads based on your location"),
+                            TapTarget.forView(navigation.findViewById(R.id.navigation_market), "Ads Market", "Here you can find all ads"),
+                            TapTarget.forView(navigation.findViewById(R.id.navigation_wallet), "Wallet", "Here you can see your rewards and redeemed codes"),
+                            TapTarget.forView(navigation.findViewById(R.id.navigation_profile), "Profile", "You can update your profile from here")
 
                                     .cancelable(false)
                     ).listener(new TapTargetSequence.Listener() {
                 @Override
                 public void onSequenceFinish() {
-                    Log.d("docc","sequence finished");
+                    Log.d("docc", "sequence finished");
                     prefManager.setIsBottomNavTutFinished(true);
                 }
 
                 @Override
                 public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                    Log.d("docc","sequence dequnce step"+ lastTarget.id()+ " "+targetClicked);
+                    Log.d("docc", "sequence dequnce step" + lastTarget.id() + " " + targetClicked);
                 }
 
                 @Override
                 public void onSequenceCanceled(TapTarget lastTarget) {
-                    Log.d("docc","sequence canclled");
+                    Log.d("docc", "sequence canclled");
                 }
             }).start();
 
@@ -436,8 +410,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showWriteSettingsDialog(){
-        Log.d("docc","came into this dialog");
+    private void showWriteSettingsDialog() {
+        Log.d("docc", "came into this dialog");
         final Dialog dialog = new Dialog(this);
         LottieAnimationView animation_view = dialog.findViewById(R.id.animation_view);
         dialog.setContentView(R.layout.write_settings_dialog);
@@ -451,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + MainActivity.this.getPackageName()));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent,CODE_WRITE_SETTINGS_PERMISSION);
+                startActivityForResult(intent, CODE_WRITE_SETTINGS_PERMISSION);
                 showIntro();
             }
         });

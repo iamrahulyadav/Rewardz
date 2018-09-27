@@ -1,27 +1,23 @@
 package in.dthoughts.innolabs.adzapp.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -34,12 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -47,8 +38,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-
+import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import tcking.github.com.giraffeplayer2.VideoInfo;
 import tcking.github.com.giraffeplayer2.VideoView;
@@ -56,7 +46,7 @@ import tcking.github.com.giraffeplayer2.VideoView;
 
 public class DetailAdActivity extends AppCompatActivity {
 
-    private static final String USER_ID_KEY ="user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code",
+    private static final String USER_ID_KEY = "user_id", POINTS_KEY = "points", COUPON_CODE_KEY = "coupon_code",
             TIMESTAMP_KEY = "time_stamp", PUBLISHER_NAME_KEY = "publisher_name", EXPIRES_ON_KEY = "expires_on",
             AD_ID_KEY = "ad_id", FEEDBACK_KEY = "feedback";
 
@@ -66,12 +56,13 @@ public class DetailAdActivity extends AppCompatActivity {
     //YouTubePlayerView Ad_video;
     VideoView videoView;
     Button Redeem_button;
-    String adPublisherPic, adPublisherName,adExpiresOn,adBanner,adDescription,adUrl,adType,adVideoUrl,adPoints, adCouponCode, adID;
+    String adPublisherPic, adPublisherName, adExpiresOn, adBanner, adDescription, adUrl, adType, adVideoUrl, adPoints, adCouponCode, adID;
     double userTotalPoints, pointsAfterDeduction;
     PrefManager prefManager;
     FirebaseFirestore db;
     FirebaseUser user;
     boolean redeemed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,65 +81,64 @@ public class DetailAdActivity extends AppCompatActivity {
         });
 
         prefManager = new PrefManager(this);
-        if(prefManager.isDetailAdTutFinished() == false){
-           new TapTargetSequence(this)
-                   .targets(TapTarget.forView(findViewById(R.id.name),"Publisher name", "you can see same of publisher"),
-                            TapTarget.forView(findViewById(R.id.expireson),"Expires on", "This is the expiration date of ad"),
-                            TapTarget.forView(findViewById(R.id.adDescription),"Description","AD's description"),
-                           TapTarget.forView(findViewById(R.id.redeemButton),"Redeem buton", "Button to redeem")
-                   .cancelable(false))
-                   .listener(new TapTargetSequence.Listener() {
-                       @Override
-                       public void onSequenceFinish() {
-                           prefManager.setIsDetailAdTutFinished(true);
-                       }
+        if (prefManager.isDetailAdTutFinished() == false) {
+            new TapTargetSequence(this)
+                    .targets(TapTarget.forView(findViewById(R.id.name), "Publisher name", "you can see same of publisher"),
+                            TapTarget.forView(findViewById(R.id.expireson), "Expires on", "This is the expiration date of ad"),
+                            TapTarget.forView(findViewById(R.id.adDescription), "Description", "AD's description"),
+                            TapTarget.forView(findViewById(R.id.redeemButton), "Redeem buton", "Button to redeem")
+                                    .cancelable(false))
+                    .listener(new TapTargetSequence.Listener() {
+                        @Override
+                        public void onSequenceFinish() {
+                            prefManager.setIsDetailAdTutFinished(true);
+                        }
 
-                       @Override
-                       public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        @Override
+                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
 
-                       }
+                        }
 
-                       @Override
-                       public void onSequenceCanceled(TapTarget lastTarget) {
+                        @Override
+                        public void onSequenceCanceled(TapTarget lastTarget) {
 
-                       }
-                   }).start();
+                        }
+                    }).start();
 
 
         }
 
-        final  Bundle  extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         //if(extras != null){
 
-            adPublisherPic =  extras.get("adPublisherPic").toString();
-            adPublisherName = extras.get("adPublisherName").toString();
-            adExpiresOn = extras.get("adExpiresOn").toString();
-            adBanner = extras.get("adBanner").toString();
-            adDescription = extras.get("adDescription").toString();
-            adUrl = extras.get("adUrl").toString();
-            adType = extras.get("adType").toString();
-            adVideoUrl = extras.get("adVideoUrl").toString();
-            adPoints = extras.get("adPoints").toString();
-            adCouponCode = extras.get("adCouponCode").toString();
-            adID = extras.get("adID").toString();
-            Log.d("doc", adID);//TODO:remove this in release build
+        adPublisherPic = extras.get("adPublisherPic").toString();
+        adPublisherName = extras.get("adPublisherName").toString();
+        adExpiresOn = extras.get("adExpiresOn").toString();
+        adBanner = extras.get("adBanner").toString();
+        adDescription = extras.get("adDescription").toString();
+        adUrl = extras.get("adUrl").toString();
+        adType = extras.get("adType").toString();
+        adVideoUrl = extras.get("adVideoUrl").toString();
+        adPoints = extras.get("adPoints").toString();
+        adCouponCode = extras.get("adCouponCode").toString();
+        adID = extras.get("adID").toString();
+        Log.d("doc", adID);//TODO:remove this in release build
 
         //}else{
-          //  Log.d("e", "exception");
+        //  Log.d("e", "exception");
         //}
 
 
-
-        Publisher_pic =  findViewById(R.id.profilePic);
+        Publisher_pic = findViewById(R.id.profilePic);
         Publisher_name = findViewById(R.id.name);
         Expires_on = findViewById(R.id.expireson);
-        Ad_description =  findViewById(R.id.adDescription);
+        Ad_description = findViewById(R.id.adDescription);
         Ad_url = findViewById(R.id.txtUrl);
         Ad_banner = findViewById(R.id.adBanner);
-        Redeem_button =  findViewById(R.id.redeemButton);
+        Redeem_button = findViewById(R.id.redeemButton);
 //        Ad_video = findViewById(R.id.adVideo);
 //        getLifecycle().addObserver(Ad_video);
-        videoView =  findViewById(R.id.video_view);
+        videoView = findViewById(R.id.video_view);
 
 
         //Picasso.get().load(adPublisherPic).into(Publisher_pic);
@@ -159,12 +149,12 @@ public class DetailAdActivity extends AppCompatActivity {
         Ad_url.setText(adUrl);
         Linkify.addLinks(Ad_url, Linkify.WEB_URLS);//To make links(URL) highlighted and clickable
 
-        if(adType.equals("standard") || adType.equals("basic")){
+        if (adType.equals("standard") || adType.equals("basic")) {
             //Picasso.get().load(adBanner).into(Ad_banner);
             Picasso.with(getApplicationContext()).load(adBanner).into(Ad_banner);
         }
 
-        if(adType.equals("premium")){
+        if (adType.equals("premium")) {
             Log.d("doc", "video file detected");
             videoView.setVisibility(View.VISIBLE);
             Ad_banner.setVisibility(View.INVISIBLE);
@@ -174,13 +164,11 @@ public class DetailAdActivity extends AppCompatActivity {
 
 
         }
-            Redeem_button.setText(getString(R.string.redeem) + " " + adPoints);
+        Redeem_button.setText(getString(R.string.redeem) + " " + adPoints);
 
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-
 
 
         //TODO: disable button after user pressing the redeem button while transaction is processing and add a progressbar as indication on button
@@ -195,10 +183,9 @@ public class DetailAdActivity extends AppCompatActivity {
 
                 //code to show coupon code to user
                 user.reload();
-                if(user.isEmailVerified()){
+                if (user.isEmailVerified()) {
                     deductRewardPoints();
-                }
-               else{
+                } else {
                     emailVerifyAlert();
                 }
 
@@ -209,7 +196,6 @@ public class DetailAdActivity extends AppCompatActivity {
         openAppRater();
 
     }
-
 
 
     private void openAppRater() {
@@ -235,7 +221,7 @@ public class DetailAdActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = sdf.format(c.getTime());
 
-        Map< String, Object > newUserFeedback = new HashMap< >();
+        Map<String, Object> newUserFeedback = new HashMap<>();
         newUserFeedback.put(USER_ID_KEY, user.getUid());
         newUserFeedback.put(TIMESTAMP_KEY, timestamp);
         newUserFeedback.put(FEEDBACK_KEY, feedback);
@@ -253,14 +239,14 @@ public class DetailAdActivity extends AppCompatActivity {
         });
     }
 
-    public  void sendEmailVerification() {
+    public void sendEmailVerification() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         user.sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully) + user.getEmail(), Toast.LENGTH_SHORT).show();
                             Log.d("doc", "Verification email sent to " + user.getEmail());
                         } else {
                             Log.d("doc", "sendEmailVerification failed!", task.getException());
@@ -270,20 +256,18 @@ public class DetailAdActivity extends AppCompatActivity {
     }
 
 
-
     private void deductRewardPoints() {
 
         db.collection("userRewards").document(user.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 userTotalPoints = documentSnapshot.getDouble("Rewards");
-               //TODO:uncmnt unnecessary toasts and logs , use try catch for null in above line
+                //TODO:uncmnt unnecessary toasts and logs , use try catch for null in above line
                 //AFter getting userTotalPoints check they r more than req. and take necessary steps
-                if(userTotalPoints < Double.parseDouble(adPoints)){
+                if (userTotalPoints < Double.parseDouble(adPoints)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.low_in_wallet), Toast.LENGTH_LONG).show();
 
-                }
-                else{
+                } else {
                     pointsAfterDeduction = userTotalPoints - Double.parseDouble(adPoints);
                     DocumentReference updatingRewards = db.collection("userRewards").document(user.getUid());
                     updatingRewards.update("Rewards", pointsAfterDeduction).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -301,7 +285,6 @@ public class DetailAdActivity extends AppCompatActivity {
                 }
 
 
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -314,7 +297,7 @@ public class DetailAdActivity extends AppCompatActivity {
 
     private void showCouponCode() {
         addTransactionToDB();
-        Log.d("coupon",adCouponCode);
+        Log.d("coupon", adCouponCode);
         displayCouponCode();
 //        myDialog = new Dialog(this);
 //        myDialog.setContentView(R.layout.coupon_code_alert);
@@ -327,7 +310,7 @@ public class DetailAdActivity extends AppCompatActivity {
 
     }
 
-    private void displayCouponCode(){
+    private void displayCouponCode() {
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.coupon_code_alert);
         couponCode = myDialog.findViewById(R.id.copuon_code);
@@ -344,11 +327,11 @@ public class DetailAdActivity extends AppCompatActivity {
         String timestamp = sdf.format(c.getTime());
 
 
-        Map< String, Object > newUserTransaction = new HashMap< >();
+        Map<String, Object> newUserTransaction = new HashMap<>();
         newUserTransaction.put(USER_ID_KEY, user.getUid());
-        newUserTransaction.put(POINTS_KEY,adPoints);
+        newUserTransaction.put(POINTS_KEY, adPoints);
         newUserTransaction.put(PUBLISHER_NAME_KEY, adPublisherName);
-        newUserTransaction.put(COUPON_CODE_KEY,adCouponCode);
+        newUserTransaction.put(COUPON_CODE_KEY, adCouponCode);
         newUserTransaction.put(TIMESTAMP_KEY, timestamp);
         newUserTransaction.put(EXPIRES_ON_KEY, adExpiresOn);
         newUserTransaction.put(AD_ID_KEY, adID);
@@ -356,12 +339,12 @@ public class DetailAdActivity extends AppCompatActivity {
         db.collection("Transactions").add(newUserTransaction).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Log.d("transaction", " success "+user.getUid());
+                Log.d("transaction", " success " + user.getUid());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),getString(R.string.processing_failure),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.processing_failure), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -406,10 +389,18 @@ public class DetailAdActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if(videoView.getVisibility() == View.VISIBLE){
+        if (videoView.getVisibility() == View.VISIBLE) {
             videoView.getPlayer().pause();
         }
         super.onPause();
+    }
+
+
+    @Override
+    public void onUserLeaveHint () {
+        if (adType.equals("premium")) {
+            //Activity.enterPictureInPictureMode();
+        }
     }
 
 }

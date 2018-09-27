@@ -57,7 +57,7 @@
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_account_circle_black_24dp"
+                app:srcCompat="@mipmap/ic_launcher_round"
                 android:contentDescription="@string/profile_pic_description" />
 
             <LinearLayout
@@ -127,7 +127,7 @@
             android:scaleType="fitXY"
             android:visibility="visible"
             android:contentDescription="@string/profile_pic_description"
-            app:srcCompat="@drawable/ic_dashboard_black_24dp" />
+            app:srcCompat="@mipmap/ic_launcher" />
 
         <tcking.github.com.giraffeplayer2.VideoView
             android:id="@+id/video_view"

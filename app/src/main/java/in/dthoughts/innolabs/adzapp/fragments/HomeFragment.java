@@ -4,20 +4,14 @@ package in.dthoughts.innolabs.adzapp.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,26 +27,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.airbnb.lottie.LottieAnimationView;
 import com.fragstack.contracts.StackableFragment;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -61,29 +48,27 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
-import in.dthoughts.innolabs.adzapp.helper.DetectDevice;
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-import in.dthoughts.innolabs.adzapp.modal.Ads;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
+import in.dthoughts.innolabs.adzapp.R;
+import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
+import in.dthoughts.innolabs.adzapp.helper.PrefManager;
+import in.dthoughts.innolabs.adzapp.modal.Ads;
 
 
-public class HomeFragment extends Fragment implements StackableFragment{
+public class HomeFragment extends Fragment implements StackableFragment {
 
     FirebaseFirestore db;
     FirebaseUser user;
 
     private FusedLocationProviderClient client;
-    private Button button, write_settings_granted_button, xiaomi_permission_button,xiaomi_permissions_granted_button;
+    private Button button, write_settings_granted_button, xiaomi_permission_button, xiaomi_permissions_granted_button;
     RecyclerView mainlist;
     LottieAnimationView loading_animation_view, empty_animation_view;
     TextView no_location_Tv;
@@ -91,17 +76,19 @@ public class HomeFragment extends Fragment implements StackableFragment{
     public List<Ads> AdsList;
     public String currentLocation;
     double Lat, Lon;
-    int n=0;
+    int n = 0;
     int delayInMillis = 7000;
     boolean[] alreadyReddemed;
     PrefManager prefManager;
-    Date todayDate,expiryDate,createdDate;
+    Date todayDate, expiryDate, createdDate;
 
     //public static List<String> AdsIDs;
 
     private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
 
-    public HomeFragment(){}
+    public HomeFragment() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -125,14 +112,14 @@ public class HomeFragment extends Fragment implements StackableFragment{
             // for ActivityCompat#requestPermissions for more details.
 
             Dexter.withActivity(getActivity())//TODO:ADD more permissions to user on first launch
-                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE
-                        ,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                     .withListener(new MultiplePermissionsListener() {
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             // check if all permissions are granted
                             if (report.areAllPermissionsGranted()) {
-                              //  Toast.makeText(getContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
+                                //  Toast.makeText(getContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
 
                             }
                             if (report.isAnyPermissionPermanentlyDenied()) {
@@ -148,7 +135,7 @@ public class HomeFragment extends Fragment implements StackableFragment{
                     }).withErrorListener(new PermissionRequestErrorListener() {
                 @Override
                 public void onError(DexterError error) {
-                    Toast.makeText(getActivity(), getString(R.string.error_occured)+ error.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_occured) + error.toString(), Toast.LENGTH_SHORT).show();
                 }
             }).onSameThread()
                     .check();
@@ -157,7 +144,7 @@ public class HomeFragment extends Fragment implements StackableFragment{
             return;
         }
 //TODO:TEST BELOW BLOCK OF CODE ON DEVICES RUNNING OS > MARSHMALLOW --FINISHED
-       //code block to get the write_settings permission
+        //code block to get the write_settings permission
 
 //        if(DetectDevice.isMiUi()){
 //            Log.d("docc","Xiaomi detected");
@@ -193,19 +180,18 @@ public class HomeFragment extends Fragment implements StackableFragment{
         });
 
         //getting date for querying
-        todayDate=java.util.Calendar.getInstance().getTime();
+        todayDate = java.util.Calendar.getInstance().getTime();
 
         Log.d("docc6", String.valueOf(todayDate));
         db = FirebaseFirestore.getInstance();
 
         AdsList = new ArrayList<>();
-        adsListAdapter = new AdsListAdapter(getContext() ,AdsList);
+        adsListAdapter = new AdsListAdapter(getContext(), AdsList);
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-
-        if(user != null){
+        if (user != null) {
             String userCurrentLocation = currentLocation;
             //Here I had the code of getting ads from db, but i moved it down
 
@@ -319,21 +305,21 @@ public class HomeFragment extends Fragment implements StackableFragment{
 
     public void getCurrentCity(double Lat, double Lon) {
 
-        try{
+        try {
             Geocoder gc = new Geocoder(getContext());
 
-            if(gc.isPresent()){
+            if (gc.isPresent()) {
                 List<Address> list = null;
                 try {
-                    list = gc.getFromLocation(Lat, Lon,1);
+                    list = gc.getFromLocation(Lat, Lon, 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try{
+                try {
                     Address address = list.get(0);
                     StringBuilder str = new StringBuilder();
                     str.append("Name:" + address.getLocality() + "\n");
-                    str.append("Sub-Admin Ares: " + address.getSubAdminArea() +"\n");
+                    str.append("Sub-Admin Ares: " + address.getSubAdminArea() + "\n");
                     str.append("Admin Area: " + address.getAdminArea() + "\n");
                     str.append("Country: " + address.getCountryName() + "\n");
                     str.append("Country Code: " + address.getCountryCode() + "\n");
@@ -343,22 +329,20 @@ public class HomeFragment extends Fragment implements StackableFragment{
                     Toast.makeText(getActivity(), currentLocation,
                             Toast.LENGTH_LONG).show();
                     Log.d("city", currentLocation);
-                }catch (Exception e){
+                } catch (Exception e) {
                     Log.d("error in location", e.getMessage());
                 }
 
 
-
-
-                if(user!= null){
-                    Log.d("docc6","statrting quierying");
+                if (user != null) {
+                    Log.d("docc6", "statrting quierying");
                     db.collection("Published Ads").whereEqualTo("city", currentLocation).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()){
-                                for(QueryDocumentSnapshot doc : task.getResult()){
-                                    n = n+1;
-                                    Log.d("docc6","inside loop: "+ String.valueOf(doc.get("expires_on")));
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    n = n + 1;
+                                    Log.d("docc6", "inside loop: " + String.valueOf(doc.get("expires_on")));
                                     SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
                                     try {
                                         expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
@@ -366,19 +350,18 @@ public class HomeFragment extends Fragment implements StackableFragment{
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                    if((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))){
-                                        Log.d("docc6","ads havent expired");
+                                    if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                                        Log.d("docc6", "ads havent expired");
                                         checkAlreadyRedeemed(doc);
-                                    }
-                                    else{
-                                        Log.d("docc6","ads expired");
+                                    } else {
+                                        Log.d("docc6", "ads expired");
                                     }
 
                                 }
-                            }else{
+                            } else {
 
                             }
-                            if(n==0){
+                            if (n == 0) {
                                 mainlist.setVisibility(View.GONE);
                                 loading_animation_view.pauseAnimation();
                                 loading_animation_view.setVisibility(View.GONE);
@@ -395,7 +378,7 @@ public class HomeFragment extends Fragment implements StackableFragment{
                     });
                 }
             }
-        }catch (Exception err){
+        } catch (Exception err) {
             Log.d("doc", err.getMessage());
         }
 
@@ -407,26 +390,26 @@ public class HomeFragment extends Fragment implements StackableFragment{
         alreadyReddemed = new boolean[1];
 
 
-        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc/*getDocument()*/.getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id", doc/*getDocument()*/.getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                try{
+                try {
 
-                    if(queryDocumentSnapshots.size()!= 0){
+                    if (queryDocumentSnapshots.size() != 0) {
                         alreadyReddemed[0] = true;
-                        Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-                    }else {
+                        Log.d("doc", "inside if:" + String.valueOf(alreadyReddemed[0]));
+                    } else {
                         alreadyReddemed[0] = false;
-                       // Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
+                        // Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
                         Ads ads = doc.toObject(Ads.class).withId(doc.getId());
                         AdsList.add(ads);
                         adsListAdapter.notifyDataSetChanged();
                         Log.d("doc", doc/*.getDocument()*/.getId().toString());
-                        Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
+                        Log.d("doc", "inside if:" + String.valueOf(alreadyReddemed[0]));
                     }
-                }catch (Exception err){
-                    Log.d("doc",err.getMessage());
+                } catch (Exception err) {
+                    Log.d("doc", err.getMessage());
                 }
             }
         });
@@ -437,8 +420,8 @@ public class HomeFragment extends Fragment implements StackableFragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == HomeFragment.CODE_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(getContext())){
-            Log.d("doc1", requestCode+" "+resultCode+" "+"CODE_WRITE_SETTINGS_PERMISSION success");
+        if (requestCode == HomeFragment.CODE_WRITE_SETTINGS_PERMISSION && Settings.System.canWrite(getContext())) {
+            Log.d("doc1", requestCode + " " + resultCode + " " + "CODE_WRITE_SETTINGS_PERMISSION success");
 
         }
     }

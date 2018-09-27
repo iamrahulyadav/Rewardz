@@ -64,10 +64,10 @@
     <string name="processing_failure">Unable to process request now, please try later.</string>
     <string name="intent_choose_image">Select Picture</string>
     <string name="profile_pic_description">Profile pic of publisher</string>
-    <string name="dummy_publisher_name">Publisher name dummy</string>
-    <string name="dummy_timestamp">timestamp dummy</string>
-    <string name="dummy_text">text status dummy</string>
-    <string name="dummy_url">url dummy</string>
+    <string name="dummy_publisher_name">AdzApp</string>
+    <string name="dummy_timestamp">never exires</string>
+    <string name="dummy_text">Let\'s provide exciting offers to users</string>
+    <string name="dummy_url">adzapp.in</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <!--email verification -->

@@ -10,25 +10,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import android.preference.RingtonePreference;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-import in.dthoughts.innolabs.adzapp.ui.AdPopUpActivity;
-
 import java.io.File;
 import java.util.Random;
+
+import in.dthoughts.innolabs.adzapp.helper.PrefManager;
+import in.dthoughts.innolabs.adzapp.ui.AdPopUpActivity;
 
 public class PhoneStateReceiver extends BroadcastReceiver {
 
     public static final String REWARDZ_PREFS_TONE = "com.dthoughts.harsha.adzapp.receiver";
-    public static final String REWARDZ_TONE= "AD_ID";
+    public static final String REWARDZ_TONE = "AD_ID";
     public static final String OLD_REWARDZ_TONE = "OLD_REWARDZ_TONE";
     private static boolean isIncoming, callReceived;
     static long start_time, end_time;
@@ -36,18 +34,19 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
     File[] ringtones;
     File RewardzRingtoneFolder, ringtoneFile, selectedRingtone;
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
 
-        try{
-            if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)){
+        try {
+            if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 isIncoming = true;
                 SharedPreferences preferences = context.getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
 
                 RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
-                Log.d("ringtone", "path is :"+RewardzRingtoneFolder.toString());
+                Log.d("ringtone", "path is :" + RewardzRingtoneFolder.toString());
                 ringtones = RewardzRingtoneFolder.listFiles();
                 //Log.d("ringtone", ringtones.clone().toString());
 
@@ -56,7 +55,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
                 selectedRingtone = new File(String.valueOf(ringtoneFile));
                 ContentValues content = new ContentValues();
-                content.put(MediaStore.MediaColumns.DATA,ringtoneFile.getAbsolutePath());
+                content.put(MediaStore.MediaColumns.DATA, ringtoneFile.getAbsolutePath());
                 content.put(MediaStore.MediaColumns.TITLE, selectedRingtone.getName());
                 content.put(MediaStore.MediaColumns.SIZE, 215454);
                 content.put(MediaStore.MediaColumns.MIME_TYPE, "audio/*");
@@ -66,19 +65,19 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 content.put(MediaStore.Audio.Media.IS_ALARM, false);
                 content.put(MediaStore.Audio.Media.IS_MUSIC, false);
 
-                Log.i("ringtone", "the absolute path of the file is :"+
-                        selectedRingtone.getAbsolutePath()+" name is "+ selectedRingtone.getName());
+                Log.i("ringtone", "the absolute path of the file is :" +
+                        selectedRingtone.getAbsolutePath() + " name is " + selectedRingtone.getName());
                 Uri uri = MediaStore.Audio.Media.getContentUriForPath(
                         selectedRingtone.getAbsolutePath());
                 context.getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + "=\"" + selectedRingtone.getAbsolutePath() + "\"",
                         null);
                 Uri newUri = context.getContentResolver().insert(uri, content);
-                Log.i("ringtone","the ringtone uri is :"+newUri);
+                Log.i("ringtone", "the ringtone uri is :" + newUri);
 
                 //checks user preference and changes ringtone by checking if switch ON/OFF status
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if(Settings.System.canWrite(context)){
-                        if(preferences.getBoolean("active", true) ){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.System.canWrite(context)) {
+                        if (preferences.getBoolean("active", true)) {
                             RingtoneManager.setActualDefaultRingtoneUri(
                                     context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
                                     newUri);
@@ -87,11 +86,11 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                         }
                     }
 
-                }else{
-                    if(preferences.getBoolean("active", true) ){
+                } else {
+                    if (preferences.getBoolean("active", true)) {
                         boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(context).getActiveSubscriptionInfoCount() >= 2;
-                        if(dualSim){
-                            Log.d("docc","dual sim detected");
+                        if (dualSim) {
+                            Log.d("docc", "dual sim detected");
                         }
                         RingtoneManager.setActualDefaultRingtoneUri(
                                 context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
@@ -102,35 +101,34 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 }
 
 
-
                 SharedPreferences sharedPreferences = context.getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-                String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE,"1rPyNckD3E3Vn4eWcX6t");//TODO: change this df. value to ADZAPP a in database (dont delete adzapp ad in db)
-                sharedPreferences.edit().putString(OLD_REWARDZ_TONE,OLD_TONE).apply();
-                sharedPreferences.edit().putString(REWARDZ_TONE, selectedRingtone.getName().substring(0,20)).apply();
-                Log.d("ringtone","subString "+selectedRingtone.getName().substring(0,20));
+                String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE, "1rPyNckD3E3Vn4eWcX6t");//TODO: change this df. value to ADZAPP a in database (dont delete adzapp ad in db)
+                sharedPreferences.edit().putString(OLD_REWARDZ_TONE, OLD_TONE).apply();
+                sharedPreferences.edit().putString(REWARDZ_TONE, selectedRingtone.getName().substring(0, 20)).apply();
+                Log.d("ringtone", "subString " + selectedRingtone.getName().substring(0, 20));
 
                 //TODO: removes toasts here in this file
                 //TODO:properly match ringtone with ad, tweak code here
 
 
             }
-            if ((state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))){
-                Toast.makeText(context,"Received State",Toast.LENGTH_SHORT).show();
-                Log.d("phoneCall","Received state");
+            if ((state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))) {
+                Toast.makeText(context, "Received State", Toast.LENGTH_SHORT).show();
+                Log.d("phoneCall", "Received state");
                 start_time = System.currentTimeMillis();
                 callReceived = true;
             }
-            if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
+            if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
 
                 prefManager = new PrefManager(context);
                 if (!prefManager.isFirstTimeRinging()) {
 
                     end_time = System.currentTimeMillis();
                     long total_time = end_time - start_time;
-                    Log.d("doc",String.valueOf(total_time));
+                    Log.d("doc", String.valueOf(total_time));
                     //Intent to call dialog activity to show ad and update reward points to user after call ends
 
-                    if(isIncoming && callReceived ){               //  if(total_time >= 30000 && isIncoming )
+                    if (isIncoming && callReceived) {               //  if(total_time >= 30000 && isIncoming )
 
 
                         final Intent i = new Intent(context, AdPopUpActivity.class);
@@ -148,15 +146,13 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                     }
                     isIncoming = false;
                     callReceived = false;
-                }
-                else {
+                } else {
                     prefManager.setIsFirstTimeRinging(false);
                 }
 
 
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

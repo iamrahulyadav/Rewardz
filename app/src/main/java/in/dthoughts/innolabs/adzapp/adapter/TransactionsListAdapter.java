@@ -1,7 +1,6 @@
 package in.dthoughts.innolabs.adzapp.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.ColorChooser;
 import in.dthoughts.innolabs.adzapp.modal.Transactions;
-
-import java.util.List;
-import java.util.Random;
 
 public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsListAdapter.ViewHolder> {
 
@@ -42,17 +40,16 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
 
         holder.parentLayout.setBackground(ColorChooser.ColorChooser());//settings a random color as background dynamically
 
-        holder.publisherName.setText(context.getResources().getString(R.string.offer_redeemed) +" " +TransactionsList.get(position).getPublisher_name());
+        holder.publisherName.setText(context.getResources().getString(R.string.offer_redeemed) + " " + TransactionsList.get(position).getPublisher_name());
         holder.timestamp.setText(TransactionsList.get(position).getTime_stamp());
 
     }
 
     @Override
     public int getItemCount() {
-        if(TransactionsList.size() >0){
+        if (TransactionsList.size() > 0) {
             return TransactionsList.size();
-        }
-        else{
+        } else {
             return 0;
         }
     }

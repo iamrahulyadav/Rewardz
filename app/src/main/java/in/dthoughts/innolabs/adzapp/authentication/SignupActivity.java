@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.ui.ProfileUpdateActivity;
 
@@ -54,11 +55,11 @@ public class SignupActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
-        btnSignIn =  findViewById(R.id.sign_in_button);
-        btnSignUp =  findViewById(R.id.sign_up_button);
-        inputEmail =  findViewById(R.id.email);
-        inputPassword =  findViewById(R.id.password);
-        progressBar =  findViewById(R.id.progressBar);
+        btnSignIn = findViewById(R.id.sign_in_button);
+        btnSignUp = findViewById(R.id.sign_up_button);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        progressBar = findViewById(R.id.progressBar);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +105,7 @@ public class SignupActivity extends AppCompatActivity {
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SignupActivity.this, getString(R.string.auth_failed)+ task.getException(),
+                                    Toast.makeText(SignupActivity.this, getString(R.string.auth_failed) + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     addRewardsToUser();//adding rewadrs data to db under username
@@ -119,14 +120,14 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public  void sendEmailVerification() {
+    public void sendEmailVerification() {
 
         user.sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully) + user.getEmail(), Toast.LENGTH_SHORT).show();
                             Log.d("doc", "Verification email sent to " + user.getEmail());
                         } else {
                             Log.d("doc", "sendEmailVerification failed!", task.getException());
@@ -137,7 +138,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void addRewardsToUser() {
         //creating a rewards points for user on signup in DB and assigning it to zero.
-        Map< String, Object > newUserRewards = new HashMap< >();
+        Map<String, Object> newUserRewards = new HashMap<>();
         newUserRewards.put("Rewards", 0);
 
         //get current user
@@ -148,7 +149,7 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignupActivity.this, "Rewards  failed."+e.getMessage(),
+                        Toast.makeText(SignupActivity.this, "Rewards  failed." + e.getMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
                 });

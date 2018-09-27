@@ -33,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 import in.dthoughts.innolabs.adzapp.R;
@@ -67,7 +68,7 @@ public class DownloadRt extends Service {
 
         Log.d("doc1", "Start foreground service.");
 
-        Uri defaultSoundUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.adzapp_notification);//RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.adzapp_notification);//RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 123, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNELID)
@@ -110,7 +111,7 @@ public class DownloadRt extends Service {
                     Lat = location.getLatitude();
                     Lon = location.getLongitude();
 
-                    Log.d("latlon",String.valueOf(Lat)+ " "+ String.valueOf(Lon));
+                    Log.d("latlon", String.valueOf(Lat) + " " + String.valueOf(Lon));
                     getCurrentCity(Lat, Lon);
                 }
             }
@@ -119,20 +120,20 @@ public class DownloadRt extends Service {
     }
 
     private void getCurrentCity(double lat, double lon) {
-        try{
+        try {
             Geocoder gc = new Geocoder(getApplicationContext());
-            if(gc.isPresent()){
+            if (gc.isPresent()) {
                 List<Address> list = null;
                 try {
-                    list = gc.getFromLocation(Lat, Lon,1);
+                    list = gc.getFromLocation(Lat, Lon, 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try{
+                try {
                     Address address = list.get(0);
                     StringBuilder str = new StringBuilder();
                     str.append("Name:" + address.getLocality() + "\n");
-                    str.append("Sub-Admin Ares: " + address.getSubAdminArea() +"\n");
+                    str.append("Sub-Admin Ares: " + address.getSubAdminArea() + "\n");
                     str.append("Admin Area: " + address.getAdminArea() + "\n");
                     str.append("Country: " + address.getCountryName() + "\n");
                     str.append("Country Code: " + address.getCountryCode() + "\n");
@@ -142,14 +143,14 @@ public class DownloadRt extends Service {
                     currentState = address.getAdminArea().trim().toLowerCase().toString();
 //                    Toast.makeText(getActivity(), currentLocation,
 //                            Toast.LENGTH_LONG).show();
-                    Log.d("city", currentLocation+" , "+currentState+"in service");
-                }catch (Exception e){
+                    Log.d("city", currentLocation + " , " + currentState + "in service");
+                } catch (Exception e) {
                     Log.d("error in location", e.getMessage());
                 }
             }
 
-        }catch(Exception err){
-            Log.d("exception","got location exception in download rt service");
+        } catch (Exception err) {
+            Log.d("exception", "got location exception in download rt service");
         }
     }
 
@@ -159,10 +160,10 @@ public class DownloadRt extends Service {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
 
-            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"AdzApp");
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
 //            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
 //                    + getString(R.string.app_name)); //TODO: re check this cmnt
-            if(RewardzRingtoneFolder.isDirectory()){
+            if (RewardzRingtoneFolder.isDirectory()) {
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
                     Log.d("file", "deleted file");
@@ -171,20 +172,19 @@ public class DownloadRt extends Service {
                 }
             }
             Log.d("file", RewardzRingtoneFolder.getAbsolutePath());
-            if(!RewardzRingtoneFolder.exists()){
-                boolean  file_created = RewardzRingtoneFolder.mkdir();
-                Log.i("rewardz","file created"+file_created);
+            if (!RewardzRingtoneFolder.exists()) {
+                boolean file_created = RewardzRingtoneFolder.mkdir();
+                Log.i("rewardz", "file created" + file_created);
             }
 
             downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
-        }
-        else {
+        } else {
             /* save the folder in internal memory of phone */
 
            /* File RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
                     + File.separator + getString(R.string.app_name));*/ //TODO:Re check and uncmnt this line
-            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(),"AdzApp");
-            if(RewardzRingtoneFolder.isDirectory()){
+            File RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
+            if (RewardzRingtoneFolder.isDirectory()) {
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
                     Log.d("file", "deleted file2");
@@ -192,8 +192,8 @@ public class DownloadRt extends Service {
                     e.printStackTrace();
                 }
             }
-            boolean  file_created = RewardzRingtoneFolder.mkdir();
-            Log.d("rewardz","file created"+file_created);
+            boolean file_created = RewardzRingtoneFolder.mkdir();
+            Log.d("rewardz", "file created" + file_created);
             downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile()); //TODO: unmcnt when req.
             Log.d("file", RewardzRingtoneFolder.getAbsolutePath());
 
@@ -207,42 +207,9 @@ public class DownloadRt extends Service {
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        Log.d("city","dowload started");
+        Log.d("city", "dowload started");
 
-        db.collection("Published Ads").whereEqualTo("ringtone_available", "true").whereEqualTo("city", "india" )
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
-                                Log.d("ringtone", document.getId());
-                                ringtoneDownloadUrl = document.get("ringtone_url").toString();
-
-                                try {
-                                    File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3 -- FINISHED
-                                    Log.d("ringtone", document.getId());
-                                    StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
-                                    httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            Log.d("doc1","downloaded");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d("ringtone","not-downloaded");
-                                        }
-                                    });
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                });
-
-        db.collection("Published Ads").whereEqualTo("ringtone_available", "true").whereEqualTo("city", currentLocation )//.whereEqualTo("city","india")//.whereEqualTo("ad_type", "premium")
+        db.collection("Published Ads").whereEqualTo("ringtone_available", "true").whereEqualTo("city", "india")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -253,18 +220,51 @@ public class DownloadRt extends Service {
                                 ringtoneDownloadUrl = document.get("ringtone_url").toString();
 
                                 try {
-                                    File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3 -- FINISHED
+                                    File ringtone = File.createTempFile(document.getId(), ".mp3", directory);//TODO: change suufix to mp3 -- FINISHED
                                     Log.d("ringtone", document.getId());
                                     StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
                                     httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            Log.d("doc1","downloaded");
+                                            Log.d("doc1", "downloaded");
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Log.d("ringtone","not-downloaded");
+                                            Log.d("ringtone", "not-downloaded");
+                                        }
+                                    });
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                });
+
+        db.collection("Published Ads").whereEqualTo("ringtone_available", "true").whereEqualTo("city", currentLocation)//.whereEqualTo("city","india")//.whereEqualTo("ad_type", "premium")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("ringtone", document.getId());
+                                ringtoneDownloadUrl = document.get("ringtone_url").toString();
+
+                                try {
+                                    File ringtone = File.createTempFile(document.getId(), ".mp3", directory);//TODO: change suufix to mp3 -- FINISHED
+                                    Log.d("ringtone", document.getId());
+                                    StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                    httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                            Log.d("doc1", "downloaded");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("ringtone", "not-downloaded");
                                         }
                                     });
                                 } catch (IOException e) {
@@ -275,7 +275,7 @@ public class DownloadRt extends Service {
                             prefManager = new PrefManager(getApplicationContext());
                             prefManager.setFirstTimeLaunchInDay(false);
                             stopSelf();
-                            Log.d("doc1","stopped foreground service");
+                            Log.d("doc1", "stopped foreground service");
                         } else {
                             Log.d("doc", "Error getting documents: ", task.getException());
                         }
@@ -292,13 +292,13 @@ public class DownloadRt extends Service {
     @Override
     public void onDestroy() {
         // In order to restart this service again in one day
-        AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarm.set(
                 alarm.RTC_WAKEUP, //TODO: CHANGE IT TO 1000*60*60*24
-                System.currentTimeMillis() + (1000 * 60 * 60 * 12 ),//runs for every 24hrs from time of app install(from time at which first time service run)
+                System.currentTimeMillis() + (1000 * 60 * 60 * 12),//runs for every 24hrs from time of app install(from time at which first time service run)
                 PendingIntent.getService(this, 0, new Intent(this, DownloadRt.class), 0)
         );
-        Log.d("docc","alarmtriggred");
+        Log.d("docc", "alarmtriggred");
     }
 }
 

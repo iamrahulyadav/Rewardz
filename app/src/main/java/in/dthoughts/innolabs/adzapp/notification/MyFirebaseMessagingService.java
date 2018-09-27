@@ -5,10 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -17,8 +15,8 @@ import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
 import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.ui.DetailAdActivity;
 import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 
 import static in.dthoughts.innolabs.adzapp.App.CHANNELID;
@@ -84,7 +82,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO: Implement this method to send token to your app server.
 
 
-
     }
 
     private void sendNotification(String messageBody) {
@@ -94,7 +91,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = CHANNELID;
-        Uri defaultSoundUri= Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.adzapp_notification);//RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.adzapp_notification);//RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_stat_notification_icon)//TODO:check image working R.drawable.ic_stat_notification_icon  in manifest aslo

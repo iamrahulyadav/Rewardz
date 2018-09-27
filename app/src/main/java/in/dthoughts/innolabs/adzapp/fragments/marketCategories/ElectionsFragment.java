@@ -20,9 +20,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import in.dthoughts.innolabs.adzapp.R;
-import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
-import in.dthoughts.innolabs.adzapp.modal.Ads;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,9 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
-import in.dthoughts.innolabs.adzapp.modal.Ads;
-
+import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.adapter.AdsListAdapter;
 import in.dthoughts.innolabs.adzapp.modal.Ads;
 
@@ -43,8 +38,8 @@ public class ElectionsFragment extends Fragment {
     LottieAnimationView empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
-    Date todayDate,expiryDate,createdDate;
-    int n=0;
+    Date todayDate, expiryDate, createdDate;
+    int n = 0;
     boolean[] alreadyReddemed;
 
     private AdsListAdapter adsListAdapter;
@@ -64,19 +59,19 @@ public class ElectionsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //getting date for querying
-        todayDate=java.util.Calendar.getInstance().getTime();
+        todayDate = java.util.Calendar.getInstance().getTime();
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         AdsList = new ArrayList<>();
-        adsListAdapter = new AdsListAdapter(getContext(),AdsList);
+        adsListAdapter = new AdsListAdapter(getContext(), AdsList);
 
-        db.collection("Published Ads").whereEqualTo("category","elections").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Published Ads").whereEqualTo("category", "elections").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot doc : task.getResult()){
-                        n = n+1;
-                        Log.d("docc","inside loop");
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        //n = n + 1;
+                        Log.d("docc", "inside loop");
                         SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
                         try {
                             expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
@@ -84,19 +79,21 @@ public class ElectionsFragment extends Fragment {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        if((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))){
-                            Log.d("docc6","ads havent expired");
-                            checkAlreadyRedeemed(doc);
-                        }
-                        else{
-                            Log.d("docc6","ads expired");
+                        if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                            Log.d("docc6", "ads havent expired");
+                            n = n + 1;
+                            //checkAlreadyRedeemed(doc);
+                            Ads ads = doc.toObject(Ads.class).withId(doc.getId());
+                            AdsList.add(ads);
+                            adsListAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.d("docc6", "ads expired");
                         }
                     }
-                }
-                else{
+                } else {
 
                 }
-                if(n==0){
+                if (n == 0) {
                     mainlist.setVisibility(View.GONE);
 //                    loading_animation_view.pauseAnimation();
 //                    loading_animation_view.setVisibility(View.GONE);
@@ -121,7 +118,7 @@ public class ElectionsFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mainlist = view.findViewById(R.id.recyclerView);
@@ -138,16 +135,16 @@ public class ElectionsFragment extends Fragment {
         //alreadyReddemed = new boolean[1];
 
 
-        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id",doc/*getDocument()*/.getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("Transactions").whereEqualTo("user_id", user.getUid()).whereEqualTo("ad_id", doc/*getDocument()*/.getId()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
-                try{
+                try {
 
-                    if(queryDocumentSnapshots.size()!= 0){
+                    if (queryDocumentSnapshots.size() != 0) {
                         //                    alreadyReddemed[0] = true;
                         //                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
-                    }else {
+                    } else {
                         //alreadyReddemed[0] = false;
                         // Ads ads = doc.getDocument().toObject(Ads.class).withId(doc.getDocument().getId());
                         Ads ads = doc.toObject(Ads.class).withId(doc.getId());
@@ -156,8 +153,8 @@ public class ElectionsFragment extends Fragment {
                         //                    Log.d("doc", doc/*.getDocument()*/.getId().toString());
                         //                    Log.d("doc","inside if:"+ String.valueOf(alreadyReddemed[0]));
                     }
-                }catch (Exception err){
-                    Log.d("doc",err.getMessage());
+                } catch (Exception err) {
+                    Log.d("doc", err.getMessage());
                 }
             }
         });

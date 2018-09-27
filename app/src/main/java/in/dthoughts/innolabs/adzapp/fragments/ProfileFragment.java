@@ -13,9 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -24,8 +22,6 @@ import android.widget.Toast;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.fragstack.contracts.StackableFragment;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,15 +31,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.squareup.picasso.Picasso;
+
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.ui.ProfileUpdateActivity;
-import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment implements StackableFragment {
 
     //Button updateProfile;
     FloatingActionButton updateProfile;
-    TextView displayName, mobileNumber, city, rewardPoints ,emailVerified,ringtoneSwitchText;
+    TextView displayName, mobileNumber, city, rewardPoints, emailVerified, ringtoneSwitchText;
     Switch adPublisher, ringtoneSwitch;
     //ImageView displayPic;
     KenBurnsView displayPic;
@@ -56,7 +53,8 @@ public class ProfileFragment extends Fragment implements StackableFragment {
     FirebaseFirestore db;
     FirebaseUser user;
 
-    public ProfileFragment(){}
+    public ProfileFragment() {
+    }
 
     @Nullable
     @Override
@@ -76,7 +74,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
 //
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // initialise your views
 
@@ -101,7 +99,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
 
         readUserProfile();
         user.reload();
-        if(!user.isEmailVerified()){
+        if (!user.isEmailVerified()) {
             emailVerified.setVisibility(View.VISIBLE);
             emailVerifiedId.setVisibility(View.VISIBLE);
         }
@@ -129,7 +127,6 @@ public class ProfileFragment extends Fragment implements StackableFragment {
     }
 
 
-
     private void showRingtonePreferenceDialog() {
 
         myDialog = new Dialog(getContext());
@@ -149,14 +146,14 @@ public class ProfileFragment extends Fragment implements StackableFragment {
         myDialog.show();
     }
 
-    public  void sendEmailVerification() {
+    public void sendEmailVerification() {
 
         user.sendEmailVerification()
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), getString(R.string.email_sent_sucessfully)+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.email_sent_sucessfully) + user.getEmail(), Toast.LENGTH_SHORT).show();
                             Log.d("doc", "Verification email sent to " + user.getEmail());
                         } else {
                             Log.d("doc", "sendEmailVerification failed!", task.getException());
@@ -180,7 +177,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    Log.d("doc",documentSnapshot.getData().toString());
+                    Log.d("doc", documentSnapshot.getData().toString());
 
                     displayName.setText(documentSnapshot.get("DisplayName").toString());
                     _displayName = documentSnapshot.get("DisplayName").toString();
@@ -191,26 +188,23 @@ public class ProfileFragment extends Fragment implements StackableFragment {
                     adPublisher.setChecked(Boolean.parseBoolean(documentSnapshot.get("AdPublisher").toString()));
                     _adPublisher = documentSnapshot.get("AdPublisher").toString();
                     //_photoUri = documentSnapshot.get("PhotoUri").toString();
-                    try{
+                    try {
                         //Picasso.get()
                         Picasso.with(getContext())
                                 .load(documentSnapshot.get("PhotoUri").toString())
                                 .placeholder(R.drawable.ic_sort_black_24dp)
                                 .error(R.drawable.ic_error_black_24dp)
                                 .into(displayPic);
-                    }
-                    catch (Exception error ){
-                        Log.d("profile pic exception",error.getMessage());
+                    } catch (Exception error) {
+                        Log.d("profile pic exception", error.getMessage());
                         //Picasso.get().load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(displayPic);
                         Picasso.with(getContext()).load(R.drawable.ic_account_circle_black_24dp).placeholder(R.drawable.ic_account_circle_black_24dp).into(displayPic);
                     }
-                    try{
+                    try {
                         _photoUri = documentSnapshot.getString("PhotoUri").toString();
-                    }
-                    catch (Exception error){
+                    } catch (Exception error) {
                         _photoUri = null;
                     }
-
 
 
                 }
@@ -226,7 +220,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
                     Log.d("ERROR", e.getMessage());
                     return;
                 }
-                if (documentSnapshot != null && documentSnapshot.exists()){
+                if (documentSnapshot != null && documentSnapshot.exists()) {
                     rewardPoints.setText(documentSnapshot.get("Rewards").toString());
                 }
 

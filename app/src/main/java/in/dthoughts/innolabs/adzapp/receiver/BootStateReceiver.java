@@ -15,7 +15,7 @@ public class BootStateReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         Intent serviceIntent = new Intent(context, DownloadRt.class);
         //context.startService(serviceIntent);
-        ContextCompat.startForegroundService(context,serviceIntent);
+        ContextCompat.startForegroundService(context, serviceIntent);
     }
 
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
 import in.dthoughts.innolabs.adzapp.R;
 
 public class ResetPasswordActivity extends AppCompatActivity {
@@ -39,9 +40,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
         animationDrawable.setExitFadeDuration(2000);
 
         inputEmail = findViewById(R.id.email);
-        btnReset =  findViewById(R.id.btn_reset_password);
-        btnBack =  findViewById(R.id.btn_back);
-        progressBar =  findViewById(R.id.progressBar); //TODO: allign progressbar in middle of screen in XML for login signup and reset
+        btnReset = findViewById(R.id.btn_reset_password);
+        btnBack = findViewById(R.id.btn_back);
+        progressBar = findViewById(R.id.progressBar); //TODO: allign progressbar in middle of screen in XML for login signup and reset
 
         auth = FirebaseAuth.getInstance();
 

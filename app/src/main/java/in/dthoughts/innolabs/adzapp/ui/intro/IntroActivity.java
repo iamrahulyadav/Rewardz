@@ -8,32 +8,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-
-import in.dthoughts.innolabs.adzapp.BaseActivity;
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-import in.dthoughts.innolabs.adzapp.service.DownloadRt;
-import in.dthoughts.innolabs.adzapp.ui.MainActivity;
-import in.dthoughts.innolabs.adzapp.R;
 
 import agency.tango.materialintroscreen.MaterialIntroActivity;
 import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
 import agency.tango.materialintroscreen.animations.IViewTranslation;
+import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
-
-import in.dthoughts.innolabs.adzapp.helper.PrefManager;
+import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 
 public class IntroActivity extends MaterialIntroActivity {
 
     PrefManager prefManager;
     boolean downloadedFromPlayStore, isRooted;
     Context context;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +67,7 @@ public class IntroActivity extends MaterialIntroActivity {
 //                }
 //            });
 //
-//            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+//            builder.setNegativeButton("Close App", new DialogInterface.OnClickListener() {
 //                @Override
 //                public void onClick(DialogInterface dialog, int which) {
 //                    finish();
@@ -90,14 +82,13 @@ public class IntroActivity extends MaterialIntroActivity {
 //        }
 
 
-
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.first_slide_background)
-                        .buttonsColor(R.color.first_slide_buttons)
-                        .image(R.mipmap.ic_launcher)
-                        .title(getString(R.string.intro_slide1_title))
-                        .description(getString(R.string.intro_slide1_description))
-                        .build());
+                .backgroundColor(R.color.first_slide_background)
+                .buttonsColor(R.color.first_slide_buttons)
+                .image(R.mipmap.ic_launcher)
+                .title(getString(R.string.intro_slide1_title))
+                .description(getString(R.string.intro_slide1_description))
+                .build());
 
 
         addSlide(new CustomSlide());
@@ -105,8 +96,8 @@ public class IntroActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                         .backgroundColor(R.color.third_slide_background)
                         .buttonsColor(R.color.third_slide_buttons)
-                        .neededPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE
-                                ,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
+                        .neededPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE
+                                , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA})
                         .image(R.drawable.ic_lock_open_black_24dp)
                         .title(getString(R.string.permissions_title))
                         .description(getString(R.string.intro_slide3_permission_description))
@@ -130,7 +121,7 @@ public class IntroActivity extends MaterialIntroActivity {
     }
 
 
-    public  static boolean isStoreVersion(Context context) {
+    public static boolean isStoreVersion(Context context) {
         boolean result = false;
 
         try {
