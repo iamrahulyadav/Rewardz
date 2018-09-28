@@ -46,6 +46,7 @@
         android:background="@color/white"
         android:textColor="@color/grey_500"
         android:layout_weight="0.5"
+        android:textAllCaps="false"
         android:text="Yup Granted"
         />
 
@@ -53,10 +54,11 @@
         android:id="@+id/xiaomi_permissions_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
+        android:background="@color/white"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_weight="0.5"
         android:textSize="18sp"
+        android:textAllCaps="false"
         android:text="Let's Grant"
         />
     </LinearLayout>

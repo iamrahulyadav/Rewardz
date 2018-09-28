@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -54,6 +56,8 @@ public class WalletFragment extends Fragment implements StackableFragment {
     Snackbar snackbar;
     FirebaseFirestore db;
     FirebaseUser user;
+    private TabLayout mTabLayout;
+
     double INVITATION_POINTS = 10.0, rewardpoints, frndRewardpoints;
     private static final String USER_ID_KEY = "UserID", REF_USER_ID_KEY = "ReferredBy";
     private static final int CODE_WRITE_SETTINGS_PERMISSION = 111;
@@ -71,6 +75,9 @@ public class WalletFragment extends Fragment implements StackableFragment {
         viewPager = view.findViewById(R.id.viewpager);
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
+        // link the tabLayout and the viewpager together
+        mTabLayout =  view.findViewById(R.id.tab_layout);
+        mTabLayout.setupWithViewPager(viewPager);
         return view;
 
         //   return inflater.inflate(R.layout.fragment_wallet, null);
@@ -267,14 +274,15 @@ public class WalletFragment extends Fragment implements StackableFragment {
     }
 
     protected void showWriteSettingsWay() {
-        final Dialog xiaomiDialog = new Dialog(getContext());
+        final BottomSheetDialog xiaomiDialog = new BottomSheetDialog(getContext());
         xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
-        xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
         TextView tv = xiaomiDialog.findViewById(R.id.tv);
         tv.setText("Grant Modify system settings permission by opening SETTINGS > INSTALLED APPS > ADZAPP > OTHER PERMISSION");
         Button xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
         Button xiaomi_permissions_granted_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_granted_button);
         xiaomi_permissions_granted_button.setVisibility(View.GONE);
+        xiaomi_permission_button.setText("dismiss");
         xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

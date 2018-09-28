@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Action bar related stuff
        getSupportActionBar().setSubtitle("Let's make your ads fly!");
-      
+
         container = findViewById(R.id.container);
         navigation = findViewById(R.id.navigation);//Don't delete this bruh!
         prefManager = new PrefManager(this);
@@ -183,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, DownloadRt.class);
             ContextCompat.startForegroundService(this, intent);
 
-            //prefManager.setFirstTimeLaunchInDay(false);
         }
 
     }
@@ -243,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.mainmenu, menu);
-
         return true;
     }
 
@@ -251,9 +250,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.menu_settings:
-//                Toast.makeText(MainActivity.this, "Settings activity", Toast.LENGTH_LONG).show();
-//              return true;
             case R.id.search:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 return true;
@@ -345,19 +341,18 @@ public class MainActivity extends AppCompatActivity {
         Log.d("docc1", String.valueOf(mFragmentController.getCurrentFragment()));
         Log.d("docc1", "ID IS" + String.valueOf(navigation.getMenu().findItem(navigation.getSelectedItemId())));
 
-        //super.onBackPressed();
+
     }
 
     private void showXiaomiPermissionDialog() {
-        final Dialog xiaomiDialog = new Dialog(this);
-        xiaomiDialog.setContentView(R.layout.xiaomi_permission_dialog);
-        xiaomiDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        xiaomi_permission_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_button);
-        xiaomi_permissions_granted_button = xiaomiDialog.findViewById(R.id.xiaomi_permissions_granted_button);
+        final BottomSheetDialog xiaomiSheet = new BottomSheetDialog(this);
+        xiaomiSheet.setContentView(R.layout.xiaomi_permission_dialog);
+        xiaomi_permission_button = xiaomiSheet.findViewById(R.id.xiaomi_permissions_button);
+        xiaomi_permissions_granted_button = xiaomiSheet.findViewById(R.id.xiaomi_permissions_granted_button);
         xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                xiaomiDialog.dismiss();
+                xiaomiSheet.dismiss();
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
                 startActivity(intent);
@@ -368,12 +363,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 prefManager.setPermissionDialog(true);
-                xiaomiDialog.dismiss();
+                xiaomiSheet.dismiss();
                 showIntro();
             }
         });
-        xiaomiDialog.show();
-
+        xiaomiSheet.show();
 
     }
 
@@ -412,10 +406,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showWriteSettingsDialog() {
         Log.d("docc", "came into this dialog");
-        final Dialog dialog = new Dialog(this);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this);
         LottieAnimationView animation_view = dialog.findViewById(R.id.animation_view);
         dialog.setContentView(R.layout.write_settings_dialog);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         button = dialog.findViewById(R.id.write_settings_button);
         write_settings_granted_button = dialog.findViewById(R.id.write_settings_granted_button);
         button.setOnClickListener(new View.OnClickListener() {

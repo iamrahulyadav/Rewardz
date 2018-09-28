@@ -85,6 +85,7 @@ public class BaseActivity extends AppCompatActivity {
             Log.d("doc", String.valueOf(prefManager.isFirstTimeLaunch()));
             prefManager.setFirstTimeLaunch(false);
             startActivity(new Intent(BaseActivity.this, IntroActivity.class));
+
             finish();
 
         } else {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,9 +31,10 @@ public class MarketFragment extends Fragment implements StackableFragment {
 
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
-    FloatingActionButton fab;
     FirebaseFirestore db;
     FirebaseUser user;
+
+    private TabLayout mTabLayout;
 
     public MarketFragment() {
     }
@@ -47,6 +49,9 @@ public class MarketFragment extends Fragment implements StackableFragment {
         viewPager = view.findViewById(R.id.viewpager);
         viewPagerAdapter = new MarketFragment.ViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
+        // link the tabLayout and the viewpager together
+        mTabLayout =  view.findViewById(R.id.tab_layout);
+        mTabLayout.setupWithViewPager(viewPager);
         return view;
 
     }
@@ -65,16 +70,6 @@ public class MarketFragment extends Fragment implements StackableFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fab = view.findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), AddNewAd.class);
-                startActivity(i);
-
-            }
-        });
     }
 
     @Override

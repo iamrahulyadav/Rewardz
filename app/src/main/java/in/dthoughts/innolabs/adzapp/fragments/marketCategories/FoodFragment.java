@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -40,6 +42,7 @@ public class FoodFragment extends Fragment {
     FirebaseUser user;
     Date todayDate, expiryDate, createdDate;
     int n = 0;
+    Timestamp expiryDate_timestamp , createdDate_timestamp;
 
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
@@ -60,6 +63,7 @@ public class FoodFragment extends Fragment {
         //getting date for querying
         todayDate = java.util.Calendar.getInstance().getTime();
         db = FirebaseFirestore.getInstance();
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         AdsList = new ArrayList<>();
         adsListAdapter = new AdsListAdapter(getContext(), AdsList);
@@ -94,9 +98,14 @@ public class FoodFragment extends Fragment {
                         Log.d("docc", "inside loop");
                         SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
                         try {
-                            expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
-                            createdDate = sdf.parse(String.valueOf(doc.get("created_on")));
-                        } catch (ParseException e) {
+                            expiryDate_timestamp = doc.getTimestamp("expires_on");
+                            createdDate_timestamp = doc.getTimestamp("created_on");
+                            Log.d("docc7","timestamp "+ expiryDate_timestamp+" , "+createdDate_timestamp);
+                            expiryDate = expiryDate_timestamp.toDate();
+                            createdDate = createdDate_timestamp.toDate();
+//                            expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
+//                            createdDate = sdf.parse(String.valueOf(doc.get("created_on")));
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {

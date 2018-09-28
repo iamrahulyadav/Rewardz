@@ -53,7 +53,6 @@ public class DetailAdActivity extends AppCompatActivity {
     ImageView Publisher_pic, Ad_banner;
     TextView Publisher_name, Expires_on, Ad_description, Ad_url, couponCode;
     Dialog myDialog;
-    //YouTubePlayerView Ad_video;
     VideoView videoView;
     Button Redeem_button;
     String adPublisherPic, adPublisherName, adExpiresOn, adBanner, adDescription, adUrl, adType, adVideoUrl, adPoints, adCouponCode, adID;
@@ -109,7 +108,6 @@ public class DetailAdActivity extends AppCompatActivity {
         }
 
         final Bundle extras = getIntent().getExtras();
-        //if(extras != null){
 
         adPublisherPic = extras.get("adPublisherPic").toString();
         adPublisherName = extras.get("adPublisherName").toString();
@@ -122,11 +120,7 @@ public class DetailAdActivity extends AppCompatActivity {
         adPoints = extras.get("adPoints").toString();
         adCouponCode = extras.get("adCouponCode").toString();
         adID = extras.get("adID").toString();
-        Log.d("doc", adID);//TODO:remove this in release build
 
-        //}else{
-        //  Log.d("e", "exception");
-        //}
 
 
         Publisher_pic = findViewById(R.id.profilePic);
@@ -136,12 +130,10 @@ public class DetailAdActivity extends AppCompatActivity {
         Ad_url = findViewById(R.id.txtUrl);
         Ad_banner = findViewById(R.id.adBanner);
         Redeem_button = findViewById(R.id.redeemButton);
-//        Ad_video = findViewById(R.id.adVideo);
-//        getLifecycle().addObserver(Ad_video);
         videoView = findViewById(R.id.video_view);
 
 
-        //Picasso.get().load(adPublisherPic).into(Publisher_pic);
+
         Picasso.with(getApplicationContext()).load(adPublisherPic).into(Publisher_pic);
         Publisher_name.setText(adPublisherName);
         Expires_on.setText(adExpiresOn);
@@ -150,7 +142,6 @@ public class DetailAdActivity extends AppCompatActivity {
         Linkify.addLinks(Ad_url, Linkify.WEB_URLS);//To make links(URL) highlighted and clickable
 
         if (adType.equals("standard") || adType.equals("basic")) {
-            //Picasso.get().load(adBanner).into(Ad_banner);
             Picasso.with(getApplicationContext()).load(adBanner).into(Ad_banner);
         }
 
@@ -398,9 +389,7 @@ public class DetailAdActivity extends AppCompatActivity {
 
     @Override
     public void onUserLeaveHint () {
-        if (adType.equals("premium")) {
-            //Activity.enterPictureInPictureMode();
-        }
+
     }
 
 }

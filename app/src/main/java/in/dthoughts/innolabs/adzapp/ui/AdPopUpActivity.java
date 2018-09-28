@@ -43,14 +43,13 @@ public class AdPopUpActivity extends Activity {
     FirebaseFirestore db;
     FirebaseUser user;
     Double rewardpoints, pointsToAdd = Double.valueOf(5);
-    //ArrayList<String> adsID;
+
 
     TextView publisher_name, city, expires_on, ad_description, ad_url;
     ImageView profile_pic, ad_banner;
     ImageButton ad_close;
     LinearLayout parentLayout;
     RelativeLayout rootLayout;
-    //YouTubePlayerView Ad_video;
     VideoView videoView;
 
     DocumentSnapshot doc;
@@ -72,8 +71,6 @@ public class AdPopUpActivity extends Activity {
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // adsID = new ArrayList<>();
-
 
         if (user != null) {
             DocumentReference userReawrdPoints = db.collection("userRewards").document(user.getUid());
@@ -85,7 +82,7 @@ public class AdPopUpActivity extends Activity {
                         rewardpoints = Double.valueOf(doc.get("Rewards").toString());
                         Log.d("reward", String.valueOf(rewardpoints));
 
-                        //checking ringtone toogle on/off
+                        //checking ringtone toggle on/off
                         SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             boolean settingsCanWrite = Settings.System.canWrite(getApplicationContext());
@@ -120,24 +117,6 @@ public class AdPopUpActivity extends Activity {
 
             //TODO: remove this block of code and repalce it with the code to read from the shared pefs
             // TODO: CONTINUE -- for ad_id and then call "callAD()" mehod with id as a string arg
-            // callAd();//chnging this methid from oncreate to onResume for better staibilization TODO: un cmnt in goes wrng
-//              db.collection("Published Ads")
-//                    .get()
-//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if (task.isSuccessful()) {
-//                                for (QueryDocumentSnapshot document : task.getResult()) {
-//                                    adsID.add(document.getId());
-//                                    Log.d("doc", document.getId() + " => " + document.getData());
-//
-//                                }
-//                                callAd();
-//                            } else {
-//                                Log.d("doc", "Error getting documents: ", task.getException());
-//                            }
-//                        }
-//                    });
         }
 
     }
@@ -161,7 +140,6 @@ public class AdPopUpActivity extends Activity {
         ad_close = findViewById(R.id.closeAd);
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
         mShimmerViewContainer.startShimmerAnimation();
-        //Ad_video = findViewById(R.id.adVideo);
         videoView = findViewById(R.id.video_view);
 
 
@@ -221,22 +199,7 @@ public class AdPopUpActivity extends Activity {
                                 videoView.setVideoPath(doc.get("video_url").toString()).getPlayer().start();
                             }
 
-//                            Ad_video.setVisibility(View.VISIBLE);
-//                            //initializing the youtube player and sending youtube video ID to stream.
-//                            Ad_video.initialize(new YouTubePlayerInitListener() {
-//                                @Override
-//                                public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {
-//                                    initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
-//                                        @Override
-//                                        public void onReady() {
-//                                            String videoId = getYoutubeID(doc.get("video_url").toString());
-//
-//                                            initializedYouTubePlayer.loadVideo(videoId,0);
-//                                        }
-//                                    });
-//                                }
-//                            }, true);
-//                            //end of youtube player
+
                         }
 
                         publisher_name.setText(doc.get("publisher_name").toString());
@@ -323,7 +286,7 @@ public class AdPopUpActivity extends Activity {
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, p1, p2, p3, p4, p5, p6); */
         startActivity(intent/*, options.toBundle()*/);
-//removing the ad dailog activity from the stack.
+//removing the ad dialog activity from the stack.
         closeAdActivity();
     }
 

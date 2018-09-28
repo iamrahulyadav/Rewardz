@@ -114,6 +114,7 @@
                 android:id="@+id/redeemButton"
                 android:background="@drawable/auth_bg_gradient_two"
                 android:textColor="@android:color/white"
+                android:enabled="true"
                 android:text="@string/redeem"/>
         </LinearLayout>
 

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -41,20 +40,82 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.view.PagerTabStrip
-                android:id="@+id/pager_title_strip"
-                android:layout_width="match_parent"
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:background="@color/colorPrimary"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textColor="#fff"
-                android:animateLayoutChanges="true"
-                />
+                android:layout_width="match_parent"
+                app:tabMode="fixed"
+                app:tabIndicatorColor="@color/colorPrimary"
+                app:tabGravity="fill"/>
 
         </android.support.v4.view.ViewPager>
     </LinearLayout>
 
 </LinearLayout>
+
+
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/reward_coins"
+                android:contentDescription="@string/profile_pic_description"/>
+            <TextView
+                android:id="@+id/rewardPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/points"
+                android:textSize="40sp"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="2"
+            android:orientation="horizontal" >
+
+            <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    app:tabMode="scrollable" />
+
+                <android.support.v4.view.PagerTabStrip
+                    android:id="@+id/pager_title_strip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:textColor="#fff"
+                    android:animateLayoutChanges="true"
+                    />
+
+            </android.support.v4.view.ViewPager>
+        </LinearLayout>
+
+    </LinearLayout> -->
 
