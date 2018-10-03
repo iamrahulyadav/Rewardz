@@ -102,7 +102,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
 
                 SharedPreferences sharedPreferences = context.getSharedPreferences(REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-                String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE, "1rPyNckD3E3Vn4eWcX6t");//TODO: change this df. value to ADZAPP a in database (dont delete adzapp ad in db)
+                String OLD_TONE = sharedPreferences.getString(REWARDZ_TONE, "cDL4KvRx22RXj8aG1kUZ");//TODO: change this df. value to ADZAPP a in database (dont delete adzapp ad in db)
                 sharedPreferences.edit().putString(OLD_REWARDZ_TONE, OLD_TONE).apply();
                 sharedPreferences.edit().putString(REWARDZ_TONE, selectedRingtone.getName().substring(0, 20)).apply();
                 Log.d("ringtone", "subString " + selectedRingtone.getName().substring(0, 20));

@@ -3,16 +3,20 @@ package in.dthoughts.innolabs.adzapp.ui;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,8 @@ import mehdi.sakout.aboutpage.Element;
 public class AboutActivity extends AppCompatActivity {
 
     Uri mInvitationUrl;
+    SeekBar seekbar;
+    TextView progressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,7 @@ public class AboutActivity extends AppCompatActivity {
                 .addGroup(getString(R.string.about_page_app_preference_group_name))
                 //.addItem(openRingtonePreference())
                 .addItem(openAdPublisherAndAgent())
+                .addItem(intervalSeekbar())
                 .addGroup("Refer and Earn")
                 .addItem(referAndEarn())
                 .addGroup(getString(R.string.about_page_app_group_name))
@@ -68,6 +75,54 @@ public class AboutActivity extends AppCompatActivity {
                 .create();
         setContentView(aboutPage);
 
+    }
+
+    private Element intervalSeekbar() {
+        Element intervalSeekbar = new Element();
+        intervalSeekbar.setTitle("Chnage download interval time.");
+        intervalSeekbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialog sheetDialog =  new BottomSheetDialog(AboutActivity.this);
+                sheetDialog.setContentView(R.layout.download_interval_time);
+                seekbar = sheetDialog.findViewById(R.id.seekbar);
+                progressText = sheetDialog.findViewById(R.id.progress);
+                seekbar.setMax(24);
+
+                final SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneIntervalValue", Context.MODE_PRIVATE);
+                int interval_time = preferences.getInt("interval_time", 2);
+                seekbar.setProgress(interval_time);
+                progressText.setText("Your current progress is "+interval_time);
+                seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    int progressChangedValue = 0;
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        progressChangedValue = progress;
+                        progressText.setText("Your current progress is "+progressChangedValue);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        progressText.setText("Your current progress is "+progressChangedValue);
+                        if(progressChangedValue == 0){
+                            progressChangedValue = 1;
+                        }
+                        preferences.edit().putInt("interval_time", progressChangedValue).commit();
+                    }
+                });
+                sheetDialog.show();
+
+
+            }
+        });
+
+        return intervalSeekbar;
     }
 
     private Element referAndEarn() {

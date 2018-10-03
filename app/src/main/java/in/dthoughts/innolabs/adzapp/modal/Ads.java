@@ -25,10 +25,11 @@ public class Ads {
     String publisher_name;
     String video_url;
     String coupon_code;
+    String reward_through;
     @Exclude
     private String key;
 
-    public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city, Date created_on, /*String created_on, String expires_on*/Date expires_on, String points, String publisher_image, String publisher_name, String video_url, String coupon_code) {
+    public Ads(String ad_banner, String ad_type, String ad_description, String ad_url, String city, Date created_on, /*String created_on, String expires_on*/Date expires_on, String points, String publisher_image, String publisher_name, String video_url, String coupon_code, String reward_through) {
         this.ad_banner = ad_banner;
         this.ad_type = ad_type;
         this.ad_description = ad_description;
@@ -41,6 +42,7 @@ public class Ads {
         this.publisher_name = publisher_name;
         this.video_url = video_url;
         this.coupon_code = coupon_code;
+        this.reward_through = reward_through;
     }
 
 
@@ -165,4 +167,7 @@ public class Ads {
         this.coupon_code = coupon_code;
     }
 
+    public String getReward_through() { return reward_through; }
+
+    public void setReward_through(String reward_thorugh) { this.reward_through = reward_thorugh; }
 }

@@ -21,6 +21,7 @@ import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.DetailAdActivity;

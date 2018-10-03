@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,6 +38,7 @@ public class ElectronicsFragment extends Fragment {
 
     RecyclerView mainlist;
     LottieAnimationView empty_animation_view;
+    TextView fav_tunes;
     FirebaseFirestore db;
     FirebaseUser user;
     Date todayDate, expiryDate, createdDate;
@@ -131,6 +133,7 @@ public class ElectronicsFragment extends Fragment {
         mainlist.setHasFixedSize(true);
         mainlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         mainlist.setAdapter(adsListAdapter);
+        fav_tunes = view.findViewById(R.id.fav_tune);
         empty_animation_view = view.findViewById(R.id.empty_animation_view);
         empty_animation_view.cancelAnimation();
 

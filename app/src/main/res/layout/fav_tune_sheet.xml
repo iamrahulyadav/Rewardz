@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:padding="@dimen/padding_10"
+        android:id="@+id/fav_tune_warn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select your favourite party tune such that you will get only favourite ringtone. By default it's selected to NONE."
+        />
+
+    <RadioGroup
+        android:id="@+id/fav_tune_radio_grp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fav_tune_warn"
+
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="58dp" >
+
+        <RadioButton
+            android:id="@+id/trs_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TRS"/>
+        <RadioButton
+            android:id="@+id/congress_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONGRESS"/>
+        <RadioButton
+            android:id="@+id/mim_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MIM"/>
+        <RadioButton
+            android:id="@+id/ysrc_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YSR CONGRESS"/>
+        <RadioButton
+            android:id="@+id/cpi_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CPI/CPM"/>
+        <RadioButton
+            android:id="@+id/none_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="NOTA (NONE)"/>
+    </RadioGroup>
+
+</RelativeLayout>

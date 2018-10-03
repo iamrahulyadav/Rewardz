@@ -1,7 +1,9 @@
 package in.dthoughts.innolabs.adzapp.ui;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -182,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         if (prefManager.isFirstTimeLaunchInDay()) {
             //starting service
             Intent intent = new Intent(MainActivity.this, DownloadRt.class);
+            intent.putExtra("CAME_FROM", "MAIN_ACTIVITY");
             ContextCompat.startForegroundService(this, intent);
 
         }

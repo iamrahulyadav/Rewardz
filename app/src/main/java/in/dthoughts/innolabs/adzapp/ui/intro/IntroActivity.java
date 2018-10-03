@@ -11,11 +11,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import agency.tango.materialintroscreen.MaterialIntroActivity;
 import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
 import agency.tango.materialintroscreen.animations.IViewTranslation;
+import in.dthoughts.innolabs.adzapp.BuildConfig;
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.MainActivity;
@@ -42,44 +44,49 @@ public class IntroActivity extends MaterialIntroActivity {
         //checking whether app downloaded from playstore or not
 
         downloadedFromPlayStore = isStoreVersion(context);
+        Toast.makeText(this, String.valueOf("is store Version: "+downloadedFromPlayStore), Toast.LENGTH_LONG).show();
 //        //isRooted = CommonUtils.isRooted(context);
         //TODO:UNCMNT WHOLE BLOCK
-//        if(!downloadedFromPlayStore /*|| isRooted*/){
-//            //As app is side loaded we will cause a crash such that user cant use the app until they downloaded from store.
-//            final AlertDialog.Builder builder = new AlertDialog.Builder(IntroActivity.this);
-//            builder.setTitle("App is side loaded");
-//            builder.setMessage("Seems Like AdzApp is not downloaded from play store. TO enjoy our services please download app from play store");
+
+//        if(!BuildConfig.DEBUG){
+//            if(!downloadedFromPlayStore /*|| isRooted*/){
+//                //As app is side loaded we will cause a crash such that user cant use the app until they downloaded from store.
+//                final AlertDialog.Builder builder = new AlertDialog.Builder(IntroActivity.this);
+//                builder.setTitle("App is side loaded");
+//                builder.setMessage("Seems Like AdzApp is not downloaded from play store. TO enjoy our services please download app from play store");
 //
-//            builder.setPositiveButton("Go to Play store", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    //perform any action
-//                    final String appPackageName = getPackageName();
-//                    try {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-//                        finish();
-//                        System.exit(0);
-//                    } catch (android.content.ActivityNotFoundException anfe) {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+//                builder.setPositiveButton("Go to Play store", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //perform any action
+//                        final String appPackageName = getPackageName();
+//                        try {
+//                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+//                            finish();
+//                            System.exit(0);
+//                        } catch (android.content.ActivityNotFoundException anfe) {
+//                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+//                            finish();
+//                            System.exit(0);
+//                        }
+//                    }
+//                });
+//
+//                builder.setNegativeButton("Close App", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
 //                        finish();
 //                        System.exit(0);
 //                    }
-//                }
-//            });
+//                });
 //
-//            builder.setNegativeButton("Close App", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    finish();
-//                    System.exit(0);
-//                }
-//            });
+//                //creating alert dialog
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
 //
-//            //creating alert dialog
-//            AlertDialog alertDialog = builder.create();
-//            alertDialog.show();
-//
+//            }
 //        }
+
 
 
         addSlide(new SlideFragmentBuilder()

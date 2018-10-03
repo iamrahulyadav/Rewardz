@@ -55,7 +55,7 @@ public class DetailAdActivity extends AppCompatActivity {
     Dialog myDialog;
     VideoView videoView;
     Button Redeem_button;
-    String adPublisherPic, adPublisherName, adExpiresOn, adBanner, adDescription, adUrl, adType, adVideoUrl, adPoints, adCouponCode, adID;
+    String adPublisherPic, adPublisherName, adExpiresOn, adBanner, adDescription, adUrl, adType, adVideoUrl, adPoints, adCouponCode, adRewardThrough, adID;
     double userTotalPoints, pointsAfterDeduction;
     PrefManager prefManager;
     FirebaseFirestore db;
@@ -119,6 +119,8 @@ public class DetailAdActivity extends AppCompatActivity {
         adVideoUrl = extras.get("adVideoUrl").toString();
         adPoints = extras.get("adPoints").toString();
         adCouponCode = extras.get("adCouponCode").toString();
+        adRewardThrough = extras.get("rewardThrough").toString();
+        Log.d("docc9", adRewardThrough);
         adID = extras.get("adID").toString();
 
 
@@ -154,6 +156,9 @@ public class DetailAdActivity extends AppCompatActivity {
             videoView.getPlayer().aspectRatio(VideoInfo.AR_ASPECT_FILL_PARENT);
 
 
+        }
+        if(adRewardThrough.contains("link")){
+            Redeem_button.setVisibility(View.GONE);
         }
         Redeem_button.setText(getString(R.string.redeem) + " " + adPoints);
 

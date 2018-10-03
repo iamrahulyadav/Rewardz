@@ -76,6 +76,7 @@ public class AdsListAdapter extends RecyclerView.Adapter<AdsListAdapter.ViewHold
                 intent.putExtra("adVideoUrl", AdsList.get(position).getVideo_url());
                 intent.putExtra("adPoints", AdsList.get(position).getPoints());
                 intent.putExtra("adCouponCode", AdsList.get(position).getCoupon_code());
+                intent.putExtra("rewardThrough", AdsList.get(position).getReward_through());
                 intent.putExtra("adID", AdsList.get(position).getKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

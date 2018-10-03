@@ -12,6 +12,7 @@
         app:lottie_fileName="loading_data.json"
         app:lottie_loop="true"
         app:lottie_autoPlay="true" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

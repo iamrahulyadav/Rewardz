@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="Select interval time in hours for downloading new tunes."
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_gravity="center"/>
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:min="1"
+        android:max="24"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:id="@+id/progress"
+        android:textStyle="bold"
+        android:textSize="25sp"
+
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
