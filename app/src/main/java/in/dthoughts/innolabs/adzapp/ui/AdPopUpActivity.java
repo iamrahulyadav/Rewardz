@@ -8,8 +8,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.DeviceLocked;
 import in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver;
@@ -51,7 +57,7 @@ public class AdPopUpActivity extends Activity {
     FirebaseFirestore db;
     FirebaseUser user;
     Double rewardpoints, pointsToAdd = Double.valueOf(5);
-
+    private File file;
 
     TextView publisher_name, city, expires_on, ad_description, ad_url;
     ImageView profile_pic, ad_banner;
@@ -63,6 +69,7 @@ public class AdPopUpActivity extends Activity {
     DocumentSnapshot doc;
 
     private ShimmerFrameLayout mShimmerViewContainer;
+    private String Video_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,8 +197,24 @@ public class AdPopUpActivity extends Activity {
     private void callAd() {
 
         SharedPreferences sharedPreferences = getSharedPreferences(PhoneStateReceiver.REWARDZ_PREFS_TONE, Context.MODE_PRIVATE);
-        String adID = sharedPreferences.getString(PhoneStateReceiver.OLD_REWARDZ_TONE, "cDL4KvRx22RXj8aG1kUZ");//TODO:Add adzapp ad in DB and use DB ID here use NOTEPAD++ and find this Id && replace with new adzapp ID
+        final String adID = sharedPreferences.getString(PhoneStateReceiver.OLD_REWARDZ_TONE, "cDL4KvRx22RXj8aG1kUZ");//TODO:Add adzapp ad in DB and use DB ID here use NOTEPAD++ and find this Id && replace with new adzapp ID
         Log.d("ringtone", "adID from pref " + adID);
+
+        String folder_path = Environment.getExternalStorageDirectory() + File.separator
+                + getString(R.string.app_name)+ File.separator + "Advideos";
+        file = new File( folder_path ) ;
+        File list[] = file.listFiles();
+        for( int i=0; i< list.length; i++)
+        {
+            if(list[i].getName().contains(adID)){
+                //video_path = list[i].getAbsolutePath();
+                Log.d("docc13", list[i].getAbsolutePath());
+                Log.d("docc13","path: "+ list[i].getPath());
+                Video_path = list[i].getPath();
+            }
+            //myList.add( list[i].getName() );
+        }
+
         DocumentReference randomAd = db.collection("Published Ads").document(adID);
         randomAd.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -213,11 +236,17 @@ public class AdPopUpActivity extends Activity {
                         if (doc.get("ad_type").toString().equals("premium")) {
                             ad_banner.setVisibility(View.GONE);
                             videoView.setVisibility(View.VISIBLE);
+                            if(TextUtils.isEmpty(Video_path)){
+                                Video_path = doc.get("video_url").toString();
+                            }//for offline stream
                             if (DeviceLocked.isDeviceLocked(getApplicationContext())) {
-                                initializePlayer(doc.get("video_url").toString(), false);
+
+                                initializePlayer(Video_path, false);
+                                //initializePlayer(doc.get("video_url").toString(), false); exo player online stream
                             } else {
-                                //videoView.setVideoPath(doc.get("video_url").toString()).getPlayer().start();
-                                initializePlayer(doc.get("video_url").toString(), true);
+                                //videoView.setVideoPath(doc.get("video_url").toString()).getPlayer().start(); //giraffe player code
+                                //initializePlayer(doc.get("video_url").toString(), true); //exo player online stream
+                                initializePlayer(Video_path, true);
                             }
 
 

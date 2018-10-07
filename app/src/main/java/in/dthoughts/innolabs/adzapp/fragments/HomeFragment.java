@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
     TextView no_location_Tv;
     public AdsListAdapter adsListAdapter;
     public List<Ads> AdsList;
-    public String currentLocation;
+    public String currentLocation, currentState;
     double Lat, Lon;
     int n = 0;
     int delayInMillis = 7000;
@@ -251,7 +251,8 @@ public class HomeFragment extends Fragment implements StackableFragment {
                     str.append("Country Code: " + address.getCountryCode() + "\n");
                     String strAddress = str.toString();
                     Log.d("address", strAddress);
-                    currentLocation = address.getLocality().trim().toLowerCase().toString();
+                    currentLocation = address.getLocality().trim().toLowerCase();
+                    currentState = address.getAdminArea().trim().toLowerCase();
                     Toast.makeText(getActivity(), currentLocation,
                             Toast.LENGTH_LONG).show();
                     Log.d("city", currentLocation+" "+address.getAdminArea().trim().toLowerCase().toString());
@@ -294,11 +295,12 @@ public class HomeFragment extends Fragment implements StackableFragment {
 
                             }
                             if (n == 0) {
-                                mainlist.setVisibility(View.GONE);
-                                loading_animation_view.pauseAnimation();
-                                loading_animation_view.setVisibility(View.GONE);
-                                empty_animation_view.playAnimation();
-                                empty_animation_view.setVisibility(View.VISIBLE);
+                                getStateAds();
+//                                mainlist.setVisibility(View.GONE);
+//                                loading_animation_view.pauseAnimation();
+//                                loading_animation_view.setVisibility(View.GONE);
+//                                empty_animation_view.playAnimation();
+//                                empty_animation_view.setVisibility(View.VISIBLE);
 
                             } else {
                                 mainlist.setVisibility(View.VISIBLE);
@@ -314,6 +316,106 @@ public class HomeFragment extends Fragment implements StackableFragment {
             Log.d("doc", err.getMessage());
         }
 
+    }
+
+    private void getStateAds() {
+
+        db.collection("Published Ads").whereEqualTo("city", currentState).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        n = n + 1;
+                        Log.d("docc6", "inside loop: " + String.valueOf(doc.get("expires_on")));
+
+                        try {
+                            expiryDate_timestamp = doc.getTimestamp("expires_on");
+                            createdDate_timestamp = doc.getTimestamp("created_on");
+                            Log.d("docc7","timestamp "+ expiryDate_timestamp+" , "+createdDate_timestamp);
+                            expiryDate = expiryDate_timestamp.toDate();
+                            createdDate = createdDate_timestamp.toDate();
+                            Log.d("docc7","timestamp=>date "+ expiryDate+" , "+createdDate);
+//                                        expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
+//                                        createdDate = sdf.parse(String.valueOf(doc.get("created_on")));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                            Log.d("docc6", "ads havent expired");
+                            checkAlreadyRedeemed(doc);
+                        } else {
+                            Log.d("docc6", "ads expired");
+                        }
+
+                    }
+                } else {
+
+                }
+                if (n == 0) {
+                    getIndiaAds();
+
+                } else {
+                    Toast.makeText(getActivity(), "showing state ads", Toast.LENGTH_SHORT).show();
+                    mainlist.setVisibility(View.VISIBLE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+    }
+
+    private void getIndiaAds() {
+        db.collection("Published Ads").whereEqualTo("city", "india").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        n = n + 1;
+                        Log.d("docc6", "inside loop: " + String.valueOf(doc.get("expires_on")));
+
+                        try {
+                            expiryDate_timestamp = doc.getTimestamp("expires_on");
+                            createdDate_timestamp = doc.getTimestamp("created_on");
+                            Log.d("docc7","timestamp "+ expiryDate_timestamp+" , "+createdDate_timestamp);
+                            expiryDate = expiryDate_timestamp.toDate();
+                            createdDate = createdDate_timestamp.toDate();
+                            Log.d("docc7","timestamp=>date "+ expiryDate+" , "+createdDate);
+//                                        expiryDate = sdf.parse(String.valueOf(doc.get("expires_on")));
+//                                        createdDate = sdf.parse(String.valueOf(doc.get("created_on")));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                            Log.d("docc6", "ads havent expired");
+                            checkAlreadyRedeemed(doc);
+                        } else {
+                            Log.d("docc6", "ads expired");
+                        }
+
+                    }
+                } else {
+
+                }
+                if (n == 0) {
+
+                    mainlist.setVisibility(View.GONE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.playAnimation();
+                    empty_animation_view.setVisibility(View.VISIBLE);
+
+                } else {
+                    Toast.makeText(getActivity(), "showing India ads", Toast.LENGTH_SHORT).show();
+                    mainlist.setVisibility(View.VISIBLE);
+                    loading_animation_view.pauseAnimation();
+                    loading_animation_view.setVisibility(View.GONE);
+                    empty_animation_view.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
 

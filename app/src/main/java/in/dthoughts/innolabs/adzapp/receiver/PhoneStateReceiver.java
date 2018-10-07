@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Random;
 
+import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.AdPopUpActivity;
 
@@ -45,7 +46,9 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 isIncoming = true;
                 SharedPreferences preferences = context.getSharedPreferences("AdzAppRingtoneSwitchValue", Context.MODE_PRIVATE);
 
-                RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
+                //RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory(), "AdzApp");
+                RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
+                        +"AdzApp" + File.separator + "AdTones");
                 Log.d("ringtone", "path is :" + RewardzRingtoneFolder.toString());
                 ringtones = RewardzRingtoneFolder.listFiles();
                 //Log.d("ringtone", ringtones.clone().toString());
@@ -88,10 +91,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
                 } else {
                     if (preferences.getBoolean("active", true)) {
-                        boolean dualSim = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 && SubscriptionManager.from(context).getActiveSubscriptionInfoCount() >= 2;
-                        if (dualSim) {
-                            Log.d("docc", "dual sim detected");
-                        }
+
                         RingtoneManager.setActualDefaultRingtoneUri(
                                 context.getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
                                 newUri);

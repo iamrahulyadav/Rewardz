@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -60,7 +63,8 @@ public class DetailAdActivity extends AppCompatActivity {
     PrefManager prefManager;
     FirebaseFirestore db;
     FirebaseUser user;
-    boolean redeemed;
+    private File file;
+    String Video_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +111,8 @@ public class DetailAdActivity extends AppCompatActivity {
 
         }
 
+
+
         final Bundle extras = getIntent().getExtras();
 
         adPublisherPic = extras.get("adPublisherPic").toString();
@@ -123,7 +129,20 @@ public class DetailAdActivity extends AppCompatActivity {
         Log.d("docc9", adRewardThrough);
         adID = extras.get("adID").toString();
 
-
+        String folder_path = Environment.getExternalStorageDirectory() + File.separator
+                + getString(R.string.app_name)+ File.separator + "Advideos";
+        file = new File( folder_path ) ;
+        File list[] = file.listFiles();
+        for( int i=0; i< list.length; i++)
+        {
+            if(list[i].getName().contains(adID)){
+                //video_path = list[i].getAbsolutePath();
+                Log.d("docc13", list[i].getAbsolutePath());
+                Log.d("docc13","path: "+ list[i].getPath());
+                Video_path = list[i].getPath();
+            }
+            //myList.add( list[i].getName() );
+        }
 
         Publisher_pic = findViewById(R.id.profilePic);
         Publisher_name = findViewById(R.id.name);
@@ -151,6 +170,10 @@ public class DetailAdActivity extends AppCompatActivity {
             Log.d("doc", "video file detected");
             videoView.setVisibility(View.VISIBLE);
             Ad_banner.setVisibility(View.INVISIBLE);
+            if(!TextUtils.isEmpty(Video_path)){
+                adVideoUrl = Video_path;
+                Log.d("docc13","detail ad ofline url");
+            }
 
             videoView.setVideoPath(adVideoUrl).getPlayer().start();
             videoView.getPlayer().aspectRatio(VideoInfo.AR_ASPECT_FILL_PARENT);

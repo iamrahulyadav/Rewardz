@@ -13,6 +13,8 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -38,6 +40,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import in.dthoughts.innolabs.adzapp.helper.PrefManager;
 import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 import in.dthoughts.innolabs.adzapp.R;
 
@@ -55,11 +58,12 @@ public class DownloadRt extends Service {
     FirebaseFirestore db;
     FirebaseUser user;
     FirebaseStorage storage;
-    public String ringtoneDownloadUrl;
+    public String ringtoneDownloadUrl, videoDownloadUrl, fav_party_name;
     private FusedLocationProviderClient client;
+    private PrefManager prefManager;
     Double Lat, Lon;
     String currentLocation, currentState;
-    File RewardzRingtoneFolder;
+    File RewardzRingtoneFolder, RewardzVideoFolder;
     Timestamp expiryDate_timestamp , createdDate_timestamp;
     Date todayDate, expiryDate, createdDate;
 
@@ -72,18 +76,19 @@ public class DownloadRt extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-//        if(downlaoded_for_today){
-//            stopSelf();
-//        }
+
 
         Log.d("docc12", "Start foreground service.");
 
+
+        Uri defaultSoundUri = /*Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.adzapp_notification);*/RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 123, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNELID)
-                .setContentTitle("AdzApp")
-                .setContentText("Looking for new Ring tones")
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.service_notification_text))
+                .setSound(defaultSoundUri)
+                .setSmallIcon(R.drawable.ic_stat_notification_icon)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
@@ -99,7 +104,7 @@ public class DownloadRt extends Service {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
              RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
-                    + getString(R.string.app_name));
+                    +"."+ getString(R.string.app_name)+ File.separator + "AdTones");
             if (RewardzRingtoneFolder.isDirectory()) {
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
@@ -109,14 +114,14 @@ public class DownloadRt extends Service {
                 }
             }
             Log.d("docc12", RewardzRingtoneFolder.getAbsolutePath());
-            RewardzRingtoneFolder.mkdir();
+            RewardzRingtoneFolder.mkdirs();
             getUserLocation();
             //downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile());
         } else {
             /* save the folder in internal memory of phone */
 
              RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
-                    + File.separator + getString(R.string.app_name));
+                    + File.separator +"."+ getString(R.string.app_name)+ File.separator + "AdTones");
 
             if (RewardzRingtoneFolder.isDirectory()) {
                 try {
@@ -126,7 +131,7 @@ public class DownloadRt extends Service {
                     Log.d("docc12", e.getMessage());
                 }
             }
-            RewardzRingtoneFolder.mkdir();
+            RewardzRingtoneFolder.mkdirs();
             getUserLocation();
             //downloadRingtone(RewardzRingtoneFolder.getAbsoluteFile());
             Log.d("docc12", RewardzRingtoneFolder.getAbsolutePath());
@@ -149,35 +154,37 @@ public class DownloadRt extends Service {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {//TODO: make this block into try anc catch for null pointer exception
-                    try{
-                        Lat = task.getResult().getLatitude();
-                        Lon = task.getResult().getLongitude();
-                    }catch(NullPointerException exp){
-                        Log.d("docc12","null pointer exception while obtaining lat and lon");
-                    }
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    Lat = location.getLatitude();
+                    Lon = location.getLongitude();
 
+                    Log.d("docc12", String.valueOf(Lat) + " " + String.valueOf(Lon));
                     getCurrentCity(Lat, Lon);
                 }
             }
-          });
-//    .addOnSuccessListener(new OnSuccessListener<Location>() {
+        });
+// .addOnCompleteListener(new OnCompleteListener<Location>() {
 //            @Override
-//            public void onSuccess(Location location) {
-//
-//                if (location != null) {
-//                    Lat = location.getLatitude();
-//                    Lon = location.getLongitude();
+//            public void onComplete(@NonNull Task<Location> task) {
+//                if (task.isSuccessful()) {//TODO: make this block into try anc catch for null pointer exception
+//                    try{
+//                        Lat = task.getResult().getLatitude();
+//                        Lon = task.getResult().getLongitude();
+//                    }catch(NullPointerException exp){
+//                        Log.d("docc12","null pointer exception while obtaining lat and lon");
+//                    }
 //
 //                    getCurrentCity(Lat, Lon);
 //                }
-//
+//                else{
+//                    lo
+//                }
 //            }
-//        });
-
+//          });
+//
     }
 
     private void getCurrentCity(double lat, double lon) {
@@ -227,6 +234,10 @@ public class DownloadRt extends Service {
         }catch (NullPointerException e){
             Log.d("docc12", "null location");
         }
+
+        //getting from shared preferences
+        final SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneFavParty", Context.MODE_PRIVATE);
+         fav_party_name =  preferences.getString("favPartyName","none");
         db.collection("Published Ads").whereEqualTo("ringtone_available","true").whereEqualTo("city","india")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -243,25 +254,52 @@ public class DownloadRt extends Service {
                                     createdDate = createdDate_timestamp.toDate();
 
                                     if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                                        if(document.get("category").toString().equals("elections")){
+                                            Log.d("docc12","election ad: "+ document.get("publisher_name"));
+                                                if(document.get("publisher_name").toString().toLowerCase().trim().contains(fav_party_name)){
+                                                    try {
+                                                        File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                                        Log.d("ringtone", document.getId());
+                                                        StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                                        httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                                Log.d("docc12","downloaded fav party tune");
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.d("docc12","not-downloaded fav party tune");
+                                                            }
+                                                        });
+                                                    } catch (IOException e) {
+                                                        Log.d("docc12", e.getMessage());
+                                                    }
+                                                }else{
+                                                    Log.d("docc12","not fav party");
 
-                                        try {
-                                            File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
-                                            Log.d("ringtone", document.getId());
-                                            StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
-                                            httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                    Log.d("docc12","downloaded inside india");
                                                 }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d("docc12","not-downloaded inside india");
-                                                }
-                                            });
-                                        } catch (IOException e) {
-                                            Log.d("docc12", e.getMessage());
+                                        }else{
+                                            try {
+                                                File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                                Log.d("ringtone", document.getId());
+                                                StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                                httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                        Log.d("docc12","downloaded inside india");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("docc12","not-downloaded inside india");
+                                                    }
+                                                });
+                                            } catch (IOException e) {
+                                                Log.d("docc12", e.getMessage());
+                                            }
                                         }
+
                                     }else {Log.d("docc12","a skipped due to date");}
 
 
@@ -288,23 +326,50 @@ public class DownloadRt extends Service {
 
                                 if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
 
-                                    try {
-                                        File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
-                                        Log.d("ringtone", document.getId());
-                                        StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
-                                        httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                Log.d("docc12","downloaded inside "+ currentState);
+                                    if(document.get("category").toString().equals("elections")){
+                                        Log.d("docc12","election ad: "+ document.get("publisher_name"));
+                                        if(document.get("publisher_name").toString().toLowerCase().trim().contains(fav_party_name)){
+                                            try {
+                                                File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                                Log.d("ringtone", document.getId());
+                                                StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                                httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                        Log.d("docc12","downloaded fav party tune");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("docc12","not-downloaded fav party tune");
+                                                    }
+                                                });
+                                            } catch (IOException e) {
+                                                Log.d("docc12", e.getMessage());
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d("docc12","not-downloaded inside "+ currentState);
-                                            }
-                                        });
-                                    } catch (IOException e) {
-                                        Log.d("docc12", e.getMessage());
+                                        }else{
+                                            Log.d("docc12","not fav party");
+
+                                        }
+                                    }else{
+                                        try {
+                                            File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                            Log.d("ringtone", document.getId());
+                                            StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                            httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                    Log.d("docc12","downloaded inside state: "+currentState);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("docc12","not-downloaded inside sate: "+currentState);
+                                                }
+                                            });
+                                        } catch (IOException e) {
+                                            Log.d("docc12", e.getMessage());
+                                        }
                                     }
                                 }else {Log.d("docc12","a skipped due to date");}
 
@@ -331,29 +396,59 @@ public class DownloadRt extends Service {
 
                                 if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
 
-                                    try {
-                                        File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
-                                        Log.d("ringtone", document.getId());
-                                        StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
-                                        httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                Log.d("docc12","downloaded inside "+ currentLocation);
+                                    if(document.get("category").toString().equals("elections")){
+                                        Log.d("docc12","election ad: "+ document.get("publisher_name"));
+                                        if(document.get("publisher_name").toString().toLowerCase().trim().contains(fav_party_name)){
+                                            try {
+                                                File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                                Log.d("ringtone", document.getId());
+                                                StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                                httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                        Log.d("docc12","downloaded fav party tune");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("docc12","not-downloaded fav party tune");
+                                                    }
+                                                });
+                                            } catch (IOException e) {
+                                                Log.d("docc12", e.getMessage());
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d("docc12","not-downloaded inside "+ currentLocation);
-                                            }
-                                        });
-                                    } catch (IOException e) {
-                                        Log.d("docc12", e.getMessage());
+                                        }else{
+                                            Log.d("docc12","not fav party");
+
+                                        }
+                                    }else{
+                                        try {
+                                            File ringtone = File.createTempFile(document.getId(),".mp3",directory);//TODO: change suufix to mp3
+                                            Log.d("ringtone", document.getId());
+                                            StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                            httpsReference.getFile(ringtone).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                    Log.d("docc12","downloaded inside city: "+currentLocation);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("docc12","not-downloaded inside city: "+currentLocation);
+                                                }
+                                            });
+                                        } catch (IOException e) {
+                                            Log.d("docc12", e.getMessage());
+                                        }
                                     }
 
                                 }else {Log.d("docc12","a skipped due to date");}
 
 
                             }
+                            prefManager = new PrefManager(getApplicationContext());
+                            prefManager.setFirstTimeLaunchInDay(false);
+                            downloadForYouVideos();
                             stopSelf();
 
                         } else {
@@ -361,6 +456,115 @@ public class DownloadRt extends Service {
                         }
                     }
                 });
+    }
+
+    private void downloadForYouVideos() {
+        Log.d("docc12","came here");
+        if (android.os.Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED)) {
+            RewardzVideoFolder = new File(Environment.getExternalStorageDirectory() + File.separator
+                    + getString(R.string.app_name)+ File.separator + "Advideos");
+            if (RewardzVideoFolder.isDirectory()) {
+                try {
+                    FileUtils.deleteDirectory(RewardzVideoFolder);
+                    Log.d("docc12", "deleted file");
+                } catch (IOException e) {
+                    Log.d("docc12", e.getMessage());
+                }
+
+            }
+            RewardzVideoFolder.mkdirs();
+            Log.d("docc12","adbsolute path of video folder"+ RewardzVideoFolder.getAbsolutePath());
+
+        }else {
+            /* save the folder in internal memory of phone */
+
+            RewardzVideoFolder = new File("/data/data/" + getPackageName()
+                    + File.separator + getString(R.string.app_name) + File.separator + ".Advideos");
+
+            if (RewardzVideoFolder.isDirectory()) {
+                try {
+                    FileUtils.deleteDirectory(RewardzVideoFolder);
+                    Log.d("docc12", "deleted file2");
+                } catch (IOException e) {
+                    Log.d("docc12", e.getMessage());
+                }
+            }
+            RewardzVideoFolder.mkdirs();
+
+
+        }
+
+        db.collection("Published Ads").whereEqualTo("video_available","true").whereEqualTo("city",currentLocation)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("docc12", document.getId());
+                                videoDownloadUrl = document.get("video_url").toString();
+                                expiryDate_timestamp = document.getTimestamp("expires_on");
+                                createdDate_timestamp = document.getTimestamp("created_on");
+                                Log.d("docc12","timestamp "+ expiryDate_timestamp+" , "+createdDate_timestamp);
+                                expiryDate = expiryDate_timestamp.toDate();
+                                createdDate = createdDate_timestamp.toDate();
+
+                                if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                                    if(document.get("category").toString().equals("elections")){
+                                        Log.d("docc12","election ad: "+ document.get("publisher_name"));
+                                        if(document.get("publisher_name").toString().toLowerCase().trim().contains(fav_party_name)){
+                                            try {
+                                                File video = File.createTempFile(document.getId(),".mp4",RewardzVideoFolder);//TODO: change suufix to mp3
+                                                Log.d("ringtone", document.getId());
+                                                StorageReference httpsReference = storage.getReferenceFromUrl(ringtoneDownloadUrl);
+                                                httpsReference.getFile(video).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                        Log.d("docc12","downloaded fav party video");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("docc12","not-downloaded fav party video");
+                                                    }
+                                                });
+                                            } catch (IOException e) {
+                                                Log.d("docc12", e.getMessage());
+                                            }
+                                        }else{
+                                            Log.d("docc12","not fav party");
+
+                                        }
+                                    }else{
+                                        try {
+                                            File video = File.createTempFile(document.getId(),".mp4",RewardzVideoFolder);//TODO: change suufix to mp3
+                                            Log.d("ringtone", document.getId());
+                                            StorageReference httpsReference = storage.getReferenceFromUrl(videoDownloadUrl);
+                                            httpsReference.getFile(video).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                    Log.d("docc12","downloaded video inside city");
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("docc12","not-downloaded video inside city");
+                                                }
+                                            });
+                                        } catch (IOException e) {
+                                            Log.d("docc12", e.getMessage());
+                                        }
+                                    }
+
+                                }else {Log.d("docc12","a skipped due to date");}
+
+
+                            }
+                        }
+                    }
+                });
+
     }
 
     @Nullable
@@ -373,11 +577,11 @@ public class DownloadRt extends Service {
     public void onDestroy() {
         // I want to restart this service again in one hour
         final SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneIntervalValue", Context.MODE_PRIVATE);
-        int interval_time = preferences.getInt("interval_time", 2);
+        int interval_time = preferences.getInt("interval_time", 24);
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarm.set(
                 alarm.RTC_WAKEUP,
-                System.currentTimeMillis() + (1000 * 60 * interval_time ),// TODO:chnage time ADD EXTRA 60, runs for every 24hrs from time of app install(from time at which first time service run)
+                System.currentTimeMillis() + (1000 * 60 * 60 * interval_time ),// TODO:chnage time ADD EXTRA 60, runs for every 24hrs from time of app install(from time at which first time service run)
                 PendingIntent.getService(this, 0, new Intent(this, DownloadRt.class), 0)
         );
     }

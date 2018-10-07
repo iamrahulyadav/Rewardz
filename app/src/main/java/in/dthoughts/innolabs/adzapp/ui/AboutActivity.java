@@ -90,7 +90,7 @@ public class AboutActivity extends AppCompatActivity {
                 seekbar.setMax(24);
 
                 final SharedPreferences preferences = getSharedPreferences("AdzAppRingtoneIntervalValue", Context.MODE_PRIVATE);
-                int interval_time = preferences.getInt("interval_time", 2);
+                int interval_time = preferences.getInt("interval_time", 24);
                 seekbar.setProgress(interval_time);
                 progressText.setText("Your current progress is "+interval_time);
                 seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
