@@ -129,13 +129,14 @@
             android:contentDescription="@string/profile_pic_description"
             app:srcCompat="@mipmap/ic_launcher" />
 
-        <com.google.android.exoplayer2.ui.PlayerView
+        <tcking.github.com.giraffeplayer2.VideoView
             android:id="@+id/video_view"
+            android:transitionName="videoPlayer"
             android:layout_width="match_parent"
-            android:layout_height="175dp"
-            app:show_buffering="true"
-            android:visibility="gone"
-            />
+            android:layout_height="175sp"
+            android:visibility="gone"/>
+
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -104,7 +104,7 @@ public class DownloadRt extends Service {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
              RewardzRingtoneFolder = new File(Environment.getExternalStorageDirectory() + File.separator
-                    +"."+ getString(R.string.app_name)+ File.separator + "AdTones");
+                    + getString(R.string.app_name)+ File.separator + "AdTones");
             if (RewardzRingtoneFolder.isDirectory()) {
                 try {
                     FileUtils.deleteDirectory(RewardzRingtoneFolder);
@@ -121,7 +121,7 @@ public class DownloadRt extends Service {
             /* save the folder in internal memory of phone */
 
              RewardzRingtoneFolder = new File("/data/data/" + getPackageName()
-                    + File.separator +"."+ getString(R.string.app_name)+ File.separator + "AdTones");
+                    + File.separator + getString(R.string.app_name)+ File.separator + "AdTones");
 
             if (RewardzRingtoneFolder.isDirectory()) {
                 try {
@@ -495,7 +495,7 @@ public class DownloadRt extends Service {
 
         }
 
-        db.collection("Published Ads").whereEqualTo("video_available","true").whereEqualTo("city",currentLocation)
+        db.collection("Published Ads").whereEqualTo("video_available","true").whereEqualTo("ringtone_available","true").whereEqualTo("city",currentLocation)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

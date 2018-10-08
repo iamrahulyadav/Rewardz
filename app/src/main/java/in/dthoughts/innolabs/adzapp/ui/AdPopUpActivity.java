@@ -24,13 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,6 +42,7 @@ import java.util.List;
 import in.dthoughts.innolabs.adzapp.R;
 import in.dthoughts.innolabs.adzapp.helper.DeviceLocked;
 import in.dthoughts.innolabs.adzapp.receiver.PhoneStateReceiver;
+import tcking.github.com.giraffeplayer2.GiraffePlayer;
 import tcking.github.com.giraffeplayer2.VideoView;
 
 
@@ -64,8 +58,8 @@ public class AdPopUpActivity extends Activity {
     ImageButton ad_close;
     LinearLayout parentLayout;
     RelativeLayout rootLayout;
-    PlayerView videoView;
-    SimpleExoPlayer player;
+    VideoView videoView;
+
     DocumentSnapshot doc;
 
     private ShimmerFrameLayout mShimmerViewContainer;
@@ -143,16 +137,6 @@ public class AdPopUpActivity extends Activity {
         callAd();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("docc8","on stop");
-        if(player != null){
-            videoView.setPlayer(null);
-            player.release();
-            player = null;
-        }
-    }
 
     private void initializeView() {
 
@@ -241,12 +225,11 @@ public class AdPopUpActivity extends Activity {
                             }//for offline stream
                             if (DeviceLocked.isDeviceLocked(getApplicationContext())) {
 
-                                initializePlayer(Video_path, false);
+                                videoView.setVideoPath(Video_path).getPlayer();
                                 //initializePlayer(doc.get("video_url").toString(), false); exo player online stream
                             } else {
-                                //videoView.setVideoPath(doc.get("video_url").toString()).getPlayer().start(); //giraffe player code
-                                //initializePlayer(doc.get("video_url").toString(), true); //exo player online stream
-                                initializePlayer(Video_path, true);
+                                videoView.setVideoPath(Video_path).getPlayer().start(); //giraffe player code
+
                             }
 
 
@@ -269,18 +252,7 @@ public class AdPopUpActivity extends Activity {
 
     }
 
-    private void initializePlayer(String video_url, boolean play) {
 
-        player = ExoPlayerFactory.newSimpleInstance(this,
-                new DefaultTrackSelector());
-        videoView.setPlayer(player);
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "AdzApp"));
-        ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(video_url));
-        player.prepare(mediaSource);
-        player.setPlayWhenReady(play);
-
-    }
 //TODO: if req. use tis code to send the ad to user as a notif in-app
 //    private void sendAdtoNotif(String AdID) {
 //      String  userId = user.getUid();
