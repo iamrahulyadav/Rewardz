@@ -256,7 +256,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
                     currentState = address.getAdminArea().trim().toLowerCase();
                     Toast.makeText(getActivity(), currentLocation,
                             Toast.LENGTH_LONG).show();
-                    Log.d("city", currentLocation+" "+address.getAdminArea().trim().toLowerCase().toString());
+                    Log.d("city", currentLocation+" "+address.getAdminArea().trim().toLowerCase());
                 } catch (Exception e) {
                     Log.d("error in location", e.getMessage());
                 }
@@ -269,7 +269,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
-                                    n = n + 1;
+                                    //n = n + 1;
                                     Log.d("docc6", "inside loop: " + String.valueOf(doc.get("expires_on")));
 
                                     try {
@@ -287,6 +287,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
                                     if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
                                         Log.d("docc6", "ads havent expired");
                                         checkAlreadyRedeemed(doc);
+                                        n = n+1;
                                     } else {
                                         Log.d("docc6", "ads expired");
                                     }
@@ -320,13 +321,13 @@ public class HomeFragment extends Fragment implements StackableFragment {
     }
 
     private void getStateAds() {
-
+        Log.d("docc6","in state ads");
         db.collection("Published Ads").whereEqualTo("city", currentState).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        n = n + 1;
+                        //n = n + 1;
                         Log.d("docc6", "inside loop: " + String.valueOf(doc.get("expires_on")));
 
                         try {
@@ -342,6 +343,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
                             e.printStackTrace();
                         }
                         if ((todayDate.equals(createdDate) || todayDate.after(createdDate)) && (todayDate.before(expiryDate) || todayDate.equals(expiryDate))) {
+                            n = n + 1;
                             Log.d("docc6", "ads havent expired");
                             checkAlreadyRedeemed(doc);
                         } else {
