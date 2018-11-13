@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +34,7 @@ public class ScanQrActivity extends AppCompatActivity implements QRCodeReaderVie
     DocumentSnapshot doc;
     FirebaseFirestore db;
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
-
+     FirebaseAnalytics firebaseAnalytics;
     private ViewGroup mainLayout;
 
     @Override
@@ -52,6 +53,7 @@ public class ScanQrActivity extends AppCompatActivity implements QRCodeReaderVie
             }
         });
         mainLayout = findViewById(R.id.mainLayout);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {

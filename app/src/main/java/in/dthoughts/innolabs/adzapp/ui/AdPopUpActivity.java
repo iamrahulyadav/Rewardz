@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -50,6 +51,7 @@ public class AdPopUpActivity extends Activity {
 
     FirebaseFirestore db;
     FirebaseUser user;
+    FirebaseAnalytics firebaseAnalytics;
     Double rewardpoints, pointsToAdd = Double.valueOf(5);
     private File file;
 
@@ -79,7 +81,7 @@ public class AdPopUpActivity extends Activity {
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         if (user != null) {
             DocumentReference userReawrdPoints = db.collection("userRewards").document(user.getUid());
@@ -174,6 +176,11 @@ public class AdPopUpActivity extends Activity {
 
     private void closeAdActivity() {
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "AD_POPUP");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "AD_POPUP_CLOSED_CLICKED");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         AdPopUpActivity.this.finish();
         System.exit(0);
     }
@@ -293,7 +300,11 @@ public class AdPopUpActivity extends Activity {
     }
 
     private void callDetailAdActivity() {
-
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "AD_POPUP");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "AD_POPUP_CLICKED");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         Intent intent = new Intent(AdPopUpActivity.this, DetailAdActivity.class);
         try {
             intent.putExtra("adPublisherPic", doc.get("publisher_image").toString());

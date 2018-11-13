@@ -10,6 +10,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import in.dthoughts.innolabs.adzapp.R;
 
 public class PublisherAgentActivity extends AppCompatActivity {
@@ -17,6 +19,7 @@ public class PublisherAgentActivity extends AppCompatActivity {
     WebView loginWebView;
     public ProgressBar WebViewprogressBar;
     Toolbar mToolbar;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class PublisherAgentActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         WebViewprogressBar = findViewById(R.id.WebViewProgressBar);
         WebViewprogressBar.setMax(100);

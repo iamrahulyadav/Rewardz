@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,12 +39,14 @@ public class SignupActivity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     FirebaseFirestore db;
     FirebaseUser user;
+    FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //background gradient animation
         constraintLayout = findViewById(R.id.constrainLayout);
         animationDrawable = (AnimationDrawable) constraintLayout.getBackground();

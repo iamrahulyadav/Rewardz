@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
 
     FirebaseFirestore db;
     FirebaseUser user;
-
+    FirebaseAnalytics firebaseAnalytics;
     private FusedLocationProviderClient client;
     private Button button, write_settings_granted_button, xiaomi_permission_button, xiaomi_permissions_granted_button;
     RecyclerView mainlist;
@@ -102,7 +103,7 @@ public class HomeFragment extends Fragment implements StackableFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // do your variables initialisations here except Views!!!
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         prefManager = new PrefManager(getContext());
         client = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

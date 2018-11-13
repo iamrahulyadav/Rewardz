@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.unstoppable.submitbuttonview.SubmitButton;
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private AnimationDrawable animationDrawable;
     //private ConstraintLayout constraintLayout;
     private RelativeLayout relativeLayout;
-
+    FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         animationDrawable.setExitFadeDuration(2000);
 
         auth = FirebaseAuth.getInstance();
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -67,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+
             }
         });
 
@@ -74,6 +76,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "SIGNUP");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "SIGN_IN_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
             }
         });
 
@@ -83,6 +91,11 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LOGIN");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "LOG_IN_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.blank_email), Toast.LENGTH_SHORT).show();

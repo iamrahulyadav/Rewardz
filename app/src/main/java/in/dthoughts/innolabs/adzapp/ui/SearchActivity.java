@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
@@ -41,6 +42,7 @@ public class SearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     FirebaseFirestore db;
     FirebaseUser user;
+     FirebaseAnalytics firebaseAnalytics;
     ArrayList<String> publisherNameList;
     ArrayList<String> profilePicList;
     SearchAdapter searchAdapter;
@@ -58,7 +60,7 @@ public class SearchActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         search_editText = mToolbar.findViewById(in.dthoughts.innolabs.adzapp.R.id.search_editText);
         recyclerView = findViewById(in.dthoughts.innolabs.adzapp.R.id.recyclerView);
 

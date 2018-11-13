@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,6 +35,7 @@ public class TransactionFragment extends Fragment {
     LottieAnimationView loading_animation_view, empty_animation_view;
     FirebaseFirestore db;
     FirebaseUser user;
+    FirebaseAnalytics firebaseAnalytics;
     int n = 0;
 
     private TransactionsListAdapter transactionsListAdapter;
@@ -53,7 +55,7 @@ public class TransactionFragment extends Fragment {
 
         TransactionsList = new ArrayList<>();
         transactionsListAdapter = new TransactionsListAdapter(getContext(), TransactionsList);
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 

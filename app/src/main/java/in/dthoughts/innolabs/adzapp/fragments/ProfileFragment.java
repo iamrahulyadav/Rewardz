@@ -24,6 +24,7 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.fragstack.contracts.StackableFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -49,7 +50,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
     Dialog myDialog;
 
     private String _displayName, _city, _mobileNumber, _adPublisher, _photoUri;
-
+    FirebaseAnalytics firebaseAnalytics;
     FirebaseFirestore db;
     FirebaseUser user;
 
@@ -70,8 +71,7 @@ public class ProfileFragment extends Fragment implements StackableFragment {
 
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-//
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {

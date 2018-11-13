@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import agency.tango.materialintroscreen.MaterialIntroActivity;
 import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
@@ -25,7 +27,7 @@ import in.dthoughts.innolabs.adzapp.ui.MainActivity;
 public class IntroActivity extends MaterialIntroActivity {
 
     PrefManager prefManager;
-
+    FirebaseAnalytics firebaseAnalytics;
     Context context;
 
     @Override
@@ -44,7 +46,7 @@ public class IntroActivity extends MaterialIntroActivity {
         //checking whether app downloaded from playstore or not
        // TODO: ddo it ^^
 
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.first_slide_background)

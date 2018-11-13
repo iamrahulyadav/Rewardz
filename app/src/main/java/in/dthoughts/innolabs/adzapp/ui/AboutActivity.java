@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.dynamiclinks.DynamicLink;
@@ -44,12 +45,13 @@ public class AboutActivity extends AppCompatActivity {
     Uri mInvitationUrl;
     SeekBar seekbar;
     TextView progressText;
+    FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher_round)//TODO:chnage logo path here --FINISHED
@@ -114,6 +116,11 @@ public class AboutActivity extends AppCompatActivity {
                             progressChangedValue = 1;
                         }
                         preferences.edit().putInt("interval_time", progressChangedValue).commit();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "DOWNLOAD_INTERVAL");
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "DOWNLOAD_INTERVAL_CHANGED");
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SeekBar");
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                     }
                 });
                 sheetDialog.show();
@@ -135,6 +142,11 @@ public class AboutActivity extends AppCompatActivity {
                 startReferAndEarn();
             }
         });
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "REFER_EARN");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "REFER_EARN_CLICKED");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         return referAndEarn;
     }
 
@@ -191,6 +203,11 @@ public class AboutActivity extends AppCompatActivity {
         mail_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "REFER_EARN");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "REFER_EARN_MAIL_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 sendInvitationCode(mInvitationUrl);
             }
         });
@@ -201,6 +218,11 @@ public class AboutActivity extends AppCompatActivity {
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_TEXT, "Download AdzApp with my referral link " + String.valueOf(mInvitationUrl));
                 startActivity(Intent.createChooser(shareIntent, "Share link using"));
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "REFER_EARN");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "REFER_EARN_SOCIAL_SHARE_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             }
         });
 
@@ -235,6 +257,11 @@ public class AboutActivity extends AppCompatActivity {
         adPublisher_Agent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "PUBLISHER_AGENT");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "PUBLISHER_AGENT_LOGIN_PAGE_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 Intent intent = new Intent(AboutActivity.this, PublisherAgentActivity.class);
                 startActivity(intent);
             }
@@ -262,6 +289,11 @@ public class AboutActivity extends AppCompatActivity {
         privacyPolicy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "PRIVACY_POLICY");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "PRIVACY_POLICY_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_policy_url)));
                 startActivity(browserIntent);
             }
@@ -275,6 +307,11 @@ public class AboutActivity extends AppCompatActivity {
         ThirdPartyLicenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "LICENSES");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "LICENSES_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 openLicenseDailog();
             }
         });
@@ -377,6 +414,11 @@ public class AboutActivity extends AppCompatActivity {
         copyRightsElement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "COPY_RIGHTS");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "COPYRIGHTS_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 Toast.makeText(AboutActivity.this, copyrights, Toast.LENGTH_SHORT).show();
             }
         });

@@ -24,6 +24,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
@@ -57,7 +58,7 @@ public class ElectionsFragment extends Fragment {
     FirebaseUser user;
     Date todayDate, expiryDate, createdDate;
     int n = 0;
-    boolean[] alreadyReddemed;
+    FirebaseAnalytics firebaseAnalytics;
     Timestamp expiryDate_timestamp , createdDate_timestamp;
     private AdsListAdapter adsListAdapter;
     private List<Ads> AdsList;
@@ -75,6 +76,7 @@ public class ElectionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         //getting date for querying
         todayDate = java.util.Calendar.getInstance().getTime();
         db = FirebaseFirestore.getInstance();

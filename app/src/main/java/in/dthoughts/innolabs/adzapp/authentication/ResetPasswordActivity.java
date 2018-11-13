@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 
 import in.dthoughts.innolabs.adzapp.R;
@@ -27,12 +28,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private AnimationDrawable animationDrawable;
     private ConstraintLayout constraintLayout;
+    FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //background gradient animation
         constraintLayout = findViewById(R.id.constrainLayout);
         animationDrawable = (AnimationDrawable) constraintLayout.getBackground();

@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -60,9 +61,11 @@ public class DetailAdActivity extends AppCompatActivity {
     Button Redeem_button;
     String adPublisherPic, adPublisherName, adExpiresOn, adBanner, adDescription, adUrl, adType, adVideoUrl, adPoints, adCouponCode, adRewardThrough, adID;
     double userTotalPoints, pointsAfterDeduction;
+    Long AnalyticsDetailAdWatchers, AnalyticsRedeemButtonClicked;
     PrefManager prefManager;
     FirebaseFirestore db;
     FirebaseUser user;
+    FirebaseAnalytics firebaseAnalytics;
     private File file;
     String Video_path;
 
@@ -82,6 +85,8 @@ public class DetailAdActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         prefManager = new PrefManager(this);
         if (prefManager.isDetailAdTutFinished() == false) {
@@ -198,7 +203,11 @@ public class DetailAdActivity extends AppCompatActivity {
                 //TODO: deduct the points from user wallet in DB. and add this to transaction table -- FNISHED
                 //TODO: ->which contains AD-id, User-id, TimeSpan. --FINISHED
                 //TODO: ADD coupon code attribute to published adds document and show the code here after deducting the points __FINISHED
-
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "REDEEM");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "REDEEM_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
                 //code to show coupon code to user
                 user.reload();
@@ -210,12 +219,28 @@ public class DetailAdActivity extends AppCompatActivity {
 
             }
         });
-
-
+        addWatcherCountToDetailAd();
         openAppRater();
 
     }
 
+    private void addWatcherCountToDetailAd() {
+        db.collection("Published Ads").document(adID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                AnalyticsDetailAdWatchers = Long.parseLong(String.valueOf(documentSnapshot.get("AnalyticsDetailAdWatchers")));
+                if(AnalyticsDetailAdWatchers >= 0){
+                    db.collection("Published Ads").document(adID).update("AnalyticsDetailAdWatchers",AnalyticsDetailAdWatchers+1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("adsAnalytics","updated count to: "+ AnalyticsDetailAdWatchers);
+                        }
+                    });
+                }
+            }
+        });
+
+    }
 
     private void openAppRater() {
 
@@ -359,6 +384,20 @@ public class DetailAdActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d("transaction", " success " + user.getUid());
+                db.collection("Published Ads").document(adID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        AnalyticsRedeemButtonClicked = documentSnapshot.getLong("AnalyticsRedeemButtonClicked");
+                        if(AnalyticsRedeemButtonClicked >= 0){
+                            db.collection("Published Ads").document(adID).update("AnalyticsRedeemButtonClicked",AnalyticsRedeemButtonClicked+1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("adsAnalytics","updated AnalyticsRedeemButtonClicked count to: "+ AnalyticsRedeemButtonClicked);
+                                }
+                            });
+                        }
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -382,6 +421,11 @@ public class DetailAdActivity extends AppCompatActivity {
         alertDialog.setPositiveButton(getString(R.string.resend_email), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // User pressed YES button. Write Logic Here
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EMAIL_VERIFICATION");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "SEND_EMAIL_VERIFY_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 sendEmailVerification();
                 Toast.makeText(getApplicationContext(), getString(R.string.email_sent_sucessfully), Toast.LENGTH_SHORT).show();
             }
@@ -390,6 +434,11 @@ public class DetailAdActivity extends AppCompatActivity {
         alertDialog.setNegativeButton(getString(R.string.dont_send_email), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // User pressed No button. Write Logic Here
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EMAIL_VERIFICATION");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "DONT_EMAIL_VERIFY_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 Toast.makeText(getApplicationContext(), getString(R.string.dont_send_email_toast), Toast.LENGTH_SHORT).show();
             }
         });
@@ -397,6 +446,11 @@ public class DetailAdActivity extends AppCompatActivity {
         alertDialog.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // User pressed Cancel button. Write Logic Here
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "EMAIL_VERIFICATION");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "CANCEL_EMAIL_VERIFY_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 Toast.makeText(getApplicationContext(), "You clicked on Cancel",
                         Toast.LENGTH_SHORT).show();
             }

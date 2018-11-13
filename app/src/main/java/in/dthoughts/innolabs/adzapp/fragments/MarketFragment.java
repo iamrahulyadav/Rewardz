@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fragstack.contracts.StackableFragment;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +34,7 @@ public class MarketFragment extends Fragment implements StackableFragment {
     ViewPagerAdapter viewPagerAdapter;
     FirebaseFirestore db;
     FirebaseUser user;
-
+    FirebaseAnalytics firebaseAnalytics;
     private TabLayout mTabLayout;
 
     public MarketFragment() {
@@ -63,7 +64,7 @@ public class MarketFragment extends Fragment implements StackableFragment {
 
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 //
     }
 
@@ -83,7 +84,7 @@ public class MarketFragment extends Fragment implements StackableFragment {
     }
 
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private static final int NUM_ITEMS = 5;
+        private static final int NUM_ITEMS = 6;
 
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -107,8 +108,8 @@ public class MarketFragment extends Fragment implements StackableFragment {
                 case 4:
                     return ElectronicsFragment.newInstance();
 
-//                case 5:
-//                    return ElectionsFragment.newInstance();
+                case 5:
+                    return ElectionsFragment.newInstance();
 
                 default:
                     return FoodFragment.newInstance();
@@ -142,8 +143,8 @@ public class MarketFragment extends Fragment implements StackableFragment {
                 case 4:
                     return ElectronicsFragment.PAGE_TITLE;
 
-//                case 5:
-//                    return ElectionsFragment.PAGE_TITLE;
+                case 5:
+                    return ElectionsFragment.PAGE_TITLE;
 
                 default:
                     return FoodFragment.PAGE_TITLE;

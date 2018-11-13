@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -56,6 +57,7 @@ public class WalletFragment extends Fragment implements StackableFragment {
     Snackbar snackbar;
     FirebaseFirestore db;
     FirebaseUser user;
+    FirebaseAnalytics firebaseAnalytics;
     private TabLayout mTabLayout;
 
     double INVITATION_POINTS = 10.0, rewardpoints, frndRewardpoints;
@@ -90,7 +92,7 @@ public class WalletFragment extends Fragment implements StackableFragment {
 
         //get current user
         user = FirebaseAuth.getInstance().getCurrentUser();
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 //
     }
 

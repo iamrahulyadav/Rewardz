@@ -41,6 +41,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.Duration;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    private FirebaseAnalytics firebaseAnalytics;
     FirebaseUser user;
     boolean emailVerified, activityFocused;
     private PrefManager prefManager;
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.container);
         navigation = findViewById(R.id.navigation);//Don't delete this bruh!
         prefManager = new PrefManager(this);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 //TODO: first check internet connection then proceed
         //fragment controller stuff
         mFragmentController = new FragmentController(getSupportFragmentManager(), R.id.fragment_container, savedInstanceState, null);
@@ -212,6 +215,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendEmailVerification() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MAIN_ACTIVITY");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "EMAIL_VERIFY_CLICKED");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         user = FirebaseAuth.getInstance().getCurrentUser();
         user.sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -355,6 +363,11 @@ public class MainActivity extends AppCompatActivity {
         xiaomi_permission_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MAIN_ACTIVITY");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "XIAOMI_PERMISSION_SHEET_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 xiaomiSheet.dismiss();
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
@@ -366,6 +379,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 prefManager.setPermissionDialog(true);
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MAIN_ACTIVITY");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "XIAOMI_PERMISSION_SHEET_CANCEL_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 xiaomiSheet.dismiss();
                 showIntro();
             }
@@ -417,6 +435,11 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MAIN_ACTIVTY");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "PERMISSION_SHEET_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 dialog.dismiss();
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + MainActivity.this.getPackageName()));
@@ -429,6 +452,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 prefManager.setPermissionDialog(true);
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "MAIN_ACTIVTY");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "PERMISSION_SHEET_GRANTED_CLICKED");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Button");
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 dialog.dismiss();//TODO: save in shared prerferencs and dont show user again -- FINISHED
                 showIntro();
             }

@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,7 +54,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser user;
     FirebaseStorage firebaseStorage;
-
+    private FirebaseAnalytics firebaseAnalytics;
     Task<Uri> urlTask;
 
 
@@ -82,7 +83,7 @@ public class ProfileUpdateActivity extends AppCompatActivity {
             updateProfile = extras.getBoolean("UPDATE__PROFILE", false);
         }
 
-
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
